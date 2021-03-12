@@ -1,6 +1,7 @@
 package beans;
 
 public class Comment {
+	
 	private User buyer;
 	private Manifestation manifestation;
 	private String commentText;

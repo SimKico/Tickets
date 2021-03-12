@@ -1,6 +1,7 @@
 package beans;
 
 public class Location {
+	
 	private int lng;
 	private int lat;
 	private String street;

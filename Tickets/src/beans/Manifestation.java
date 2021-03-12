@@ -3,6 +3,7 @@ package beans;
 import java.util.Date;
 
 public class Manifestation {
+	
 	private String title;
 	private ManifestationType manifestationType;
 	private Date realisationDate;

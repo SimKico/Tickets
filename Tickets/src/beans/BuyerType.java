@@ -1,6 +1,7 @@
 package beans;
 
 public class BuyerType {
+	
 	private String typeName; // e.g. GOLD, SILVER, BRONZE
 	private int discount;
 	private int nextLevelPoints;
