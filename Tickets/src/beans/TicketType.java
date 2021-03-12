@@ -1,9 +1,5 @@
 package beans;
 
 public enum TicketType {
-	
-	VIP,
-	REGULAR,
-	FANPIT
-
+	VIP, REGULAR, FANPIT
 }
