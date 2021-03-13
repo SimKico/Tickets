@@ -22,14 +22,14 @@
     
     <script type="text/javascript"> 
 
-		function validate_email_input(){
+		function validate_username_input(){
                 console.log("validate input")
                 var param1 = $("#username").val()
                 if(param1 == "" ){
                     $("#username").css("border-width","medium")
                     $("#username").css("border-color","rgba(255, 14, 14)")
 					$("#username").addClass("my-class")
-					document.getElementById("username").placeholder = "* Obavezno polje! Unesite e-adresu"
+					document.getElementById("username").placeholder = "Insert username!"
 					return false
                 }else{
 					$("#username").css("border-color","rgba(7, 247, 23)")
@@ -43,7 +43,7 @@
                     $("#password").css("border-width","medium")
                     $("#password").css("border-color","rgba(255, 14, 14)")
 					$("#password").addClass("my-class2")
-					document.getElementById("password").placeholder = "* Obavezno polje! Unesite lozinku"
+					document.getElementById("password").placeholder = "Insert password!"
 					return false
 				}else{
 					$("#password").css("border-color","rgba(7, 247, 23)")
@@ -51,53 +51,39 @@
 				}
 		}
     
-        function validate_input(){
-                console.log("validate input")
+        function login(){
                 var param1 = $("#username").val()
-                console.log(param1)
+                console.log("username: " + param1)
 				var param2 = $("#password").val()
-				if(validate_email_input() && validate_password_input()){
+                console.log("password: " + param2)
+				if(validate_username_input() && validate_password_input()){
 				
                     $("#username").css("border-color","rgba(7, 247, 23)")
                     $("#password").css("border-color","rgba(7, 247, 23)")
-					var s = JSON.stringify({ "username" : param1, "password": param2 }) // mora se ovaj string"email" i "lozinka" poklapati sa poljima klase Korisnik u eclipsu 
+					var dataToJson = JSON.stringify({ "username" : param1, "password": param2 })
+					console.log("json : " + dataToJson )
 					$.ajax({
 						type: "POST",
-						url: "/rest/login",  //mora se poklapati sa stringom u eclipse-u kod  post metode. ovim kazemo koju post metodu gadjamo na serveru
-						data: s,
+						url: "/login",  //mora se poklapati sa stringom u eclipse-u kod  post metode. ovim kazemo koju post metodu gadjamo na serveru
+						data: dataToJson,
 						contentType: "application/json",
 						dataType: "json", // ova pet su obavezna
 						complete: function (data) {
 							
 							if(data.responseText == 'false'){
-								console.log("da")
+								console.log("WRONG USERNAME OR PASSWORD!")
 								$("#error").fadeOut("slow")
 								$("#error").empty()
 								$("#error").fadeIn("slow")
-								$("#error").append("Pogresna e-adresa ili lozinka!")
+								$("#error").append("Wrong username or password!")
 							}else{
-								switch (data.responseText) {
-									case "SUPER_ADMIN":
-										location.href = "homepage_SUPER_ADMIN.html";
-										break;
-									case "ADMIN":
-										location.href = "homepage_ADMIN.html";
-										break;
-									case "KORISNIK":
-										location.href = "homepage_KORISNIK.html";
-										break;
-									default:
-										break;
+								console.log(data.responseText);
+								localStorage.setItem("role",data.responseText);
 								}
 							}
-							
 						}
-					})
-                    
+					)}
                 }
-    
-            }
-    
     </script>
 </head>
 <body>
@@ -105,7 +91,7 @@
 	<div class="d-flex justify-content-center h-100">
 		<div class="card">
 			<div class="card-header">
-				<h3>Welcome!</h3>
+				<h3>Welcome to GetTicket!</h3>
 				
 			</div>
 			<div class="card-body">
@@ -117,18 +103,18 @@
 						<div class="input-group-prepend">
 							<span id="userIcon"  class="input-group-text"><i class="fas fa-user"></i></span>
 						</div>
-						<input id="username" class="form-control"  type="text"  placeholder="username"  oninput="validate_email_input()" >
+						<input id="username" class="form-control"  type="text"  placeholder="username">
 						
 					</div>
 					<div class="input-group form-group">
 						<div class="input-group-prepend">
 							<span class="input-group-text"><i class="fas fa-key"></i></span>
 						</div>
-						<input id="password" class="form-control"  type="password"  placeholder="password" oninput="validate_password_input()" >
+						<input id="password" class="form-control"  type="password"  placeholder="password">
 					</div>
 					<br>
 					<div class="form-group">
-						<input type="button" value="Prijavite se" class="btn float-right" onclick="validate_input();">
+						<input type="button" value="Log in" class="btn float-right" onclick="login()">
 					</div>		
 				</form>
 			</div>

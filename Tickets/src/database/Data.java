@@ -120,13 +120,13 @@ public class Data {
 
 		users.add(new User("admin2", "123", "Nikola", "Nikolic", Gender.MALE, date2, Role.ADMIN,null,null,0,null));
 
-		users.add(new User("prodavac1", "123", "Petar", "Petrovic", Gender.MALE, date3, Role.SELLER ,null,null,0,null));
+		users.add(new User("seller1", "123", "Petar", "Petrovic", Gender.MALE, date3, Role.SELLER ,null,null,0,null));
 
-		users.add(new User("kupac1", "123", "Natasa", "Kovacevic", Gender.FEMALE, date4, Role.BUYER,null,null,4500, gold));
+		users.add(new User("buyer1", "123", "Natasa", "Kovacevic", Gender.FEMALE, date4, Role.BUYER,null,null,4500, gold));
 
-		users.add(new User("kupac2", "123", "Snjezana", "Simic", Gender.FEMALE, date5, Role.BUYER, null, null, 3500, silver));
+		users.add(new User("buyer2", "123", "Snjezana", "Simic", Gender.FEMALE, date5, Role.BUYER, null, null, 3500, silver));
 		
-		users.add(new User("kupac3", "123", "Goran", "Stanic", Gender.MALE, date6, Role.BUYER, null, null, 2500, bronze));
+		users.add(new User("buyer3", "123", "Goran", "Stanic", Gender.MALE, date6, Role.BUYER, null, null, 2500, bronze));
 		
 		
 		String json = new Gson().toJson(users);
