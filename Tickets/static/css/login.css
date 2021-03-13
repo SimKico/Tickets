@@ -1,0 +1,64 @@
+
+
+@import url('https://fonts.googleapis.com/css?family=Numans');
+
+html,body{
+    background-image: url("../source/cloud-desktop-background.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    height: 100%;
+    font-family: 'Numans', sans-serif;
+}
+
+.container{
+    height: 100%;
+    align-content: center;
+}
+
+.my-class::placeholder{
+    color:red
+}
+
+.my-class2::placeholder{
+    color:red
+}
+
+.card{
+    height: 335px;
+    margin-top:auto;
+    margin-bottom: auto;
+    width: 417px;
+    background-color: rgba(124, 186, 228, 0.5) !important;
+}
+
+
+.card-header h3{
+    color: white;
+}
+
+
+.input-group-prepend span{
+    width: 50px;
+    background-color: #FFC312;
+    color: black;
+    border:0 !important;
+}
+
+input:focus{
+    outline: 0 0 0 0  !important;
+    box-shadow: 0 0 0 0 !important;
+}
+
+.btn{
+    float: left;
+    color: black;
+    background-color: #FFC312;
+    width: 120px;
+    position: absolute;
+    left: 35%;
+}
+
+.btn:hover{
+    color: black;
+    background-color:orange;
+}

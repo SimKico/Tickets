@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Prijavite se</title>
+	<link rel = "icon" href =  "source/cloud-512.png" type = "image/x-icon">
+	
+	<!--JQuery 3.4.1 CDN CDN-->
+	<script
+		src="https://code.jquery.com/jquery-3.4.1.js"
+		integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+		crossorigin="anonymous">
+	</script>
+
+	<!--Bootsrap 4 CDN-->
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    
+    <!--Fontawesome CDN-->
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+
+	<!--Custom styles-->
+	<link rel="stylesheet" type="text/css" href="css/login.css">
+    
+    <script type="text/javascript"> 
+
+		function validate_email_input(){
+                console.log("validate input")
+                var param1 = $("#username").val()
+                if(param1 == "" ){
+                    $("#username").css("border-width","medium")
+                    $("#username").css("border-color","rgba(255, 14, 14)")
+					$("#username").addClass("my-class")
+					document.getElementById("username").placeholder = "* Obavezno polje! Unesite e-adresu"
+					return false
+                }else{
+					$("#username").css("border-color","rgba(7, 247, 23)")
+					return true
+				}
+		}
+
+		function validate_password_input(){
+			var param2 = $("#password").val()
+			if(param2 == ""){
+                    $("#password").css("border-width","medium")
+                    $("#password").css("border-color","rgba(255, 14, 14)")
+					$("#password").addClass("my-class2")
+					document.getElementById("password").placeholder = "* Obavezno polje! Unesite lozinku"
+					return false
+				}else{
+					$("#password").css("border-color","rgba(7, 247, 23)")
+					return true
+				}
+		}
+    
+        function validate_input(){
+                console.log("validate input")
+                var param1 = $("#username").val()
+                console.log(param1)
+				var param2 = $("#password").val()
+				if(validate_email_input() && validate_password_input()){
+				
+                    $("#username").css("border-color","rgba(7, 247, 23)")
+                    $("#password").css("border-color","rgba(7, 247, 23)")
+					var s = JSON.stringify({ "username" : param1, "password": param2 }) // mora se ovaj string"email" i "lozinka" poklapati sa poljima klase Korisnik u eclipsu 
+					$.ajax({
+						type: "POST",
+						url: "/rest/login",  //mora se poklapati sa stringom u eclipse-u kod  post metode. ovim kazemo koju post metodu gadjamo na serveru
+						data: s,
+						contentType: "application/json",
+						dataType: "json", // ova pet su obavezna
+						complete: function (data) {
+							
+							if(data.responseText == 'false'){
+								console.log("da")
+								$("#error").fadeOut("slow")
+								$("#error").empty()
+								$("#error").fadeIn("slow")
+								$("#error").append("Pogresna e-adresa ili lozinka!")
+							}else{
+								switch (data.responseText) {
+									case "SUPER_ADMIN":
+										location.href = "homepage_SUPER_ADMIN.html";
+										break;
+									case "ADMIN":
+										location.href = "homepage_ADMIN.html";
+										break;
+									case "KORISNIK":
+										location.href = "homepage_KORISNIK.html";
+										break;
+									default:
+										break;
+								}
+							}
+							
+						}
+					})
+                    
+                }
+    
+            }
+    
+    </script>
+</head>
+<body>
+<div class="container">
+	<div class="d-flex justify-content-center h-100">
+		<div class="card">
+			<div class="card-header">
+				<h3>Welcome!</h3>
+				
+			</div>
+			<div class="card-body">
+				<div id="error" style="color: red;" ></div>
+					<br>
+				<form>
+					<div class="input-group form-group">
+						
+						<div class="input-group-prepend">
+							<span id="userIcon"  class="input-group-text"><i class="fas fa-user"></i></span>
+						</div>
+						<input id="username" class="form-control"  type="text"  placeholder="username"  oninput="validate_email_input()" >
+						
+					</div>
+					<div class="input-group form-group">
+						<div class="input-group-prepend">
+							<span class="input-group-text"><i class="fas fa-key"></i></span>
+						</div>
+						<input id="password" class="form-control"  type="password"  placeholder="password" oninput="validate_password_input()" >
+					</div>
+					<br>
+					<div class="form-group">
+						<input type="button" value="Prijavite se" class="btn float-right" onclick="validate_input();">
+					</div>		
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+
+</body>
+</html>
