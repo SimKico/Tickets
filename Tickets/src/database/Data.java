@@ -16,6 +16,9 @@ import com.google.gson.JsonParser;
 
 import beans.BuyerType;
 import beans.Gender;
+import beans.Location;
+import beans.Manifestation;
+import beans.ManifestationType;
 import beans.Role;
 import beans.User;
 
@@ -28,6 +31,8 @@ public class Data {
 
 		File buyerTypes = new File("src/database/buyerTypes.json");
 		File users = new File("src/database/users.json");
+		File manifestations = new File("src/database/manifestations.json");
+		File locations = new File("src/database/locations.json");
 		
 		if(buyerTypes.length()==0) {
 			System.out.println("[System]: 'buyerTypes.json' is filled.");
@@ -37,6 +42,16 @@ public class Data {
 		if(users.length()==0) {
 			System.out.println("[System]: 'users.json' is filled.");
 			fillUsers();
+		}
+		
+		if(manifestations.length()==0) {
+			System.out.println("[System]: 'manifestations.json' is filled.");
+			fillManifestations();
+		}
+		
+		if(locations.length()==0) {
+			System.out.println("[System]: 'locations.json' is filled.");
+			fillLocations();
 		}
 		
 		try {
@@ -58,6 +73,24 @@ public class Data {
 				Database.buyerTypes.add(buyerType);
 			}
 			System.out.println("[System]: 'BuyerTypes' is read. ["+j.size()+"] elements.");
+			
+			reader = new FileReader(new File("src/database/manifestations.json"));
+			j = jp.parse(reader).getAsJsonArray();
+			
+			for (JsonElement jsonElement : j) {
+				Manifestation manifestation = g.fromJson(jsonElement, Manifestation.class);
+				Database.manifestations.add(manifestation);
+			}
+			System.out.println("[System]: 'Manifestations' is read. ["+j.size()+"] elements.");
+			
+			reader = new FileReader(new File("src/database/locations.json"));
+			j = jp.parse(reader).getAsJsonArray();
+			
+			for (JsonElement jsonElement : j) {
+				Location location = g.fromJson(jsonElement, Location.class);
+				Database.locations.add(location);
+			}
+			System.out.println("[System]: 'Location' is read. ["+j.size()+"] elements.");
 			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -139,5 +172,66 @@ public class Data {
 		} catch (Exception e) {
 			// TODO: handle exception
 		}			
+	}
+	
+	public static void fillLocations() {
+		
+		ArrayList<Location> locations = new ArrayList<Location>();
+		
+		locations.add(new Location(20.46, 44.817, "Francuska", 3, "Beograd", 11000));
+		locations.add(new Location(19.843, 45.255, "Pozorišni trg", 1, "Novi Sad", 21000));
+		locations.add(new Location(19.845, 45.247, "Sutjeska", 2, "Novi Sad", 21000));
+		locations.add(new Location(20.421, 44.814, "Bulevar Arsenija Čarnojevića", 58, "Beograd", 11000));
+		locations.add(new Location(19.863, 45.252, "Beogradska", 0, "Petrovaradin", 21131));
+		locations.add(new Location(19.845, 45.255, "Trg Slobode", 0, "Novi Sad", 21000));
+		
+		String json = new Gson().toJson(locations);
+		
+		try {
+			file = new FileWriter(new File("src/database/locations.json"));
+			file.write(json);
+			file.close();
+	
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+	}
+	
+	public static void fillManifestations() throws ParseException {
+		
+		ArrayList<Manifestation> manifestations = new ArrayList<Manifestation>();
+		
+		String sDate1="13.12.2020";
+		String sDate2="18.04.2021";
+		String sDate3="15.10.2021";
+		
+		Date date1 = new SimpleDateFormat("dd.MM.yyyy").parse(sDate1);  
+		Date date2 = new SimpleDateFormat("dd.MM.yyyy").parse(sDate2);  
+		Date date3 = new SimpleDateFormat("dd.MM.yyyy").parse(sDate3);  
+		
+		Location location1 = new Location(20.46, 44.817, "Francuska", 3, "Beograd", 11000);
+		Location location2 = new Location(19.843, 45.255, "Pozorišni trg", 1, "Novi Sad", 21000);
+		Location location3 = new Location(19.845, 45.247, "Sutjeska", 2, "Novi Sad", 21000);
+		Location location4 = new Location(20.421, 44.814, "Bulevar Arsenija Čarnojevića", 58, "Beograd", 11000);
+		Location location5 = new Location(19.863, 45.252, "Beogradska", 0, "Petrovaradin", 21131);
+		Location location6 = new Location(19.845, 45.255, "Trg Slobode", 0, "Novi Sad", 21000);
+		
+		manifestations.add(new Manifestation("Koncert1", ManifestationType.CONCERTS, date1, 1500, true, location4, "static/source/cloud-desktop-background.jpg"));
+		manifestations.add(new Manifestation("Festival1", ManifestationType.FESTIVALS, date2, 1200, true, location5, "static/source/cloud-desktop-background.jpg"));
+		manifestations.add(new Manifestation("Pozoriste1", ManifestationType.THEATERS, date3, 789, true, location1, "static/source/cloud-desktop-background.jpg"));
+		manifestations.add(new Manifestation("Koncert2", ManifestationType.CONCERTS, date3, 1500, false, location3, "static/source/cloud-desktop-background.jpg"));
+		manifestations.add(new Manifestation("Festival2", ManifestationType.FESTIVALS, date2, 1200, false, location6, "static/source/cloud-desktop-background.jpg"));
+		manifestations.add(new Manifestation("Pozoriste2", ManifestationType.THEATERS, date1, 789, true, location2, "static/source/cloud-desktop-background.jpg"));
+		
+		String json = new Gson().toJson(manifestations);
+		
+		try {
+			file = new FileWriter(new File("src/database/manifestations.json"));
+			file.write(json);
+			file.close();
+	
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
 	}
 }

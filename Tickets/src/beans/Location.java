@@ -2,8 +2,8 @@ package beans;
 
 public class Location {
 	
-	private int lng;
-	private int lat;
+	private double lng;
+	private double lat;
 	private String street;
 	private int number;
 	private String city;
@@ -13,7 +13,7 @@ public class Location {
 		super();
 	}
 
-	public Location(int lng, int lat, String street, int number, String city, int zipCode) {
+	public Location(double lng, double lat, String street, int number, String city, int zipCode) {
 		super();
 		this.lng = lng;
 		this.lat = lat;
@@ -23,19 +23,19 @@ public class Location {
 		this.zipCode = zipCode;
 	}
 
-	public int getLng() {
+	public double getLng() {
 		return lng;
 	}
 
-	public void setLng(int lng) {
+	public void setLng(double lng) {
 		this.lng = lng;
 	}
 
-	public int getLat() {
+	public double getLat() {
 		return lat;
 	}
 
-	public void setLat(int lat) {
+	public void setLat(double lat) {
 		this.lat = lat;
 	}
 
