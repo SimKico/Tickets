@@ -3,8 +3,10 @@ package database;
 import java.util.ArrayList;
 
 import beans.BuyerType;
+import beans.Comment;
 import beans.Location;
 import beans.Manifestation;
+import beans.Ticket;
 import beans.User;
 
 public class Database {
@@ -17,5 +19,8 @@ public class Database {
 	
 	public static ArrayList<Manifestation> manifestations = new ArrayList<Manifestation>();
 	
+	public static ArrayList<Ticket> tickets = new ArrayList<Ticket>();
+	
+	public static ArrayList<Comment> comments = new ArrayList<Comment>();
 	
 }

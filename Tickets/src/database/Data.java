@@ -15,11 +15,15 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 
 import beans.BuyerType;
+import beans.Comment;
 import beans.Gender;
 import beans.Location;
 import beans.Manifestation;
 import beans.ManifestationType;
 import beans.Role;
+import beans.Ticket;
+import beans.TicketStatus;
+import beans.TicketType;
 import beans.User;
 
 public class Data {
@@ -33,6 +37,8 @@ public class Data {
 		File users = new File("src/database/users.json");
 		File manifestations = new File("src/database/manifestations.json");
 		File locations = new File("src/database/locations.json");
+		File tickets = new File("src/database/tickets.json");
+		File comments = new File("src/database/comments.json");
 		
 		if(buyerTypes.length()==0) {
 			System.out.println("[System]: 'buyerTypes.json' is filled.");
@@ -53,6 +59,17 @@ public class Data {
 			System.out.println("[System]: 'locations.json' is filled.");
 			fillLocations();
 		}
+		
+		if(tickets.length()==0) {
+			System.out.println("[System]: 'tickets.json' is filled.");
+			fillTickets();
+		}
+		
+		if(comments.length()==0) {
+			System.out.println("[System]: 'comments.json' is filled.");
+			fillComments();
+		}
+		
 		
 		try {
 			FileReader reader = new FileReader(new File("src/database/users.json"));
@@ -92,6 +109,24 @@ public class Data {
 			}
 			System.out.println("[System]: 'Location' is read. ["+j.size()+"] elements.");
 			
+			reader = new FileReader(new File("src/database/tickets.json"));
+			j = jp.parse(reader).getAsJsonArray();
+			
+			for (JsonElement jsonElement : j) {
+				Ticket ticket = g.fromJson(jsonElement, Ticket.class);
+				Database.tickets.add(ticket);
+			}
+			System.out.println("[System]: 'Tickets' is read. ["+j.size()+"] elements.");
+			
+			reader = new FileReader(new File("src/database/comments.json"));
+			j = jp.parse(reader).getAsJsonArray();
+			
+			for (JsonElement jsonElement : j) {
+				Comment comment = g.fromJson(jsonElement, Comment.class);
+				Database.comments.add(comment);
+			}
+			System.out.println("[System]: 'Comments' is read. ["+j.size()+"] elements.");
+			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -99,6 +134,7 @@ public class Data {
 		
 
 	}
+
 	public static void fillBuyerType() {
 		
 		ArrayList<BuyerType> buyerType = new ArrayList<BuyerType>();
@@ -234,4 +270,102 @@ public class Data {
 			// TODO: handle exception
 		}
 	}
+	
+	private static void fillTickets() throws ParseException {
+		
+		ArrayList<Ticket> tickets = new ArrayList<Ticket>();
+		
+		String sDate1="13.12.2020";
+		String sDate2="18.04.2021";
+		String sDate3="15.10.2021";
+		
+		Date date1 = new SimpleDateFormat("dd.MM.yyyy").parse(sDate1);  
+		Date date2 = new SimpleDateFormat("dd.MM.yyyy").parse(sDate2);  
+		Date date3 = new SimpleDateFormat("dd.MM.yyyy").parse(sDate3);  
+		
+		double priceKoncert1Regular = 1500;
+
+		double priceFestival1Regular = 1200;
+
+		double pricePozoriste1Regular = 789;
+		
+		double priceKoncert2Regural = 1500;
+		
+		double priceFestival2Regular = 1200;
+
+		double pricePozoriste3Regular = 789;
+		
+		Ticket ticket1 = new Ticket("t1", "Koncert1", date1, priceKoncert1Regular, "Natasa", "Kovacevic", TicketStatus.RESERVED, TicketType.REGULAR);
+		Ticket ticket2 = new Ticket("t2", "Koncert1", date1, priceKoncert1Regular * 2, "Snjezana", "Simic", TicketStatus.RESERVED, TicketType.FANPIT);
+		Ticket ticket3 = new Ticket("t3", "Koncert1", date1, priceKoncert1Regular * 4, "Goran", "Stanic", TicketStatus.RESERVED, TicketType.VIP);
+		Ticket ticket4 = new Ticket("t4", "Festival1", date2, priceFestival1Regular, "Natasa", "Kovacevic", TicketStatus.RESERVED, TicketType.REGULAR);
+		Ticket ticket5 = new Ticket("t5", "Festival1", date2, priceFestival1Regular * 2,  "Snjezana", "Simic", TicketStatus.RESERVED, TicketType.FANPIT);
+		Ticket ticket6 = new Ticket("t6", "Festival1", date2, priceFestival1Regular * 4,  "Goran", "Stanic", TicketStatus.CANCELD, TicketType.VIP);
+		Ticket ticket7 = new Ticket("t7", "Pozoriste1", date3, pricePozoriste1Regular, "Natasa", "Kovacevic", TicketStatus.RESERVED, TicketType.REGULAR);
+		Ticket ticket8 = new Ticket("t8", "Koncert2", date3, priceKoncert2Regural, "Snjezana", "Simic", TicketStatus.RESERVED, TicketType.REGULAR);
+		Ticket ticket9 = new Ticket("t9", "Festival2", date2, priceFestival2Regular, "Goran", "Stanic", TicketStatus.RESERVED, TicketType.REGULAR);
+		Ticket ticket10 = new Ticket("t10", "Pozoriste2", date1, pricePozoriste3Regular, "Natasa", "Kovacevic", TicketStatus.CANCELD, TicketType.REGULAR);
+		
+		tickets.add(ticket1);
+		tickets.add(ticket2);
+		tickets.add(ticket3);
+		tickets.add(ticket4);
+		tickets.add(ticket5);
+		tickets.add(ticket6);
+		tickets.add(ticket7);
+		tickets.add(ticket8);
+		tickets.add(ticket9);
+		tickets.add(ticket10);
+		
+		String json = new Gson().toJson(tickets);
+		
+		try {
+			file = new FileWriter(new File("src/database/tickets.json"));
+			file.write(json);
+			file.close();
+	
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		
+	}
+	
+	private static void fillComments() throws ParseException {
+		
+		ArrayList<Comment> comments = new ArrayList<Comment>();
+		
+		String sDate4="01.02.1995";
+		
+		Date date4 = new SimpleDateFormat("dd.MM.yyyy").parse(sDate4);  
+		
+		BuyerType gold = new BuyerType("gold", 30, 4000); 
+		
+		User user1 = new User("buyer1", "123", "Natasa", "Kovacevic", Gender.FEMALE, date4, Role.BUYER,null,null,4500, gold);
+		
+		String sDate1="13.12.2020";
+		
+		Date date1 = new SimpleDateFormat("dd.MM.yyyy").parse(sDate1);  
+		
+		Location location4 = new Location(20.421, 44.814, "Bulevar Arsenija Čarnojevića", 58, "Beograd", 11000);
+		
+		Manifestation manifestation1 = new Manifestation("Koncert1", ManifestationType.CONCERTS, date1, 1500, true, location4, "static/source/cloud-desktop-background.jpg");
+		
+		Comment comment1 = new Comment(user1, manifestation1, "Sve pohvale.", 5);
+		
+		comments.add(comment1);
+		
+		String json = new Gson().toJson(comments);
+		
+		try {
+			file = new FileWriter(new File("src/database/comments.json"));
+			file.write(json);
+			file.close();
+	
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		
+	}
+
 }
+
