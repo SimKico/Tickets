@@ -1,16 +1,21 @@
 package rest;
 
 import static spark.Spark.get;
-import static spark.Spark.post;
-
 import static spark.Spark.port;
+import static spark.Spark.post;
 import static spark.Spark.staticFiles;
-import static spark.Spark.webSocket;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
+import beans.BuyerType;
+import beans.Gender;
+import beans.Role;
 import beans.User;
 import database.Data;
 import database.Database;
@@ -56,6 +61,44 @@ public class SparkAppMain {
 				}						
 			}
 			return false;			
+		});
+		
+		post("/registration", (req, res) -> {
+			
+			res.type("application/json");
+					
+			String data = req.body();
+//			User newUser = g.fromJson(data, User.class);
+			JsonObject job = new JsonParser().parse(data).getAsJsonObject();
+			System.out.println(job);
+			
+			System.out.println(job.get("birthDay").getAsString());
+			System.out.println(job.get("gender").getAsString());
+			Date date = new SimpleDateFormat("yyyy-MM-dd").parse(job.get("birthDay").getAsString());
+			System.out.println(date);
+			System.out.println(date.getClass().getName());
+			
+			Gender gender = job.get("gender").getAsString() == ("MALE") ? Gender.MALE : Gender.FEMALE;
+			System.out.println(gender);
+			BuyerType buyerType = new BuyerType("none",0,0);
+			User newUser = new User(job.get("username").getAsString(), job.get("password").getAsString(), job.get("firstName").getAsString(), job.get("lastName").getAsString(), gender, date, Role.BUYER, null, null, 0, buyerType);
+			System.out.println(newUser);
+			
+					
+			Session ss = req.session(true);
+					
+			User user = ss.attribute("user");
+					
+			for(User kk: Database.users) {
+				if(kk.getUsername().equals(newUser.getUsername())) {
+						return false;
+					}else {
+						Database.addUser(newUser);
+						return false;
+					}
+				}						
+			
+			return false;
 		});
 		
 	}

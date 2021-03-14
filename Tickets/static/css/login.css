@@ -24,7 +24,7 @@ html,body{
 }
 
 .card{
-    height: 335px;
+    height: auto;
     margin-top:auto;
     margin-bottom: auto;
     width: 417px;
@@ -49,13 +49,20 @@ input:focus{
     box-shadow: 0 0 0 0 !important;
 }
 
-.btn{
+.btn left{
     float: left;
     color: black;
     background-color: #FFC312;
     width: 120px;
     position: absolute;
-    left: 35%;
+}
+
+.btn right{
+    float: right;
+    color: black;
+    background-color: #FFC312;
+    width: 120px;
+    position: absolute;
 }
 
 .btn:hover{

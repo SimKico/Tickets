@@ -172,6 +172,7 @@ public class Data {
 		String sDate5="31.10.1997";
 		String sDate6="15.02.1991";
 		
+		
 		Date date1 = new SimpleDateFormat("dd.MM.yyyy").parse(sDate1);  
 		Date date2 = new SimpleDateFormat("dd.MM.yyyy").parse(sDate2);  
 		Date date3 = new SimpleDateFormat("dd.MM.yyyy").parse(sDate3);  

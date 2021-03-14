@@ -36,6 +36,7 @@ public class User {
 		this.manifestations = manifestations;
 		this.points = points;
 		this.buyerType = buyerType;
+		System.out.println(this.birthDay);
 	}
 
 	public String getUsername() {

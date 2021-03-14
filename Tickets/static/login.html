@@ -84,7 +84,11 @@
 						}
 					)}
                 }
-    </script>
+   
+		function signIn(){
+			location.href = "signIn.html";
+		}
+ </script>
 </head>
 <body>
 <div class="container">
@@ -92,12 +96,11 @@
 		<div class="card">
 			<div class="card-header">
 				<h3>Welcome to GetTicket!</h3>
-				
 			</div>
-			<div class="card-body">
+			<div class="card-body" >
 				<div id="error" style="color: red;" ></div>
 					<br>
-				<form>
+				<form >
 					<div class="input-group form-group">
 						
 						<div class="input-group-prepend">
@@ -114,10 +117,12 @@
 					</div>
 					<br>
 					<div class="form-group">
-						<input type="button" value="Log in" class="btn float-right" onclick="login()">
-					</div>		
+						<input type="button" value="Log in" class="btn left" onclick="login()">
+						<input type="button" value="Sign in"  class="btn right" onclick="signIn()">
+					</div>	
 				</form>
 			</div>
+		
 		</div>
 	</div>
 </div>
