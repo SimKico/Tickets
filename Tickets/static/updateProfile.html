@@ -2,7 +2,7 @@
 <html>
 
 <head>
-	<title>Sign in</title>
+	<title>Update profile</title>
 	<link rel="icon" href="source/cloud-512.png" type="image/x-icon" />
 
 	<!--JQuery 3.4.1 CDN CDN-->
@@ -21,7 +21,34 @@
 	<link rel="stylesheet" type="text/css" href="css/login.css" />
 
 	<script type="text/javascript">
+
+		function loadProfile(){
+			console.log("You are in");
+			var username = localStorage.getItem("username");
+			// console.log("loadProfile " + username);
+			// var usernameData = JSON.stringify({username});
+			
+			$.ajax({
+                    url:"/profile",
+                    method:"get",
+                    dataType: "JSON",
+                    success:function(data){
+						console.log(data);
+						$("#username").val(data.username);
+						
+						$("#firstName").val(data.firstName);
+						
+						$("#lastName").val(data.lastName);
+
+						$("#date_of_birth").val(data.birthDay.split(", 12")[0]);
+						
+						$("#gender").val(data.gender);
+
+                    }
+                })
+		}
 		function is_valid() {
+
 			console.log("validate input");
 			var username = $("#username").val();
 
@@ -85,7 +112,7 @@
 		}
 
 		function cancel() {
-			location.href = "login.html";
+			location.href = "profil.html";
 		}
 
 		function timeConverter(UNIX_timestamp){
@@ -98,7 +125,7 @@
 			return time;
 		}
 
-		function register() {
+		function updateProfile() {
 			if(is_valid()){
 
 				var username = $("#username").val();
@@ -128,13 +155,13 @@
 
 				var registrationData = JSON.stringify({ "username" : username, "password": password, "firstName" : firstName, "lastName" : lastName, "birthDay": date1, "gender":gender });
 				$.ajax({
-					type : "POST",
-					url : "/registration",
+					type : "PUT",
+					url : "/profileUpdate",
 					data : registrationData,
 					dataType : "json",
 					complete : function(data){
 						if(data.responseText){
-							location.href = "login.html";
+							location.href = "profil.html";
 						}else
 						{
 							alert("User with that username already exists!");
@@ -146,7 +173,7 @@
 	</script>
 </head>
 
-<body>
+<body  onload = "loadProfile()" >
 	<div class="container">
 		<div class="d-flex justify-content-center h-100">
 			<div class="card">
@@ -161,7 +188,7 @@
 							<div class="input-group-prepend">
 								<span id="userIcon" class="input-group-text"><i class="fas fa-user"></i></span>
 							</div>
-							<input id="username" class="form-control" type="text" placeholder="username" />
+							<input  id="username" class="form-control" type="text" placeholder="username" />
 						</div>
 						<div class="input-group form-group">
 							<div class="input-group-prepend">
@@ -217,7 +244,7 @@
 
 						<br />
 						<div class="form-group">
-							<input type="button" value="Sign in" class="btn left" onclick="register()" />
+							<input type="button" value="Save changes" class="btn left" onclick="updateProfile()" />
 							<input type="button" value="Cancel" class="btn left" onclick="cancel()" />
 						</div>
 					</form>

@@ -3,6 +3,7 @@ package rest;
 import static spark.Spark.get;
 import static spark.Spark.port;
 import static spark.Spark.post;
+import static spark.Spark.put;
 import static spark.Spark.staticFiles;
 
 import java.io.File;
@@ -68,23 +69,15 @@ public class SparkAppMain {
 			res.type("application/json");
 					
 			String data = req.body();
-//			User newUser = g.fromJson(data, User.class);
 			JsonObject job = new JsonParser().parse(data).getAsJsonObject();
-			System.out.println(job);
-			
-			System.out.println(job.get("birthDay").getAsString());
-			System.out.println(job.get("gender").getAsString());
+		
 			Date date = new SimpleDateFormat("yyyy-MM-dd").parse(job.get("birthDay").getAsString());
-			System.out.println(date);
-			System.out.println(date.getClass().getName());
 			
 			Gender gender = job.get("gender").getAsString() == ("MALE") ? Gender.MALE : Gender.FEMALE;
-			System.out.println(gender);
+		
 			BuyerType buyerType = new BuyerType("none",0,0);
 			User newUser = new User(job.get("username").getAsString(), job.get("password").getAsString(), job.get("firstName").getAsString(), job.get("lastName").getAsString(), gender, date, Role.BUYER, null, null, 0, buyerType);
-			System.out.println(newUser);
-			
-					
+		
 			Session ss = req.session(true);
 					
 			User user = ss.attribute("user");
@@ -99,6 +92,63 @@ public class SparkAppMain {
 				}						
 			
 			return false;
+		});
+		
+		
+		get("/profile", (req, res) -> {
+			
+			res.type("application/json");
+					
+			User user = req.session().attribute("user");
+			return g.toJson(user);	
+		});
+		
+		put("/profileUpdate", (req, res) -> {
+			
+			res.type("application/json");
+			String data = req.body();
+			JsonObject job = new JsonParser().parse(data).getAsJsonObject();
+			
+			User oldUserData = req.session().attribute("user");
+			String oldUsername = oldUserData.getUsername();
+			
+			System.out.println(oldUserData.getUsername());
+			
+			Date date = new SimpleDateFormat("yyyy-MM-dd").parse(job.get("birthDay").getAsString());
+			
+			Gender gender = job.get("gender").getAsString() == ("MALE") ? Gender.MALE : Gender.FEMALE;
+		
+			BuyerType buyerType = new BuyerType("none",0,0);
+			
+			
+			User newUserData = new User(job.get("username").getAsString(), job.get("password").getAsString(), job.get("firstName").getAsString(), job.get("lastName").getAsString(), gender, date, Role.BUYER, null, null, 0, buyerType);
+		
+			Session ss = req.session(true);
+					
+			for(User kk: Database.users) {
+				if(kk.getUsername().equals(newUserData.getUsername())) {
+						return false;
+					}else {
+						for(User oneUser : Database.users) {
+							if(oneUser.getUsername().equals(oldUsername)) {
+								oneUser.setUsername(newUserData.getUsername());
+
+								oneUser.setFirstName(newUserData.getFirstName());
+
+								oneUser.setLastName(newUserData.getLastName());
+
+								oneUser.setGender(newUserData.getGender());
+
+								oneUser.setPassword(newUserData.getPassword());
+								
+								Database.saveUsers();
+								return true;
+							}
+						}
+					}
+				}						
+			
+			return false;	
 		});
 		
 	}

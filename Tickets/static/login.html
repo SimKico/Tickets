@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Prijavite se</title>
+	<title>Log in</title>
 	<link rel = "icon" href =  "source/cloud-512.png" type = "image/x-icon">
 	
 	<!--JQuery 3.4.1 CDN CDN-->
@@ -79,6 +79,8 @@
 							}else{
 								console.log(data.responseText);
 								localStorage.setItem("role",data.responseText);
+								localStorage.setItem("username", param1);
+								location.href = "profil.html";
 								}
 							}
 						}
