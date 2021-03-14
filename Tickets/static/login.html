@@ -52,6 +52,7 @@
 		}
     
         function login(){
+		
                 var param1 = $("#username").val()
                 console.log("username: " + param1)
 				var param2 = $("#password").val()
@@ -78,9 +79,11 @@
 								$("#error").append("Wrong username or password!")
 							}else{
 								console.log(data.responseText);
-								localStorage.setItem("role",data.responseText);
-								localStorage.setItem("username", param1);
+								localStorage.setItem("role", data.responseText);
+								console.log(data.responseText);
 								location.href = "profil.html";
+								
+								console.log(data.responseText);
 								}
 							}
 						}

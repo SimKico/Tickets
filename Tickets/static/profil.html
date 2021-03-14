@@ -25,6 +25,9 @@
 		function loadProfile(){
 			console.log("You are in");
 			var username = localStorage.getItem("username");
+			console.log("username "+ username);
+			var role = localStorage.getItem("role");
+			console.log(role);
 			// console.log("loadProfile " + username);
 			// var usernameData = JSON.stringify({username});
 			
@@ -32,17 +35,47 @@
                     url:"/profile",
                     method:"get",
                     dataType: "JSON",
+					data : username,
                     success:function(data){
 						console.log(data);
-						$("#username").val(data.username);
 						
-						$("#firstName").val(data.firstName);
-						
-						$("#lastName").val(data.lastName);
+						$("#role").val("Role                 :  " + role);
 
-						$("#date_of_birth").val(data.birthDay.split(", 12")[0]);
+						$("#username").val("Username       :  " +data.username);
 						
-						$("#gender").val(data.gender);
+						$("#firstName").val("First name      :  " +data.firstName);
+						
+						$("#lastName").val("Last name      :  " +data.lastName);
+
+						$("#date_of_birth").val("Date of birth :  " + data.birthDay.split(", 12")[0]);
+						
+						$("#gender").val("Gender           :  " + data.gender);
+
+						if(role === "BUYER"){
+							$("#points").val("Your points   :  " + data.points);
+							$("#buyerType").val("Buyer type     :  " + data.buyerType.typeName);
+							$("#discount").val("Discount        :  " + data.buyerType.discount);
+							$("#nextLevel").val("Next level      :  " + data.buyerType.nextLevelPoints);
+						}else if(role === "SELLER"){
+
+							document.getElementById("p1").style.visibility = "hidden";
+							
+							document.getElementById("p2").style.visibility = "hidden";
+							
+							document.getElementById("p3").style.visibility = "hidden";
+							
+							document.getElementById("p4").style.visibility = "hidden";
+							
+						}else if(role === "ADMIN"){
+
+							document.getElementById("p1").style.visibility = "hidden";
+							
+							document.getElementById("p2").style.visibility = "hidden";
+							
+							document.getElementById("p3").style.visibility = "hidden";
+							
+							document.getElementById("p4").style.visibility = "hidden";
+						}
 
                     }
                 })
@@ -52,20 +85,39 @@
 			location.href = "updateProfile.html";
 		}
 
+		function logOut(){
+			$.ajax({
+						url: "/logout",
+						method: "get",
+						complete: function(){
+							location.href="/"
+						}   
+					})
+		}
+
 	</script>
 </head>
 
 <body  onload = "loadProfile()">
 	<div class="container">
 		<div class="d-flex justify-content-center h-100">
+			
 			<div class="card">
 				<div class="card-header">
 					<h3>Your profile</h3>
+					<input type="button" value="Log out" class="btn" onclick="logOut()" />
 				</div>
 				<div class="card-body">
 					<div id="error" style="color: red"></div>
 					<br />
 					<form>
+						<div class="input-group form-group">
+							<div class="input-group-prepend">
+								<span class="input-group-text"><i class="fas fa-receipt"></i></span>
+							</div>
+							<input disabled id="role" class="form-control" type="text" />
+						</div>
+
 						<div class="input-group form-group">
 							<div class="input-group-prepend">
 								<span id="userIcon" class="input-group-text"><i class="fas fa-user"></i></span>
@@ -89,22 +141,50 @@
 							<div class="input-group-prepend">
 								<span class="input-group-text"><i class="fas fa-receipt"></i></span>
 							</div>
-							<div>
+							
 								<input disabled type="text" class="form-control" id="gender" />
-							</div>
-							<br />
+						
 						</div>
 
 						<div class="input-group form-group">
 							<div class="input-group-prepend" >
 								<span class="input-group-text"><i class="fas fa-receipt"></i></span>
 							</div>
-							<p>
-								<span class="input-group-text" id="birth">
-									<a> Date of birth </a>
-								</span>
+							
 								<input disabled type="text" class="form-control" id="date_of_birth" />
-							</p>
+							
+						</div>
+
+						<!--  -->
+						<div  id = "p1" class="input-group form-group">
+							<div class="input-group-prepend">
+								<span class="input-group-text"><i class="fas fa-receipt"></i></span>
+							</div>
+							<input disabled id="buyerType" class="form-control" type="text" />
+						</div>
+
+						<!--  -->
+						<div  id = "p2" class="input-group form-group">
+							<div class="input-group-prepend">
+								<span class="input-group-text"><i class="fas fa-receipt"></i></span>
+							</div>
+							<input disabled id="discount" class="form-control" type="text" />
+						</div>
+
+						<!--  -->
+						<div  id = "p3" class="input-group form-group">
+							<div class="input-group-prepend">
+								<span class="input-group-text"><i class="fas fa-receipt"></i></span>
+							</div>
+							<input disabled id="nextLevel" class="form-control" type="text" />
+						</div>
+
+						<!--  -->
+						<div id = "p4" class="input-group form-group">
+							<div class="input-group-prepend">
+								<span class="input-group-text"><i class="fas fa-receipt"></i></span>
+							</div>
+							<input disabled id="points" class="form-control" type="text" />
 						</div>
 
 						<br />

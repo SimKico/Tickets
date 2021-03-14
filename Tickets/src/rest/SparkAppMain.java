@@ -42,16 +42,17 @@ public class SparkAppMain {
 		
 
 		post("/login", (req, res) -> {
-					
+			
 			res.type("application/json");
 					
 			String data = req.body();
+			System.out.println(data);
+			
 			User k = g.fromJson(data, User.class);
-					
 			Session ss = req.session(true);
 					
 			User user = ss.attribute("user");
-					
+			
 			for(User kk: Database.users) {
 				if(kk.getUsername().equals(k.getUsername()) && kk.getPassword().equals(k.getPassword())  ) {
 					if(user == null) {
@@ -62,6 +63,17 @@ public class SparkAppMain {
 				}						
 			}
 			return false;			
+		});
+		
+		get("/logout", (req, res) ->{
+			
+			Session ss = req.session(true);
+			User user = ss.attribute("user");
+			
+			if (user != null) {
+				ss.invalidate();
+			}
+			return true;
 		});
 		
 		post("/registration", (req, res) -> {
@@ -98,9 +110,11 @@ public class SparkAppMain {
 		get("/profile", (req, res) -> {
 			
 			res.type("application/json");
+			User k = req.session().attribute("user");
+			System.out.println(req.session());
+			return g.toJson(k);
 					
-			User user = req.session().attribute("user");
-			return g.toJson(user);	
+			
 		});
 		
 		put("/profileUpdate", (req, res) -> {

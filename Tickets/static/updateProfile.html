@@ -21,7 +21,15 @@
 	<link rel="stylesheet" type="text/css" href="css/login.css" />
 
 	<script type="text/javascript">
-
+		function logOut(){
+			$.ajax({
+						url: "/logout",
+						method: "get",
+						complete: function(){
+							location.href="/"
+						}   
+					})
+		}
 		function loadProfile(){
 			console.log("You are in");
 			var username = localStorage.getItem("username");
@@ -179,6 +187,7 @@
 			<div class="card">
 				<div class="card-header">
 					<h3>Welcome to GetTicket!</h3>
+					<input type="button" value="Log out" class="btn" onclick="logOut()" />
 				</div>
 				<div class="card-body">
 					<div id="error" style="color: red"></div>
