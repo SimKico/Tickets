@@ -253,12 +253,12 @@ public class Data {
 		Location location5 = new Location(19.863, 45.252, "Beogradska", 0, "Petrovaradin", 21131);
 		Location location6 = new Location(19.845, 45.255, "Trg Slobode", 0, "Novi Sad", 21000);
 		
-		manifestations.add(new Manifestation("Koncert1", ManifestationType.CONCERTS, date1, 1500, true, location4, "static/source/cloud-desktop-background.jpg"));
-		manifestations.add(new Manifestation("Festival1", ManifestationType.FESTIVALS, date2, 1200, true, location5, "static/source/cloud-desktop-background.jpg"));
-		manifestations.add(new Manifestation("Pozoriste1", ManifestationType.THEATERS, date3, 789, true, location1, "static/source/cloud-desktop-background.jpg"));
-		manifestations.add(new Manifestation("Koncert2", ManifestationType.CONCERTS, date3, 1500, false, location3, "static/source/cloud-desktop-background.jpg"));
-		manifestations.add(new Manifestation("Festival2", ManifestationType.FESTIVALS, date2, 1200, false, location6, "static/source/cloud-desktop-background.jpg"));
-		manifestations.add(new Manifestation("Pozoriste2", ManifestationType.THEATERS, date1, 789, true, location2, "static/source/cloud-desktop-background.jpg"));
+		manifestations.add(new Manifestation("Koncert1", ManifestationType.CONCERTS, date1, 1500, true, location4, "source/cloud-desktop-background.jpg"));
+		manifestations.add(new Manifestation("Festival1", ManifestationType.FESTIVALS, date2, 1200, true, location5, "source/cloud-desktop-background.jpg"));
+		manifestations.add(new Manifestation("Pozoriste1", ManifestationType.THEATERS, date3, 789, true, location1, "source/cloud-desktop-background.jpg"));
+		manifestations.add(new Manifestation("Koncert2", ManifestationType.CONCERTS, date3, 1500, false, location3, "source/cloud-desktop-background.jpg"));
+		manifestations.add(new Manifestation("Festival2", ManifestationType.FESTIVALS, date2, 1200, false, location6, "source/cloud-desktop-background.jpg"));
+		manifestations.add(new Manifestation("Pozoriste2", ManifestationType.THEATERS, date1, 789, true, location2, "source/cloud-desktop-background.jpg"));
 		
 		String json = new Gson().toJson(manifestations);
 		

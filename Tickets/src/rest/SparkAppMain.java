@@ -36,9 +36,9 @@ public class SparkAppMain {
 		
 		get("/", (req, res) ->{
 					
-					res.redirect("login.html"); 
-					return null;
-				});
+			res.redirect("homepage.html"); 
+			return null;
+		});
 		
 
 		post("/login", (req, res) -> {
@@ -163,6 +163,13 @@ public class SparkAppMain {
 				}						
 			
 			return false;	
+		});
+		
+		get("/allManifestations", (req, res) -> {
+			
+			res.type("application/json");
+			return g.toJson(Database.manifestations);
+					
 		});
 		
 	}
