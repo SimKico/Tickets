@@ -4,6 +4,11 @@
 <head>
 	<title>Update profile</title>
 	<link rel="icon" href="source/cloud-512.png" type="image/x-icon" />
+	<link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+	<!--Custom styles-->
+	<link rel="stylesheet" type="text/css"
+		href="css/manifestationHomepage.css">
 
 	<!--JQuery 3.4.1 CDN CDN-->
 	<script src="https://code.jquery.com/jquery-3.4.1.js"
@@ -182,12 +187,28 @@
 </head>
 
 <body  onload = "loadProfile()" >
+	<nav class="navbar navbar-expand-sm navbar-dark nav-backround">
+		<!-- homepage for buyer -->
+		<a class="navbar-brand" href="homepage.html">Tickets</a> 
+		<button class="navbar-toggler" type="button" data-toggle="collapse"
+			data-target="#collapsibleNavbar" onclick="">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+		<div class="collapse navbar-collapse" id="collapsibleNavbar">
+			<ul class="navbar-nav ml-auto">
+
+				<li class="nav-item"><a class="nav-link" href="profil.html">My profile</a></li>
+				
+				<li class="nav-item"><a class="nav-link" href="login.html">Log out</a></li>
+
+			</ul>
+		</div>
+	</nav>
 	<div class="container">
 		<div class="d-flex justify-content-center h-100">
 			<div class="card">
 				<div class="card-header">
-					<h3>Welcome to GetTicket!</h3>
-					<input type="button" value="Log out" class="btn" onclick="logOut()" />
+					<h3>Update your profile!</h3>
 				</div>
 				<div class="card-body">
 					<div id="error" style="color: red"></div>
