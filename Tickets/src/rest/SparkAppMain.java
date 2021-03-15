@@ -8,6 +8,7 @@ import static spark.Spark.staticFiles;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 
@@ -19,6 +20,8 @@ import beans.BuyerType;
 import beans.Gender;
 import beans.Manifestation;
 import beans.Role;
+import beans.Ticket;
+import beans.TicketStatus;
 import beans.User;
 import database.Data;
 import database.Database;
