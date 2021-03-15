@@ -6,6 +6,8 @@
 	<link rel="icon" href="source/cloud-512.png" type="image/x-icon" />
 	<link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
 
+	<script src = "functions1.js"></script>
+	
 	<!--Custom styles-->
 	<link rel="stylesheet" type="text/css"
 		href="css/manifestationHomepage.css">
@@ -26,15 +28,7 @@
 	<link rel="stylesheet" type="text/css" href="css/login.css" />
 
 	<script type="text/javascript">
-		function logOut(){
-			$.ajax({
-						url: "/logout",
-						method: "get",
-						complete: function(){
-							location.href="/"
-						}   
-					})
-		}
+		
 		function loadProfile(){
 			console.log("You are in");
 			var username = localStorage.getItem("username");
@@ -199,7 +193,7 @@
 
 				<li class="nav-item"><a class="nav-link" href="profil.html">My profile</a></li>
 				
-				<li class="nav-item"><a class="nav-link" href="login.html">Log out</a></li>
+				<li class="nav-item"><a class="nav-link" href="login.html" onclick="logOut()">Log out</a></li>
 
 			</ul>
 		</div>

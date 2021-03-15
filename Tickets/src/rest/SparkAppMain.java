@@ -178,6 +178,35 @@ public class SparkAppMain {
 			return g.toJson(Database.manifestations);
 					
 		});
-		
+			get("/userTickets", (req, res) -> {
+			
+			res.type("application/json");
+			User k = req.session().attribute("user");
+			System.out.println(k);
+			System.out.println(k.getLastName());
+			
+			ArrayList<Ticket> userTickets = new ArrayList<Ticket>();
+			if(k.getRole().equals(Role.BUYER)) {
+				for(Ticket ticket : Database.tickets) {
+					if(ticket.getBuyerFirstName().equals(k.getFirstName()) && ticket.getBuyerLastName().equals(k.getLastName()) && ticket.getStatus().equals(TicketStatus.RESERVED)) {
+						System.out.println(ticket.getBuyerFirstName()+ " " + ticket.getBuyerLastName());
+						userTickets.add(ticket);
+					}
+				}
+			}else if(k.getRole().equals(Role.ADMIN)) {
+				for(Ticket ticket : Database.tickets) {
+					userTickets.add(ticket);
+				}
+			}else {
+				if(k.getRole().equals(Role.SELLER)) {
+					for(Ticket ticket : Database.tickets) {
+						if(ticket.getStatus().equals(TicketStatus.RESERVED)) {
+							userTickets.add(ticket);
+						}
+					}
+				}
+			}
+			return g.toJson(userTickets);
+		});
 	}
 }
