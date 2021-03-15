@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -215,12 +216,12 @@ public class Data {
 		
 		ArrayList<Location> locations = new ArrayList<Location>();
 		
-		locations.add(new Location(20.46, 44.817, "Francuska", 3, "Beograd", 11000));
-		locations.add(new Location(19.843, 45.255, "Pozorišni trg", 1, "Novi Sad", 21000));
-		locations.add(new Location(19.845, 45.247, "Sutjeska", 2, "Novi Sad", 21000));
-		locations.add(new Location(20.421, 44.814, "Bulevar Arsenija Čarnojevića", 58, "Beograd", 11000));
-		locations.add(new Location(19.863, 45.252, "Beogradska", 0, "Petrovaradin", 21131));
-		locations.add(new Location(19.845, 45.255, "Trg Slobode", 0, "Novi Sad", 21000));
+		locations.add(new Location(20.46, 44.817, "Francuska", "3", "Beograd", 11000));
+		locations.add(new Location(19.843, 45.255, "Pozorišni trg", "1", "Novi Sad", 21000));
+		locations.add(new Location(19.845, 45.247, "Sutjeska", "2", "Novi Sad", 21000));
+		locations.add(new Location(20.421, 44.814, "Bulevar Arsenija Čarnojevića", "58", "Beograd", 11000));
+		locations.add(new Location(19.863, 45.252, "Beogradska", "bb", "Petrovaradin", 21131));
+		locations.add(new Location(19.845, 45.255, "Trg Slobode", "bb", "Novi Sad", 21000));
 		
 		String json = new Gson().toJson(locations);
 		
@@ -238,20 +239,20 @@ public class Data {
 		
 		ArrayList<Manifestation> manifestations = new ArrayList<Manifestation>();
 		
-		String sDate1="13.12.2020";
-		String sDate2="18.04.2021";
-		String sDate3="15.10.2021";
+		String sDate1="13.12.2020 20:00";
+		String sDate2="18.04.2021 19:00";
+		String sDate3="15.10.2021 21:00";
 		
-		Date date1 = new SimpleDateFormat("dd.MM.yyyy").parse(sDate1);  
-		Date date2 = new SimpleDateFormat("dd.MM.yyyy").parse(sDate2);  
-		Date date3 = new SimpleDateFormat("dd.MM.yyyy").parse(sDate3);  
+		Date date1 = new SimpleDateFormat("dd.MM.yyyy HH:mm").parse(sDate1);  
+		Date date2 = new SimpleDateFormat("dd.MM.yyyy HH:mm").parse(sDate2);  
+		Date date3 = new SimpleDateFormat("dd.MM.yyyy HH:mm").parse(sDate3);  
 		
-		Location location1 = new Location(20.46, 44.817, "Francuska", 3, "Beograd", 11000);
-		Location location2 = new Location(19.843, 45.255, "Pozorišni trg", 1, "Novi Sad", 21000);
-		Location location3 = new Location(19.845, 45.247, "Sutjeska", 2, "Novi Sad", 21000);
-		Location location4 = new Location(20.421, 44.814, "Bulevar Arsenija Čarnojevića", 58, "Beograd", 11000);
-		Location location5 = new Location(19.863, 45.252, "Beogradska", 0, "Petrovaradin", 21131);
-		Location location6 = new Location(19.845, 45.255, "Trg Slobode", 0, "Novi Sad", 21000);
+		Location location1 = new Location(20.46, 44.817, "Francuska", "3", "Beograd", 11000);
+		Location location2 = new Location(19.843, 45.255, "Pozorišni trg", "1", "Novi Sad", 21000);
+		Location location3 = new Location(19.845, 45.247, "Sutjeska", "2", "Novi Sad", 21000);
+		Location location4 = new Location(20.421, 44.814, "Bulevar Arsenija Čarnojevića", "58", "Beograd", 11000);
+		Location location5 = new Location(19.863, 45.252, "Beogradska", "bb", "Petrovaradin", 21131);
+		Location location6 = new Location(19.845, 45.255, "Trg Slobode", "bb", "Novi Sad", 21000);
 		
 		manifestations.add(new Manifestation("Koncert1", ManifestationType.CONCERTS, date1, 1500, true, location4, "source/cloud-desktop-background.jpg"));
 		manifestations.add(new Manifestation("Festival1", ManifestationType.FESTIVALS, date2, 1200, true, location5, "source/cloud-desktop-background.jpg"));
@@ -259,7 +260,7 @@ public class Data {
 		manifestations.add(new Manifestation("Koncert2", ManifestationType.CONCERTS, date3, 1500, false, location3, "source/cloud-desktop-background.jpg"));
 		manifestations.add(new Manifestation("Festival2", ManifestationType.FESTIVALS, date2, 1200, false, location6, "source/cloud-desktop-background.jpg"));
 		manifestations.add(new Manifestation("Pozoriste2", ManifestationType.THEATERS, date1, 789, true, location2, "source/cloud-desktop-background.jpg"));
-		
+		System.out.println(manifestations.get(0).getLocation().getStreet());
 		String json = new Gson().toJson(manifestations);
 		
 		try {
@@ -347,7 +348,7 @@ public class Data {
 		
 		Date date1 = new SimpleDateFormat("dd.MM.yyyy").parse(sDate1);  
 		
-		Location location4 = new Location(20.421, 44.814, "Bulevar Arsenija Čarnojevića", 58, "Beograd", 11000);
+		Location location4 = new Location(20.421, 44.814, "Bulevar Arsenija Čarnojevića", "58", "Beograd", 11000);
 		
 		Manifestation manifestation1 = new Manifestation("Koncert1", ManifestationType.CONCERTS, date1, 1500, true, location4, "static/source/cloud-desktop-background.jpg");
 		

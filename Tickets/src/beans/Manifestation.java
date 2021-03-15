@@ -1,5 +1,6 @@
 package beans;
 
+import java.util.Comparator;
 import java.util.Date;
 
 public class Manifestation {
@@ -84,4 +85,18 @@ public class Manifestation {
 		this.posterPath = posterPath;
 	}
 	
+	public static Comparator<Manifestation> dateComparator = new Comparator<Manifestation>() {
+
+		public int compare(Manifestation m1, Manifestation m2) {
+		   Date date1 = m1.getRealisationDate();
+		   Date date2 = m2.getRealisationDate();
+		   
+		   if(date1.before(date2))
+			   return -1;
+		   else
+			   return 0;
+
+	    }};
+	    
+   
 }
