@@ -93,15 +93,19 @@ public class SparkAppMain {
 			Session ss = req.session(true);
 					
 			User user = ss.attribute("user");
-					
+			
+			Boolean existAlready = false;
 			for(User kk: Database.users) {
 				if(kk.getUsername().equals(newUser.getUsername())) {
-						return false;
-					}else {
-						Database.addUser(newUser);
+						existAlready = true;
 						return false;
 					}
-				}						
+				}			
+			
+			if(!existAlready) {
+					Database.addUser(newUser);
+					return true;
+			}
 			
 			return false;
 		});

@@ -133,7 +133,8 @@
 					data : registrationData,
 					dataType : "json",
 					complete : function(data){
-						if(data.responseText){
+						if(data.responseText === "true"){
+							console.log(data.responseText);
 							location.href = "login.html";
 						}else
 						{
