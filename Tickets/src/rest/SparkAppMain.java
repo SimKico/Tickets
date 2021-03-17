@@ -255,8 +255,6 @@ public class SparkAppMain {
 				}else {
 					return g.toJson(satisfiesManifestation);
 				}
-			
-				
 			});
 			
 			get("/tickets/searchPrice", (req, res) -> {

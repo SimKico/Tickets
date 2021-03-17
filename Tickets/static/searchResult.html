@@ -34,15 +34,10 @@
 
 <script>
 
-	function getUserTickets(){
-		$.ajax({
-            url:"/userTickets",
-            method:"get",
-            dataType: "JSON",
-            success:function(data){
-				console.log(data);
-				var i = 0;
-				for(i; i<data.length; i++){
+	function showSearchResult(){
+		var data = JSON.parse(localStorage.getItem('resultTickets'));
+		if(data != null){
+			for(let i = 0; i < data.length; i++){
 				$("#cards")
 				.append($("<div class='col-md-4 div-space'>")
 						.append($("<div class='card'>")
@@ -55,90 +50,16 @@
 										)
 								.append($("<div class='card-footer'>").text("Price: " + data[i].price +" RSD"))
 										));
-            }
-            }
-		});
+						
+				}
+		}else{
+			$("#cards").append($("<h1>There is no result!</h1>"));
 		}
+	}
 
-		function searchManifestation(){
-			console.log("pretraga");
-            var manifestation = $("#manifestation").val();
-			
-			console.log("manifestation " + manifestation);
-			var dataToJson = JSON.stringify({"manifestation":manifestation});
-			$.ajax({
-				url: "/tickets/searchManifestation",  
-				type: "post",
-				data: dataToJson,
-				dataType: "JSON", 
-				complete: function (data) {
-							if(data.responseText == 'false'){
-								console.log("No result!");
-								localStorage.setItem('resultTickets', null);
-								location.href = "searchResult.html";
-							}else{
-								var result = data.responseJSON;
-								console.log(typeof(data.responseJSON));
-								localStorage.setItem('resultTickets', JSON.stringify(result));
-								location.href = "searchResult.html";
-								}
-							}
-				})
-		}
-
-		function searchPrice(){
-			console.log("pretraga");
-            var manifestation = $("#manifestation").val();
-			var minPrice = $("#minPrice").val();
-			var maxPrice = $("#maxPrice").val();
-			var fromDate = $("#fromDate").val();
-			var toDate = $("#toDate").val();
-			
-			console.log(manifestation + minPrice + " " + maxPrice + " " + fromDate + " " + toDate);
-			var dataToJson = JSON.stringify({"manifestation": manifestation, "minPrice" : minPrice, "maxPrice" : maxPrice, "fromDate" : fromDate , "toDate":toDate});
-			$.ajax({
-				type: "GET",
-				url: "/tickets/searchPrice",  //mora se poklapati sa stringom u eclipse-u kod  post metode. ovim kazemo koju post metodu gadjamo na serveru
-				data: dataToJson,
-				contentType: "application/json",
-				dataType: "json", // ova pet su obavezna
-				complete: function (data) {
-							if(data.responseText == 'false'){
-								console.log("WRONG USERNAME OR PASSWORD!")
-							}else{
-								console.log(data.responseText);
-								}
-							}
-				})
-		}
-		function searchDate(){
-			console.log("pretraga");
-            var manifestation = $("#manifestation").val();
-			var minPrice = $("#minPrice").val();
-			var maxPrice = $("#maxPrice").val();
-			var fromDate = $("#fromDate").val();
-			var toDate = $("#toDate").val();
-			
-			console.log(manifestation + minPrice + " " + maxPrice + " " + fromDate + " " + toDate);
-			var dataToJson = JSON.stringify({"manifestation": manifestation, "minPrice" : minPrice, "maxPrice" : maxPrice, "fromDate" : fromDate , "toDate":toDate});
-			$.ajax({
-				type: "GET",
-				url: "/tickets/searchDate",  //mora se poklapati sa stringom u eclipse-u kod  post metode. ovim kazemo koju post metodu gadjamo na serveru
-				data: dataToJson,
-				contentType: "application/json",
-				dataType: "json", // ova pet su obavezna
-				complete: function (data) {
-							if(data.responseText == 'false'){
-								console.log("WRONG USERNAME OR PASSWORD!")
-							}else{
-								console.log(data.responseText);
-								}
-							}
-				})
-		}
 </script>
 </head>
-<body onload="getUserTickets()">
+<body onload = "showSearchResult()">
 
 	<nav class="navbar navbar-expand-sm navbar-dark nav-backround">
 		<!-- homepage for buyer -->
@@ -165,7 +86,7 @@
 		<div>
 			<label for="manifestation" >Manifestation:</label>
 			<div>
-				<input type="text" class="form-control" id="manifestation" value = "Koncert1" placeholder="Koncert1"></input>
+				<input type="text" class="form-control" id="manifestation" placeholder="Koncert1"></input>
 				<button class = "btn" style = "background-color:darkgoldenrod;" onclick="searchManifestation()"  ><i class="fa fa-search" aria-hidden="true"></i></button>
 			</div>
 		</div>
