@@ -56,9 +56,11 @@ public class Database {
 	public static boolean  isSellersManifestation(User seller, String searchManifestition) {
 		for(User user : Database.users) {
 			if(user.getUsername().equals(seller.getUsername())) {
-				for(Manifestation manifestation : user.getManifestations()) {
-					if(manifestation.getTitle().equals(searchManifestition)) {
-						return true;
+				if(user.getManifestations() != null) {
+					for(Manifestation manifestation : user.getManifestations()) {
+						if(manifestation.getTitle().equals(searchManifestition)) {
+							return true;
+						}
 					}
 				}
 			}
