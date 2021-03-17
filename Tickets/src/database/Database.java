@@ -47,16 +47,23 @@ public class Database {
 	
 	public static boolean addUser(User newUser) {
 
-			System.out.println("add");
 			users.add(newUser);
-
-			System.out.println("added");
 			saveUsers();
 
-			System.out.println("saved");
-			
 			return true;
-			
 		}
+	
+	public static boolean  isSellersManifestation(User seller, String searchManifestition) {
+		for(User user : Database.users) {
+			if(user.getUsername().equals(seller.getUsername())) {
+				for(Manifestation manifestation : user.getManifestations()) {
+					if(manifestation.getTitle().equals(searchManifestition)) {
+						return true;
+					}
+				}
+			}
+		}
+		return false;
+	}
 	
 }

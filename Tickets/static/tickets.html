@@ -5,6 +5,8 @@
 <title>My tickets</title>
 <link href="assets/img/favicon.png" rel="icon">
 <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
 <!--JQuery 3.4.1 CDN CDN-->
 <script src="https://code.jquery.com/jquery-3.4.1.js"
@@ -57,6 +59,78 @@
             }
 		});
 		}
+
+		function searchManifestation(){
+			console.log("pretraga");
+            var manifestation = $("#manifestation").val();
+			
+			console.log("manifestation " + manifestation);
+			var dataToJson = JSON.stringify({"manifestation":manifestation});
+			$.ajax({
+				url: "/tickets/searchManifestation",  
+				type: "post",
+				data: dataToJson,
+				dataType: "JSON", 
+				complete: function (data) {
+							if(data.responseText == 'false'){
+								console.log("WRONG USERNAME OR PASSWORD!")
+							}else{
+								console.log(data.responseText);
+								}
+							}
+				})
+		}
+
+		function searchPrice(){
+			console.log("pretraga");
+            var manifestation = $("#manifestation").val();
+			var minPrice = $("#minPrice").val();
+			var maxPrice = $("#maxPrice").val();
+			var fromDate = $("#fromDate").val();
+			var toDate = $("#toDate").val();
+			
+			console.log(manifestation + minPrice + " " + maxPrice + " " + fromDate + " " + toDate);
+			var dataToJson = JSON.stringify({"manifestation": manifestation, "minPrice" : minPrice, "maxPrice" : maxPrice, "fromDate" : fromDate , "toDate":toDate});
+			$.ajax({
+				type: "GET",
+				url: "/tickets/searchPrice",  //mora se poklapati sa stringom u eclipse-u kod  post metode. ovim kazemo koju post metodu gadjamo na serveru
+				data: dataToJson,
+				contentType: "application/json",
+				dataType: "json", // ova pet su obavezna
+				complete: function (data) {
+							if(data.responseText == 'false'){
+								console.log("WRONG USERNAME OR PASSWORD!")
+							}else{
+								console.log(data.responseText);
+								}
+							}
+				})
+		}
+		function searchDate(){
+			console.log("pretraga");
+            var manifestation = $("#manifestation").val();
+			var minPrice = $("#minPrice").val();
+			var maxPrice = $("#maxPrice").val();
+			var fromDate = $("#fromDate").val();
+			var toDate = $("#toDate").val();
+			
+			console.log(manifestation + minPrice + " " + maxPrice + " " + fromDate + " " + toDate);
+			var dataToJson = JSON.stringify({"manifestation": manifestation, "minPrice" : minPrice, "maxPrice" : maxPrice, "fromDate" : fromDate , "toDate":toDate});
+			$.ajax({
+				type: "GET",
+				url: "/tickets/searchDate",  //mora se poklapati sa stringom u eclipse-u kod  post metode. ovim kazemo koju post metodu gadjamo na serveru
+				data: dataToJson,
+				contentType: "application/json",
+				dataType: "json", // ova pet su obavezna
+				complete: function (data) {
+							if(data.responseText == 'false'){
+								console.log("WRONG USERNAME OR PASSWORD!")
+							}else{
+								console.log(data.responseText);
+								}
+							}
+				})
+		}
 </script>
 </head>
 <body onload="getUserTickets()">
@@ -78,6 +152,49 @@
 			</ul>
 		</div>
 	</nav>
+	<div class="form-inline">
+		<div >
+			<h2 style="color:darkgoldenrod; ">Search</h2>
+			<h5 style="color:darkgoldenrod; ">ticket</h5>
+		</div>
+		<div>
+			<label for="manifestation" >Manifestation:</label>
+			<div>
+				<input type="text" class="form-control" id="manifestation" placeholder="Koncert1"></input>
+				<button class = "btn" style = "background-color:darkgoldenrod;" onclick="searchManifestation()"  ><i class="fa fa-search" aria-hidden="true"></i></button>
+			</div>
+		</div>
+		
+		<div>
+			<label for="minPrice" >Minimum price:</label>
+			<div>
+				<input type="text" class="form-control" id="minPrice" placeholder="Koncert1" >
+			</div>
+		</div>
+		<div>
+			<label for="maxPrice" >Maximum price:</label>
+			<div>
+				<input type="text" class="form-control" id="maxPrice" placeholder="Koncert1">
+				<button class = "btn" style = "background-color:darkgoldenrod;" onclick="searchPrice()" ><i class="fa fa-search" aria-hidden="true"></i></button>
+			</div>
+		</div>
+
+		<div>
+			<label for="fromDate" >From date:</label>
+			<div>
+				<input type="date" class="form-control" id="fromDate"   min="1950-01-01" max="2023-06-06"   />
+			</div>
+		</div>
+		<div>
+			<label for="toDate" >To date:</label>
+			<div>
+				<input type="date" class="form-control" id="toDate"  min="1950-01-01" max="2023-06-06"  />
+				<button class = "btn" style = "background-color:darkgoldenrod;" onclick="searchDate()"  ><i class="fa fa-search" aria-hidden="true"></i></button>
+			</div>
+		</div>
+	
+		
+	</div>
 
 	<section id="hero" class="d-flex align-items-center">
 
