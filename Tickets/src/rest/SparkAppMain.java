@@ -257,62 +257,94 @@ public class SparkAppMain {
 				}
 			});
 			
-			get("/tickets/searchPrice", (req, res) -> {
+			post("/tickets/searchPrice", (req, res) -> {
 				
 				res.type("application/json");
 				User k = req.session().attribute("user");
-				System.out.println(k.getLastName());
 				
 				String data = req.body();
+			
 				JsonObject job = new JsonParser().parse(data).getAsJsonObject();
 				
-				int minPrice =  job.get("minPrice").getAsInt();
-				int maxPrice =  job.get("maxPrice").getAsInt();
-				
-				ArrayList<Ticket> satisfiesPrice = new ArrayList<Ticket>();
-				
-				if(job.get("minPrice")!= null && job.get("maxPrice")!= null  ) {
-					for(Ticket ticket : Database.tickets) {
-						if((minPrice>=ticket.getPrice() && ticket.getPrice()<= maxPrice)) {
-							satisfiesPrice.add(ticket);
-						}
+				int minPrice = job.get("minPrice").getAsInt();
+
+				int maxPrice = job.get("maxPrice").getAsInt();
+
+				ArrayList<Ticket> satisfiesManifestation = new ArrayList<Ticket>();
+			
+				if(k.getRole().equals(Role.ADMIN)) {
+						for(Ticket ticket : Database.tickets) {
+							if(ticket.getPrice() >= minPrice && ticket.getPrice() <= maxPrice ) {
+								satisfiesManifestation.add(ticket);
+							}
+					}
+				}else if(k.getRole().equals(Role.SELLER)) {
+						for(Ticket ticket : Database.tickets) {
+							if(Database.isSellersManifestation(k, ticket.getManifestation())) {
+								if(ticket.getPrice() >= minPrice && ticket.getPrice() <= maxPrice ) {
+									satisfiesManifestation.add(ticket);
+								}
+							}
+							
+						
 					}
 				}else {
-					return false;
+					for(Ticket ticket : Database.tickets) {
+						if(ticket.getBuyerFirstName().equals(k.getFirstName()) && ticket.getBuyerLastName().equals(k.getLastName()) && ticket.getPrice() >= minPrice && ticket.getPrice() <= maxPrice ) {
+							satisfiesManifestation.add(ticket);
+						}
+					}
 				}
-				
-				return  g.toJson(satisfiesPrice);
-				
+				if(satisfiesManifestation.isEmpty()) {
+					return false;
+				}else {
+					return g.toJson(satisfiesManifestation);
+				}
 			});
 			
-			get("/tickets/searchDate", (req, res) -> {
-				
+			post("/tickets/searchDate", (req, res) -> {
+				System.out.println("1");
 				res.type("application/json");
 				User k = req.session().attribute("user");
-				System.out.println(k.getLastName());
-				
+				System.out.println("2");
 				String data = req.body();
+				System.out.println("3");
 				JsonObject job = new JsonParser().parse(data).getAsJsonObject();
-			
+				System.out.println("4");
 				Date fromDate = new SimpleDateFormat("yyyy-MM-dd").parse(job.get("fromDate").getAsString());
 				Date toDate = new SimpleDateFormat("yyyy-MM-dd").parse(job.get("toDate").getAsString());
-				
-			
-				ArrayList<Ticket> satisfiesDate= new ArrayList<Ticket>();
-				if(job.get("fromDate") != null && job.get("toDate")!= null){
-					for(Ticket ticket : Database.tickets) {
+				System.out.println("5");
+				ArrayList<Ticket> satisfiesManifestation = new ArrayList<Ticket>();
+				System.out.println("6");
+				if(k.getRole().equals(Role.ADMIN)) {
+						for(Ticket ticket : Database.tickets) {
+							if(ticket.getManifestationDate().after(fromDate) && ticket.getManifestationDate().before(toDate)) {
+								satisfiesManifestation.add(ticket);
+							}
+					}
+				}else if(k.getRole().equals(Role.SELLER)) {
+						for(Ticket ticket : Database.tickets) {
+							if(Database.isSellersManifestation(k, ticket.getManifestation())) {
+								if(ticket.getManifestationDate().after(fromDate) && ticket.getManifestationDate().before(toDate)) {
+									satisfiesManifestation.add(ticket);
+								}
+							}
+							
 						
-						if((fromDate.before(ticket.getManifestationDate()) && toDate.after(ticket.getManifestationDate()))) {
-							satisfiesDate.add(ticket);
-						}
 					}
 				}else {
-					return false;
+					for(Ticket ticket : Database.tickets) {
+						if(ticket.getBuyerFirstName().equals(k.getFirstName()) && ticket.getBuyerLastName().equals(k.getLastName()) && ticket.getManifestationDate().after(fromDate) && ticket.getManifestationDate().before(toDate) ) {
+							satisfiesManifestation.add(ticket);
+						}
+					}
 				}
-				
-				
-				return g.toJson(satisfiesDate);
-				
+				System.out.println("7");
+				if(satisfiesManifestation.isEmpty()) {
+					return false;
+				}else {
+					return g.toJson(satisfiesManifestation);
+				}
 			});
 	}
 }

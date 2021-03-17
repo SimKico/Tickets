@@ -33,6 +33,11 @@
 	href="css/manifestationHomepage.css">
 
 <script>
+	
+	function cleanSearch(){
+			localStorage.removeItem("resultTickets");	
+			location.href = "tickets.html";
+			}
 
 	function showSearchResult(){
 		var data = JSON.parse(localStorage.getItem('resultTickets'));
@@ -57,79 +62,46 @@
 		}
 	}
 
+
 </script>
 </head>
 <body onload = "showSearchResult()">
 
-	<nav class="navbar navbar-expand-sm navbar-dark nav-backround">
-		<!-- homepage for buyer -->
-		<a class="navbar-brand" href="homepage.html">Tickets</a> 
-		<button class="navbar-toggler" type="button" data-toggle="collapse"
-			data-target="#collapsibleNavbar" onclick="">
-			<span class="navbar-toggler-icon"></span>
-		</button>
-		<div class="collapse navbar-collapse" id="collapsibleNavbar">
-			<ul class="navbar-nav ml-auto">
-
-				<li class="nav-item"><a class="nav-link" href="profil.html">My profile</a></li>
-				
-				<li class="nav-item"><a class="nav-link" href="login.html" onclick="logOut()">Log out</a></li>
-
-			</ul>
-		</div>
-	</nav>
-	<div class="form-inline">
-		<div >
-			<h2 style="color:darkgoldenrod; ">Search</h2>
-			<h5 style="color:darkgoldenrod; ">ticket</h5>
-		</div>
-		<div>
-			<label for="manifestation" >Manifestation:</label>
-			<div>
-				<input type="text" class="form-control" id="manifestation" placeholder="Koncert1"></input>
-				<button class = "btn" style = "background-color:darkgoldenrod;" onclick="searchManifestation()"  ><i class="fa fa-search" aria-hidden="true"></i></button>
-			</div>
-		</div>
-		
-		<div>
-			<label for="minPrice" >Minimum price:</label>
-			<div>
-				<input type="text" class="form-control" id="minPrice" placeholder="Koncert1" >
-			</div>
-		</div>
-		<div>
-			<label for="maxPrice" >Maximum price:</label>
-			<div>
-				<input type="text" class="form-control" id="maxPrice" placeholder="Koncert1">
-				<button class = "btn" style = "background-color:darkgoldenrod;" onclick="searchPrice()" ><i class="fa fa-search" aria-hidden="true"></i></button>
-			</div>
-		</div>
-
-		<div>
-			<label for="fromDate" >From date:</label>
-			<div>
-				<input type="date" class="form-control" id="fromDate"   min="1950-01-01" max="2023-06-06"   />
-			</div>
-		</div>
-		<div>
-			<label for="toDate" >To date:</label>
-			<div>
-				<input type="date" class="form-control" id="toDate"  min="1950-01-01" max="2023-06-06"  />
-				<button class = "btn" style = "background-color:darkgoldenrod;" onclick="searchDate()"  ><i class="fa fa-search" aria-hidden="true"></i></button>
-			</div>
-		</div>
+		<nav class="navbar navbar-expand-sm navbar-dark nav-backround">
+			<!-- homepage for buyer -->
+			<a class="navbar-brand" href = "#" onclick="homepage()">Tickets</a> 
+			<button class="navbar-toggler" type="button" data-toggle="collapse"
+				data-target="#collapsibleNavbar" onclick="">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="collapsibleNavbar">
+				<ul class="navbar-nav ml-auto">
 	
-		
-	</div>
-
-	<section id="hero" class="d-flex align-items-center">
-
-		<div class="container">
-			<div id="cards" class="row">
-				
+					<li class="nav-item"><a class="nav-link" href="profil.html">My profile</a></li>
+					
+					<li class="nav-item"><a class="nav-link" href="#" onclick="logOut()">Log out</a></li>
+	
+				</ul>
 			</div>
-		</div>
-	</section>
+		</nav>
+		<div class="form-inline">
 
-</body>
+			<div class="container">
+				<div class="container">
+					<h6 class="row" style="color:darkgoldenrod;">Back on ticket list!<h6>
+					<button class = "btn" style = "background-color:darkgoldenrod;" onclick="cleanSearch()"><i class="fa fa-backward" ></i></button>
+				</div>
+			</div>	
+		</div>
+
+		<section id="hero" class="d-flex align-items-center">
+	
+			<div class="container">
+				<div id="cards" class="row">
+					
+				</div>
+			</div>
+		</section>
+	
+	</body>
 </html>

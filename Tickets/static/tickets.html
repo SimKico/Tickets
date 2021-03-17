@@ -61,10 +61,9 @@
 		}
 
 		function searchManifestation(){
-			console.log("pretraga");
+
             var manifestation = $("#manifestation").val();
 			
-			console.log("manifestation " + manifestation);
 			var dataToJson = JSON.stringify({"manifestation":manifestation});
 			$.ajax({
 				url: "/tickets/searchManifestation",  
@@ -87,51 +86,52 @@
 		}
 
 		function searchPrice(){
-			console.log("pretraga");
-            var manifestation = $("#manifestation").val();
+			
 			var minPrice = $("#minPrice").val();
 			var maxPrice = $("#maxPrice").val();
-			var fromDate = $("#fromDate").val();
-			var toDate = $("#toDate").val();
 			
-			console.log(manifestation + minPrice + " " + maxPrice + " " + fromDate + " " + toDate);
-			var dataToJson = JSON.stringify({"manifestation": manifestation, "minPrice" : minPrice, "maxPrice" : maxPrice, "fromDate" : fromDate , "toDate":toDate});
+			var dataToJson = JSON.stringify({ "minPrice" : minPrice, "maxPrice" : maxPrice});
 			$.ajax({
-				type: "GET",
-				url: "/tickets/searchPrice",  //mora se poklapati sa stringom u eclipse-u kod  post metode. ovim kazemo koju post metodu gadjamo na serveru
+				type: "post",
+				url: "/tickets/searchPrice", 
 				data: dataToJson,
-				contentType: "application/json",
-				dataType: "json", // ova pet su obavezna
+				dataType: "json",
 				complete: function (data) {
-							if(data.responseText == 'false'){
-								console.log("WRONG USERNAME OR PASSWORD!")
+					if(data.responseText == 'false'){
+								console.log("No result!");
+								localStorage.setItem('resultTickets', null);
+								location.href = "searchResult.html";
 							}else{
-								console.log(data.responseText);
+								var result = data.responseJSON;
+								console.log(typeof(data.responseJSON));
+								localStorage.setItem('resultTickets', JSON.stringify(result));
+								location.href = "searchResult.html";
 								}
 							}
 				})
 		}
 		function searchDate(){
-			console.log("pretraga");
-            var manifestation = $("#manifestation").val();
-			var minPrice = $("#minPrice").val();
-			var maxPrice = $("#maxPrice").val();
+
 			var fromDate = $("#fromDate").val();
 			var toDate = $("#toDate").val();
+			console.log(fromDate);
 			
-			console.log(manifestation + minPrice + " " + maxPrice + " " + fromDate + " " + toDate);
-			var dataToJson = JSON.stringify({"manifestation": manifestation, "minPrice" : minPrice, "maxPrice" : maxPrice, "fromDate" : fromDate , "toDate":toDate});
+			var dataToJson = JSON.stringify({ "fromDate" : fromDate , "toDate":toDate});
 			$.ajax({
-				type: "GET",
-				url: "/tickets/searchDate",  //mora se poklapati sa stringom u eclipse-u kod  post metode. ovim kazemo koju post metodu gadjamo na serveru
+				type: "post",
+				url: "/tickets/searchDate", 
 				data: dataToJson,
-				contentType: "application/json",
-				dataType: "json", // ova pet su obavezna
+				dataType: "json",
 				complete: function (data) {
-							if(data.responseText == 'false'){
-								console.log("WRONG USERNAME OR PASSWORD!")
+					if(data.responseText == 'false'){
+								console.log("No result!");
+								localStorage.setItem('resultTickets', null);
+								location.href = "searchResult.html";
 							}else{
-								console.log(data.responseText);
+								var result = data.responseJSON;
+								console.log(typeof(data.responseJSON));
+								localStorage.setItem('resultTickets', JSON.stringify(result));
+								location.href = "searchResult.html";
 								}
 							}
 				})
@@ -142,7 +142,7 @@
 
 	<nav class="navbar navbar-expand-sm navbar-dark nav-backround">
 		<!-- homepage for buyer -->
-		<a class="navbar-brand" href="homepage.html">Tickets</a> 
+			<a class="navbar-brand" href = "#" onclick="homepage()">Tickets</a> 
 		<button class="navbar-toggler" type="button" data-toggle="collapse"
 			data-target="#collapsibleNavbar" onclick="">
 			<span class="navbar-toggler-icon"></span>
@@ -152,7 +152,7 @@
 
 				<li class="nav-item"><a class="nav-link" href="profil.html">My profile</a></li>
 				
-				<li class="nav-item"><a class="nav-link" href="login.html" onclick="logOut()">Log out</a></li>
+				<li class="nav-item"><a class="nav-link" href="#" onclick="logOut()">Log out</a></li>
 
 			</ul>
 		</div>
