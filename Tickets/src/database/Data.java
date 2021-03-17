@@ -313,17 +313,17 @@ public class Data {
 		Date date2 = new SimpleDateFormat("dd.MM.yyyy").parse(sDate2);  
 		Date date3 = new SimpleDateFormat("dd.MM.yyyy").parse(sDate3);  
 		
-		double priceKoncert1Regular = 1500;
+		int priceKoncert1Regular = 1500;
 
-		double priceFestival1Regular = 1200;
+		int priceFestival1Regular = 1200;
 
-		double pricePozoriste1Regular = 789;
+		int pricePozoriste1Regular = 789;
 		
-		double priceKoncert2Regural = 1500;
+		int priceKoncert2Regural = 1500;
 		
-		double priceFestival2Regular = 1200;
+		int priceFestival2Regular = 1200;
 
-		double pricePozoriste3Regular = 789;
+		int pricePozoriste3Regular = 789;
 		
 		Ticket ticket1 = new Ticket("t1", "Koncert1", date1, priceKoncert1Regular, "Natasa", "Kovacevic", TicketStatus.RESERVED, TicketType.REGULAR);
 		Ticket ticket2 = new Ticket("t2", "Koncert1", date1, priceKoncert1Regular * 2, "Snjezana", "Simic", TicketStatus.RESERVED, TicketType.FANPIT);

@@ -409,7 +409,6 @@ public class SparkAppMain {
 				JsonObject job = new JsonParser().parse(data).getAsJsonObject();
 				
 				String type = job.get("status").getAsString().toUpperCase();
-				System.out.println("da vidimo sta ne valja" + type);
 				
 				TicketStatus ticketStatus;
 				if(type.equals("RESERVED")) {
@@ -446,6 +445,99 @@ public class SparkAppMain {
 				}else {
 					return g.toJson(satisfiesManifestation);
 				}
+			});
+			
+
+			post("/tickets/sortAsc", (req, res) -> {
+				System.out.println("nesto");
+				res.type("application/json");
+				User k = req.session().attribute("user");
+				
+				ArrayList<Ticket> userTickets = new ArrayList<Ticket>();
+				
+				String data = req.body();
+				
+				JsonObject job = new JsonParser().parse(data).getAsJsonObject();
+				
+				String sortBy = job.get("sortBy").getAsString();
+				
+				if(k.getRole().equals(Role.BUYER)) {
+					for(Ticket ticket : Database.tickets) {
+						if(ticket.getBuyerFirstName().equals(k.getFirstName()) && ticket.getBuyerLastName().equals(k.getLastName())) {
+							System.out.println(ticket.getBuyerFirstName()+ " " + ticket.getBuyerLastName());
+							userTickets.add(ticket);
+						}
+					}
+				}else if(k.getRole().equals(Role.ADMIN)) {
+					for(Ticket ticket : Database.tickets) {
+						userTickets.add(ticket);
+					}
+				}else {
+					if(k.getRole().equals(Role.SELLER)) {
+						for(Ticket ticket : Database.tickets) {
+							if(ticket.getStatus().equals(TicketStatus.RESERVED) && Database.isSellersManifestation(k, ticket.getManifestation())) {
+								userTickets.add(ticket);
+							}
+						}
+					}
+				}
+				if(sortBy.equals("title")) {
+					System.out.println("sort by title");
+					Collections.sort(userTickets, Ticket.titleComparatorASC);
+				}else if(sortBy.equals("price")) {
+					System.out.println("sort by price");
+					Collections.sort(userTickets, Ticket.priceComparatorASC);
+				}else {
+					System.out.println("sort by date");
+					Collections.sort(userTickets, Ticket.dateComparatorASC);
+				}
+				return g.toJson(userTickets);
+			});
+			
+			post("/tickets/sortDsc", (req, res) -> {
+				System.out.println("nesto");
+				res.type("application/json");
+				User k = req.session().attribute("user");
+				
+				ArrayList<Ticket> userTickets = new ArrayList<Ticket>();
+				
+				String data = req.body();
+				
+				JsonObject job = new JsonParser().parse(data).getAsJsonObject();
+				
+				String sortBy = job.get("sortBy").getAsString();
+				
+				if(k.getRole().equals(Role.BUYER)) {
+					for(Ticket ticket : Database.tickets) {
+						if(ticket.getBuyerFirstName().equals(k.getFirstName()) && ticket.getBuyerLastName().equals(k.getLastName())) {
+							System.out.println(ticket.getBuyerFirstName()+ " " + ticket.getBuyerLastName());
+							userTickets.add(ticket);
+						}
+					}
+				}else if(k.getRole().equals(Role.ADMIN)) {
+					for(Ticket ticket : Database.tickets) {
+						userTickets.add(ticket);
+					}
+				}else {
+					if(k.getRole().equals(Role.SELLER)) {
+						for(Ticket ticket : Database.tickets) {
+							if(ticket.getStatus().equals(TicketStatus.RESERVED) && Database.isSellersManifestation(k, ticket.getManifestation())) {
+								userTickets.add(ticket);
+							}
+						}
+					}
+				}
+				if(sortBy.equals("title")) {
+					System.out.println("sort by title");
+					Collections.sort(userTickets, Ticket.titleComparatorDSC);
+				}else if(sortBy.equals("price")) {
+					System.out.println("sort by price");
+					Collections.sort(userTickets, Ticket.priceComparatorDSC);
+				}else {
+					System.out.println("sort by date");
+					Collections.sort(userTickets, Ticket.dateComparatorDSC);
+				}
+				return g.toJson(userTickets);
 			});
 	}
 }

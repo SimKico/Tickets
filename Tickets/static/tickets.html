@@ -202,6 +202,53 @@
 			})
 		}
 
+		function ascending(par){
+		
+			var dataToJson = JSON.stringify({ "sortBy": par });
+
+			$.ajax({
+				url: "/tickets/sortAsc",
+				type: "post",
+				data: dataToJson,
+				dataType: "JSON",
+				complete: function (data) {
+					if (data.responseText == 'false') {
+						console.log("No result!");
+						localStorage.setItem('resultTickets', null);
+						location.href = "searchResult.html";
+					} else {
+						var result = data.responseJSON;
+						console.log(typeof (data.responseJSON));
+						localStorage.setItem('resultTickets', JSON.stringify(result));
+						location.href = "searchResult.html";
+					}
+				}
+			})
+		}
+
+		function descending(par){
+		
+			var dataToJson = JSON.stringify({ "sortBy": par });
+			
+			$.ajax({
+				url: "/tickets/sortDsc",
+				type: "post",
+				data: dataToJson,
+				dataType: "JSON",
+				complete: function (data) {
+					if (data.responseText == 'false') {
+						console.log("No result!");
+						localStorage.setItem('resultTickets', null);
+						location.href = "searchResult.html";
+					} else {
+						var result = data.responseJSON;
+						console.log(typeof (data.responseJSON));
+						localStorage.setItem('resultTickets', JSON.stringify(result));
+						location.href = "searchResult.html";
+					}
+				}
+			})
+		}
 
 
 	</script>
@@ -268,9 +315,32 @@
 						class="fa fa-search" aria-hidden="true"></i></button>
 			</div>
 		</div>
-
-
 	</div>
+	<nav class="navbar navbar-expand-sm navbar-dark nav-backround">
+		<h1 class="navbar-brand" style="color:darkgoldenrod; ">Sort by </h1>
+		<div class="collapse navbar-collapse" id="collapsibleNavbar">
+			<div class="form-group">
+				<h6 style="color:darkgoldenrod; ">Manifestation's title</h6>
+				<input type="button" value="ascending" class="btn" onclick="ascending('title')" />
+				<input type="button" value="descending" class="btn left" onclick="descending('title')" />
+			</div>
+		</div>
+		<div class="collapse navbar-collapse" id="collapsibleNavbar">
+			
+			<div class="form-group">
+				<h6 style="color:darkgoldenrod; ">Ticket's price</h6>
+				<input type="button" value="ascending" class="btn left"onclick="ascending('price')"  />
+				<input type="button" value="descending" class="btn left" onclick="descending('price')" />
+			</div>
+		</div>
+		<div class="collapse navbar-collapse" id="collapsibleNavbar">
+			<div class="form-group">
+				<h6 style="color:darkgoldenrod; ">Date of maintenance</h6>
+				<input type="button" value="ascending" class="btn left" onclick="ascending('date')"  />
+				<input type="button" value="descending" class="btn left" onclick="descending('date')" />
+			</div>
+		</div>
+	</nav>
 	<div class="form-inline">
 		<div>
 			<h2 style="color:darkgoldenrod; ">Filter</h2>
