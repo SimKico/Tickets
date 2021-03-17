@@ -51,7 +51,9 @@
 								.append($("<div class='card-body text-center'>")
 										.append($("<div class='card-title'>").append($("<h5>").text(data[i].type)))
 										.append($("<p class='card-text'>").text(data[i].manifestationDate))
+										.append($("<p class='card-text'>").text(data[i].buyerFirstName + " " + data[i].buyerLastName))
 										.append($("<p class='card-text'>").text(data[i].status))
+										.append($("<p class='card-text'>").text("ID: "+ data[i].ticketID))
 										)
 								.append($("<div class='card-footer'>").text("Price: " + data[i].price +" RSD"))
 										));

@@ -22,6 +22,7 @@ import beans.Manifestation;
 import beans.Role;
 import beans.Ticket;
 import beans.TicketStatus;
+import beans.TicketType;
 import beans.User;
 import database.Data;
 import database.Database;
@@ -51,7 +52,6 @@ public class SparkAppMain {
 			res.type("application/json");
 					
 			String data = req.body();
-			System.out.println(data);
 			
 			User k = g.fromJson(data, User.class);
 			Session ss = req.session(true);
@@ -193,7 +193,7 @@ public class SparkAppMain {
 			ArrayList<Ticket> userTickets = new ArrayList<Ticket>();
 			if(k.getRole().equals(Role.BUYER)) {
 				for(Ticket ticket : Database.tickets) {
-					if(ticket.getBuyerFirstName().equals(k.getFirstName()) && ticket.getBuyerLastName().equals(k.getLastName()) && ticket.getStatus().equals(TicketStatus.RESERVED)) {
+					if(ticket.getBuyerFirstName().equals(k.getFirstName()) && ticket.getBuyerLastName().equals(k.getLastName())) {
 						System.out.println(ticket.getBuyerFirstName()+ " " + ticket.getBuyerLastName());
 						userTickets.add(ticket);
 					}
@@ -223,14 +223,14 @@ public class SparkAppMain {
 			
 				JsonObject job = new JsonParser().parse(data).getAsJsonObject();
 				
-				String manifestation = job.get("manifestation").getAsString();
+				String manifestation = job.get("manifestation").getAsString().toLowerCase();
 
 				ArrayList<Ticket> satisfiesManifestation = new ArrayList<Ticket>();
 			
 				if(k.getRole().equals(Role.ADMIN)) {
 					if(manifestation != null) {
 						for(Ticket ticket : Database.tickets) {
-							if(ticket.getManifestation().equals(manifestation)) {
+							if(ticket.getManifestation().toLowerCase().equals(manifestation)) {
 								satisfiesManifestation.add(ticket);
 							}
 						}
@@ -238,14 +238,14 @@ public class SparkAppMain {
 				}else if(k.getRole().equals(Role.SELLER)) {
 					if(manifestation != null && Database.isSellersManifestation(k, manifestation)) {
 						for(Ticket ticket : Database.tickets) {
-							if(ticket.getManifestation().equals(manifestation)) {
+							if(ticket.getManifestation().toLowerCase().equals(manifestation)) {
 								satisfiesManifestation.add(ticket);
 							}
 						}
 					}
 				}else {
 					for(Ticket ticket : Database.tickets) {
-						if(ticket.getManifestation().equals(manifestation) && ticket.getBuyerFirstName().equals(k.getFirstName()) && ticket.getBuyerLastName().equals(k.getLastName())) {
+						if(ticket.getManifestation().toLowerCase().equals(manifestation) && ticket.getBuyerFirstName().equals(k.getFirstName()) && ticket.getBuyerLastName().equals(k.getLastName())) {
 							satisfiesManifestation.add(ticket);
 						}
 					}
@@ -303,19 +303,18 @@ public class SparkAppMain {
 			});
 			
 			post("/tickets/searchDate", (req, res) -> {
-				System.out.println("1");
+				
 				res.type("application/json");
 				User k = req.session().attribute("user");
-				System.out.println("2");
+		
 				String data = req.body();
-				System.out.println("3");
 				JsonObject job = new JsonParser().parse(data).getAsJsonObject();
-				System.out.println("4");
+			
 				Date fromDate = new SimpleDateFormat("yyyy-MM-dd").parse(job.get("fromDate").getAsString());
 				Date toDate = new SimpleDateFormat("yyyy-MM-dd").parse(job.get("toDate").getAsString());
-				System.out.println("5");
+			
 				ArrayList<Ticket> satisfiesManifestation = new ArrayList<Ticket>();
-				System.out.println("6");
+		
 				if(k.getRole().equals(Role.ADMIN)) {
 						for(Ticket ticket : Database.tickets) {
 							if(ticket.getManifestationDate().after(fromDate) && ticket.getManifestationDate().before(toDate)) {
@@ -339,7 +338,109 @@ public class SparkAppMain {
 						}
 					}
 				}
-				System.out.println("7");
+				if(satisfiesManifestation.isEmpty()) {
+					return false;
+				}else {
+					return g.toJson(satisfiesManifestation);
+				}
+			});
+			
+			post("/tickets/filterTicketType", (req, res) -> {
+
+				System.out.println("br");
+				res.type("application/json");
+				User k = req.session().attribute("user");
+				
+				String data = req.body();
+			
+				JsonObject job = new JsonParser().parse(data).getAsJsonObject();
+				
+				String type = job.get("type").getAsString().toUpperCase();
+				System.out.println("da vidimo sta ne valja" + type);
+				
+				TicketType ticketType;
+				if(type.equals( "REGULAR")) {
+					ticketType = TicketType.REGULAR;
+				}else if(type.equals( "FANPIT")) {
+					ticketType = TicketType.FANPIT;
+				}else {
+					ticketType = TicketType.VIP;
+				}
+				
+				ArrayList<Ticket> satisfiesManifestation = new ArrayList<Ticket>();
+			
+				if(k.getRole().equals(Role.ADMIN)) {
+						for(Ticket ticket : Database.tickets) {
+							if(ticket.getType().equals(ticketType)) {
+								satisfiesManifestation.add(ticket);
+							}
+					}
+				}else if(k.getRole().equals(Role.SELLER)) {
+					for(Ticket ticket : Database.tickets) {
+						if(Database.isSellersManifestation(k, ticket.getManifestation())) {
+							if(ticket.getType().equals(ticketType)) {
+								satisfiesManifestation.add(ticket);
+							}
+						}
+					}
+				}else {
+					for(Ticket ticket : Database.tickets) {
+						System.out.println(ticketType);
+						if(ticket.getBuyerFirstName().equals(k.getFirstName()) && ticket.getBuyerLastName().equals(k.getLastName()) && ticket.getType().equals(ticketType)) {
+							System.out.println("hehe");
+							satisfiesManifestation.add(ticket);
+						}
+					}
+				}
+				if(satisfiesManifestation.isEmpty()) {
+					return false;
+				}else {
+					return g.toJson(satisfiesManifestation);
+				}
+			});
+			
+			post("/tickets/filterTicketStatus", (req, res) -> {
+
+				res.type("application/json");
+				User k = req.session().attribute("user");
+				
+				String data = req.body();
+			
+				JsonObject job = new JsonParser().parse(data).getAsJsonObject();
+				
+				String type = job.get("status").getAsString().toUpperCase();
+				System.out.println("da vidimo sta ne valja" + type);
+				
+				TicketStatus ticketStatus;
+				if(type.equals("RESERVED")) {
+					ticketStatus = TicketStatus.RESERVED;
+				}else {
+					ticketStatus = TicketStatus.CANCELD;
+				}
+				
+				ArrayList<Ticket> satisfiesManifestation = new ArrayList<Ticket>();
+			
+				if(k.getRole().equals(Role.ADMIN)) {
+						for(Ticket ticket : Database.tickets) {
+							if(ticket.getStatus().equals(ticketStatus)) {
+								satisfiesManifestation.add(ticket);
+							}
+					}
+				}else if(k.getRole().equals(Role.SELLER)) {
+					for(Ticket ticket : Database.tickets) {
+						if(Database.isSellersManifestation(k, ticket.getManifestation())) {
+							if(ticket.getStatus().equals(ticketStatus)) {
+								satisfiesManifestation.add(ticket);
+							}
+						}
+					}
+				}else {
+					for(Ticket ticket : Database.tickets) {
+						if(ticket.getBuyerFirstName().equals(k.getFirstName()) && ticket.getBuyerLastName().equals(k.getLastName()) && ticket.getStatus().equals(ticketStatus)) {
+							satisfiesManifestation.add(ticket);
+						}
+					}
+				}
 				if(satisfiesManifestation.isEmpty()) {
 					return false;
 				}else {
