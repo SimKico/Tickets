@@ -187,11 +187,39 @@ public class Data {
  
 		BuyerType bronze = new BuyerType("bronze", 10, 2000); 
 		
+		String ssDate1="13.12.2020 20:00";
+		String ssDate2="18.04.2021 19:00";
+		String ssDate3="15.10.2021 21:00";
+		
+		Date sdate1 = new SimpleDateFormat("dd.MM.yyyy HH:mm").parse(ssDate1);  
+		Date sdate2 = new SimpleDateFormat("dd.MM.yyyy HH:mm").parse(ssDate2);  
+		Date sdate3 = new SimpleDateFormat("dd.MM.yyyy HH:mm").parse(ssDate3);  
+		
+		Location location1 = new Location(20.46, 44.817, "Francuska", "3", "Beograd", 11000);
+		Location location2 = new Location(19.843, 45.255, "Pozorišni trg", "1", "Novi Sad", 21000);
+		Location location3 = new Location(19.845, 45.247, "Sutjeska", "2", "Novi Sad", 21000);
+		Location location4 = new Location(20.421, 44.814, "Bulevar Arsenija Čarnojevića", "58", "Beograd", 11000);
+		Location location5 = new Location(19.863, 45.252, "Beogradska", "bb", "Petrovaradin", 21131);
+		Location location6 = new Location(19.845, 45.255, "Trg Slobode", "bb", "Novi Sad", 21000);
+		
+		Manifestation manifestation1 = new Manifestation("Koncert1", ManifestationType.CONCERTS, date1, 1500, true, location4, "source/cloud-desktop-background.jpg");
+		Manifestation manifestation2 = new Manifestation("Festival1", ManifestationType.FESTIVALS, date2, 1200, true, location5, "source/cloud-desktop-background.jpg");
+		Manifestation manifestation3 = new Manifestation("Pozoriste1", ManifestationType.THEATERS, date3, 789, true, location1, "source/cloud-desktop-background.jpg");
+		Manifestation manifestation4 = new Manifestation("Koncert2", ManifestationType.CONCERTS, date3, 1500, false, location3, "source/cloud-desktop-background.jpg");
+		Manifestation manifestation5 = new Manifestation("Festival2", ManifestationType.FESTIVALS, date2, 1200, false, location6, "source/cloud-desktop-background.jpg");
+		Manifestation manifestation6 = new Manifestation("Pozoriste2", ManifestationType.THEATERS, date1, 789, true, location2, "source/cloud-desktop-background.jpg");
+		
+		ArrayList<Manifestation> manifestations = new ArrayList<Manifestation>();
+		manifestations.add(manifestation1);
+		manifestations.add(manifestation2);
+		manifestations.add(manifestation3);
+		manifestations.add(manifestation4);
+		
 		users.add(new User("admin1", "123", "Petra", "Peric", Gender.FEMALE, date1, Role.ADMIN,null,null,0,null));
 
 		users.add(new User("admin2", "123", "Nikola", "Nikolic", Gender.MALE, date2, Role.ADMIN,null,null,0,null));
 
-		users.add(new User("seller1", "123", "Petar", "Petrovic", Gender.MALE, date3, Role.SELLER ,null,null,0,null));
+		users.add(new User("seller1", "123", "Petar", "Petrovic", Gender.MALE, date3, Role.SELLER ,null, manifestations, 0, null));
 
 		users.add(new User("buyer1", "123", "Natasa", "Kovacevic", Gender.FEMALE, date4, Role.BUYER,null,null,4500, gold));
 

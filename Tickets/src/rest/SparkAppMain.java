@@ -205,7 +205,7 @@ public class SparkAppMain {
 			}else {
 				if(k.getRole().equals(Role.SELLER)) {
 					for(Ticket ticket : Database.tickets) {
-						if(ticket.getStatus().equals(TicketStatus.RESERVED)) {
+						if(ticket.getStatus().equals(TicketStatus.RESERVED) && Database.isSellersManifestation(k, ticket.getManifestation())) {
 							userTickets.add(ticket);
 						}
 					}

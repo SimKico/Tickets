@@ -59,6 +59,10 @@ public class Database {
 				if(user.getManifestations() != null) {
 					for(Manifestation manifestation : user.getManifestations()) {
 						if(manifestation.getTitle().equals(searchManifestition)) {
+							System.out.println(" manifestation.getTitle()" + manifestation.getTitle());
+							System.out.println("searchManifestition" + searchManifestition);
+							System.out.println("seller" + seller.getFirstName());
+							
 							return true;
 						}
 					}
