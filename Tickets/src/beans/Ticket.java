@@ -134,12 +134,12 @@ public class Ticket{
 			
 	public static Comparator<Ticket> titleComparatorDSC = new Comparator<Ticket>() {
 
-			public int compare(Ticket m1, Ticket m2) {
+		public int compare(Ticket m1, Ticket m2) {
 		  String title1 = m1.getManifestation().toLowerCase();
 		  String title2 = m2.getManifestation().toLowerCase();
 				   
 				   return title2.compareTo(title1);
-				}};
+			}};
 			
 	public static Comparator<Ticket> priceComparatorASC = new Comparator<Ticket>() {
 
@@ -149,7 +149,7 @@ public class Ticket{
 			
 			/*For ascending order*/
 			  return price1-price2;
-		}};
+			}};
 		
 	public static Comparator<Ticket> priceComparatorDSC = new Comparator<Ticket>() {
 

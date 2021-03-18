@@ -449,7 +449,7 @@ public class SparkAppMain {
 			
 
 			post("/tickets/sortAsc", (req, res) -> {
-				System.out.println("nesto");
+				
 				res.type("application/json");
 				User k = req.session().attribute("user");
 				
@@ -482,20 +482,17 @@ public class SparkAppMain {
 					}
 				}
 				if(sortBy.equals("title")) {
-					System.out.println("sort by title");
 					Collections.sort(userTickets, Ticket.titleComparatorASC);
 				}else if(sortBy.equals("price")) {
-					System.out.println("sort by price");
 					Collections.sort(userTickets, Ticket.priceComparatorASC);
 				}else {
-					System.out.println("sort by date");
 					Collections.sort(userTickets, Ticket.dateComparatorASC);
 				}
 				return g.toJson(userTickets);
 			});
 			
 			post("/tickets/sortDsc", (req, res) -> {
-				System.out.println("nesto");
+				
 				res.type("application/json");
 				User k = req.session().attribute("user");
 				
@@ -528,13 +525,10 @@ public class SparkAppMain {
 					}
 				}
 				if(sortBy.equals("title")) {
-					System.out.println("sort by title");
 					Collections.sort(userTickets, Ticket.titleComparatorDSC);
 				}else if(sortBy.equals("price")) {
-					System.out.println("sort by price");
 					Collections.sort(userTickets, Ticket.priceComparatorDSC);
 				}else {
-					System.out.println("sort by date");
 					Collections.sort(userTickets, Ticket.dateComparatorDSC);
 				}
 				return g.toJson(userTickets);
@@ -677,6 +671,49 @@ public class SparkAppMain {
 				}
 			});
 			
+			post("/users/sortAsc", (req, res) -> {
+
+				res.type("application/json");
+				String data = req.body();
+				
+				JsonObject job = new JsonParser().parse(data).getAsJsonObject();
+				String sortBy = job.get("sortBy").getAsString();
+				
+				ArrayList<User> users = Database.users;
+				
+				if(sortBy.equals("firstName")) {
+					Collections.sort(users, User.firstNameComparatorASC);
+				}else if(sortBy.equals("lastName")) {
+					Collections.sort(users, User.lastNameComparatorASC);
+				}else if(sortBy.equals("username")) {
+					Collections.sort(users, User.usernameComparatorASC);
+				}else {
+					Collections.sort(users, User.scoreComparatorASC);
+				}
+				return g.toJson(users);
+			});
+			
+			post("/users/sortDsc", (req, res) -> {
+
+				res.type("application/json");
+				String data = req.body();
+				
+				JsonObject job = new JsonParser().parse(data).getAsJsonObject();
+				String sortBy = job.get("sortBy").getAsString();
+				
+				ArrayList<User> users = Database.users;
+				
+				if(sortBy.equals("firstName")) {
+					Collections.sort(users, User.firstNameComparatorDSC);
+				}else if(sortBy.equals("lastName")) {
+					Collections.sort(users, User.lastNameComparatorDSC);
+				}else if(sortBy.equals("usrename")) {
+					Collections.sort(users, User.usernameComparatorDSC);
+				}else {
+					Collections.sort(users, User.scoreComparatorDSC);
+				}
+				return g.toJson(users);
+			});
 			
 	}
 }
