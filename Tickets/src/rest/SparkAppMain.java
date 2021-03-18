@@ -213,7 +213,7 @@ public class SparkAppMain {
 			}
 			return g.toJson(userTickets);
 		});
-			
+
 			post("/tickets/searchManifestation", (req, res) -> {
 				
 				res.type("application/json");
@@ -539,5 +539,144 @@ public class SparkAppMain {
 				}
 				return g.toJson(userTickets);
 			});
+			
+//			users ***************************************
+			get("/users", (req, res) -> {
+				
+				res.type("application/json");
+				return g.toJson(Database.users);
+				
+			});
+//search
+			post("/users/searchFirstName", (req, res) -> {
+				res.type("application/json");
+				User k = req.session().attribute("user");
+				
+				String data = req.body();
+			
+				JsonObject job = new JsonParser().parse(data).getAsJsonObject();
+				
+				String firstName = job.get("firstName").getAsString().toLowerCase();
+				ArrayList<User> users = new ArrayList<User>();
+				
+				for(User user : Database.users) {
+					if(user.getFirstName().toLowerCase().equals(firstName)) {
+						users.add(user);
+					}
+				}
+				if(users.isEmpty()) {
+					return false;
+				}else {
+					return g.toJson(users);
+				}
+			
+			});
+
+			post("/users/searchLastName", (req, res) -> {
+				res.type("application/json");
+				User k = req.session().attribute("user");
+				
+				String data = req.body();
+			
+				JsonObject job = new JsonParser().parse(data).getAsJsonObject();
+				
+				String lastName = job.get("lastName").getAsString().toLowerCase();
+				System.out.println(lastName);
+				ArrayList<User> users = new ArrayList<User>();
+				
+				for(User user : Database.users) {
+					if(user.getLastName().toLowerCase().equals(lastName)) {
+						users.add(user);
+					}
+				}
+				if(users.isEmpty()) {
+					return false;
+				}else {
+					return g.toJson(users);
+				}
+			});
+
+			post("/users/searchUsername", (req, res) -> {
+				res.type("application/json");
+				User k = req.session().attribute("user");
+				
+				String data = req.body();
+			
+				JsonObject job = new JsonParser().parse(data).getAsJsonObject();
+				
+				String username = job.get("username").getAsString().toLowerCase();
+				ArrayList<User> users = new ArrayList<User>();
+				
+				for(User user : Database.users) {
+					if(user.getUsername().toLowerCase().equals(username)) {
+						users.add(user);
+					}
+				}
+				if(users.isEmpty()) {
+					return false;
+				}else {
+					return g.toJson(users);
+				}
+			});
+//filter
+			post("/users/filterRole", (req, res) -> {
+				res.type("application/json");
+				User k = req.session().attribute("user");
+				
+				String data = req.body();
+			
+				JsonObject job = new JsonParser().parse(data).getAsJsonObject();
+				
+				String choiceRole = job.get("choiceRole").getAsString().toUpperCase();
+				
+
+				Role role;
+				if(choiceRole.equals( "ADMIN")) {
+					role = Role.ADMIN;
+				}else if(choiceRole.equals( "BUYER")) {
+					role = Role.BUYER;
+				}else {
+					role = Role.SELLER;
+				}
+				
+				ArrayList<User> users = new ArrayList<User>();
+				
+				for(User user : Database.users) {
+					if(user.getRole().equals(role)) {
+						users.add(user);
+					}
+				}
+				if(users.isEmpty()) {
+					return false;
+				}else {
+					return g.toJson(users);
+				}
+			});
+
+			post("/users/filterType", (req, res) -> {
+				res.type("application/json");
+				User k = req.session().attribute("user");
+				
+				String data = req.body();
+			
+				JsonObject job = new JsonParser().parse(data).getAsJsonObject();
+				
+				String choiceType = job.get("choiceType").getAsString();
+				System.out.println("choice type" +choiceType );
+				ArrayList<User> users = new ArrayList<User>();
+				
+				for(User user : Database.users) {
+					if(user.getBuyerType()!=null && user.getBuyerType().getTypeName().equals(choiceType)) {
+						users.add(user);
+					}
+				}
+				if(users.isEmpty()) {
+					return false;
+				}else {
+					return g.toJson(users);
+				}
+			});
+			
+			
 	}
 }
