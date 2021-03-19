@@ -800,11 +800,6 @@ public class SparkAppMain {
 						 manifestations.add(manifestation);
 					}
 					
-					System.out.println("\n Baza " +  manifestation.getLocation().getCity() + " uneseno " + location);
-					System.out.println("\nLokacija, poredjenje " + manifestation.getLocation().getCity().equals(location) + " ocekivano true");
-					System.out.println("\nProvjera praznog polja  " + location.equals("") + " Treba biti false");
-					System.out.println("\nLocation check " + checkLocation + " ocekivan true");
-					System.out.println("\n Ilii " + (location.equals("") || checkLocation));
 				}
 				
 				if(manifestations.isEmpty()) {
