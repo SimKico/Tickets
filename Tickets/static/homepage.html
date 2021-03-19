@@ -27,8 +27,85 @@
 <!--Custom styles-->
 <link rel="stylesheet" type="text/css"
 	href="css/manifestationHomepage.css">
+
+<script src="js/homepage.js"></script>
+
+<script src="https://unpkg.com/gijgo@1.9.13/js/gijgo.min.js"
+	type="text/javascript"></script>
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+	integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+	crossorigin="anonymous">
+<link href="https://unpkg.com/gijgo@1.9.13/css/gijgo.min.css"
+	rel="stylesheet" type="text/css" />
+
+<style type="text/css">
+
+</style>
+<script>
+	$(document).ready(function(){
+	    $("#toPrice").on("input", function(){
+	    	var toPrice = $("#toPrice").val();
+	    	if(toPrice==""){
+				$("#fromPrice").css('background-color', "#FFFFFF");
+				$("#search").prop("disabled",false);
+			}
+	    	else if(toPrice < 500 || toPrice > 3000){
+				$("#toPrice").css('background-color',"rgba(255,0,0,0.5)");
+				$("#search").prop("disabled",true);
+			}else{
+				$("#toPrice").css('background-color', "#FFFFFF");
+				$("#search").prop("disabled",false);
+			}
+	    });
+	    
+	    $("#fromPrice").on("input", function(){
+	    	var fromPrice = $("#fromPrice").val();
+	    	if(fromPrice==""){
+				$("#fromPrice").css('background-color', "#FFFFFF");
+				$("#search").prop("disabled",false);
+			}
+	    	else if(fromPrice < 500 || fromPrice > 3000){
+				$("#fromPrice").css('background-color', "rgba(255,0,0,0.5)");
+				$("#search").prop("disabled",true);
+			}else{
+				$("#fromPrice").css('background-color', "#FFFFFF");
+				$("#search").prop("disabled",false);
+				}
+	    });
+
+	    
+	});
 	
-<script  src="js/homepage.js"></script>
+	function search(){
+		console.log("Uso sam");
+		var title = $("#title").val();
+		var location = $("#location").val();
+		var fromDate = $("#datepicker").val();
+		var toDate = $("#datepicker2").val();
+		var fromPrice = $("#fromPrice").val()  == "" ? 500 :  parseInt($("#fromPrice").val());
+		var toPrice = $("#toPrice").val() == "" ? 3000 :  parseInt($("#toPrice").val());
+		console.log(title);
+		console.log(location);
+		console.log(fromDate);
+		console.log(toDate);
+		console.log(fromPrice);
+		console.log(toPrice);
+		dataForSearch = JSON.stringify({ "title": title, "location" : location, "fromDate" : fromDate, "toDate" : toDate, "fromPrice" : fromPrice, "toPrice" : toPrice });
+		$.ajax({
+            url:"/manifestations/search",
+            method:"post",
+            contentType: "application/json",
+            data: dataForSearch,
+            dataType: "JSON",
+            success:function(data){
+                console.log(data);
+            }
+		});
+			
+	}
+
+</script>
 
 </head>
 <body onload="getManifestations()">
@@ -42,19 +119,67 @@
 		<div class="collapse navbar-collapse" id="collapsibleNavbar">
 			<ul class="navbar-nav ml-auto">
 
-				<li class="nav-item"><a class="nav-link" href="login.html">Log In</a></li>
-				<li class="nav-item"><a class="nav-link" href="signIn.html">Sign Up</a></li>
+				<li class="nav-item"><a class="nav-link" href="login.html">Log
+						In</a></li>
+				<li class="nav-item"><a class="nav-link" href="signIn.html">Sign
+						Up</a></li>
 
 			</ul>
 		</div>
 	</nav>
 
-	<section id="hero" class="d-flex align-items-center">
-
+	<section class="flex align-items-center" title="Fill in one or more fields for search">
 		<div class="container">
-			<div id="cards" class="row">
+		<h3 style="color: #FFC312;">Search</h3>
+				<form class="form-inline">
+		<label class="sr-only" for="title">Title</label> 
+		<div class="input-group mb-1 mr-sm-1">
+		<input
+			type="text" class="form-control" style="width: 140px"
+			id="title" placeholder="Title"> 
+		</div>
+		<label class="sr-only" for="location">Username</label>
+		<div class="input-group mb-1 mr-sm-1">
+			<input type="text" id="location" class="form-control input-size"
+				style="width: 140px"
+				placeholder="City or Country">
+
+		</div>
+		<div class="input-group mb-1 mr-sm-1">
+			<input id="datepicker" placeholder="From Date" width="150" />
+			<script>
+		        $('#datepicker').datepicker({
+		            uiLibrary: 'bootstrap4'
+		        });
+		    </script>
 				
-			</div>
+			<input id="datepicker2" placeholder="To Date" width="150" />
+			<script>
+		        $('#datepicker2').datepicker({
+		            uiLibrary: 'bootstrap4'
+		        });
+		    </script>
+	
+		</div>
+		<div class="input-group mb-1 mr-sm-1">
+			<input type="number" id="fromPrice" class="form-control" placeholder="From Price"
+				min=500 style="width: 140px">
+		
+			<input type="number" id="toPrice" class="form-control" placeholder="To Price"
+				max=3000 min=500 style="width: 140px">
+		</div>
+
+		<button type="button" class="search_btn btn mb-1" id="searchBtn" onclick="search()">
+			<i class="fa fa-search"></i>
+		</button>
+
+	</form>
+		</div>
+	</section>
+
+	<section id="hero" class="d-flex align-items-center">
+		<div class="container">
+			<div id="cards" class="row"></div>
 		</div>
 	</section>
 

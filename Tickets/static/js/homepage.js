@@ -1,7 +1,7 @@
 
 	function getManifestations(){
 		$.ajax({
-            url:"/allManifestations",
+            url:"/manifestations/all",
             method:"get",
             dataType: "JSON",
             success:function(data){

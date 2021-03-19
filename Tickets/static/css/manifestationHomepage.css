@@ -34,3 +34,13 @@ html,body{
 	color: #FFC312;
 	text-shadow: 0 0 3px #000000, 0 0 5px #c0c0c0;
 }
+
+.input-size {
+	width: 140px;
+}
+
+.search_btn {
+	background-color: #FFC312 !important;
+	border-color:#c0c0c0 !important;
+}
+

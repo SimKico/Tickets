@@ -174,7 +174,7 @@ public class SparkAppMain {
 			return false;	
 		});
 		
-		get("/allManifestations", (req, res) -> {
+		get("/manifestations/all", (req, res) -> {
 			
 			res.type("application/json");
 			Collections.sort(Database.manifestations, Manifestation.dateComparator);
@@ -713,6 +713,108 @@ public class SparkAppMain {
 					Collections.sort(users, User.scoreComparatorDSC);
 				}
 				return g.toJson(users);
+			});
+			
+			post("/manifestations/search", (req, res) -> {
+				
+				res.type("application/json");
+				
+				String data = req.body();
+				System.out.print(data);
+			
+				JsonObject job = new JsonParser().parse(data).getAsJsonObject();
+				
+				String title = job.get("title").getAsString().toLowerCase();
+				String location = job.get("location").getAsString().toLowerCase();
+				String fromDate = job.get("fromDate").getAsString().toLowerCase();
+				String toDate = job.get("toDate").getAsString().toLowerCase();
+				int fromPrice = job.get("fromPrice").getAsInt();
+				int toPrice = job.get("toPrice").getAsInt();
+				
+				boolean checkTitle = false;
+				boolean checkLocation = false;
+				boolean checkFromDate = false;
+				boolean checkToDate = false;
+				boolean checkFromPrice = false;
+				boolean checkToPrice = false;
+				
+				
+				ArrayList<Manifestation> manifestations = new ArrayList<Manifestation>();
+				
+				for(Manifestation manifestation : Database.manifestations) {
+					if((!title.isEmpty() && manifestation.getTitle().toLowerCase().contains(title))) {
+						checkTitle = true;
+					}else {
+						checkTitle = false;
+					}
+					
+					if((!location.isEmpty() && manifestation.getLocation().getCity().toLowerCase().equals(location))) {
+						checkLocation = true;
+					}else {
+						checkLocation = false;
+					}
+					
+					if((!fromDate.isEmpty())){
+						Date from = new Date(fromDate);
+						if(manifestation.getRealisationDate().after(from)) {
+							checkFromDate = true;
+						}
+						else {
+								checkFromDate = false;
+						}
+					}else {
+						checkFromDate = false;
+					}
+					
+					if((!toDate.isEmpty())){
+						Date to = new Date(toDate);
+						if(manifestation.getRealisationDate().before(to)) {
+							checkToDate = true;
+						}
+						else {
+							checkToDate = false;
+						}
+					}else {
+						checkToDate = false;
+					}
+					
+					if((manifestation.getPrice() >= fromPrice)){
+						checkFromPrice = true;
+					}else {
+						checkFromPrice = false;
+					}
+					
+					if((manifestation.getPrice() <= toPrice)){
+						checkToPrice = true;
+					}else {
+						checkToPrice = false;
+					}
+					
+					if((title.equals("") || checkTitle) 
+							&& (location.equals("") || checkLocation) 
+							&& (fromDate.equals("") || checkFromDate)
+							&& (toDate.equals("") || checkToDate)
+							&& (fromPrice == 500 || checkFromPrice)
+							&& (toPrice == 3000 || checkToPrice)) {
+						 System.out.println("Imaa");
+						 manifestations.add(manifestation);
+					}
+					
+					System.out.println("\n Baza " +  manifestation.getLocation().getCity() + " uneseno " + location);
+					System.out.println("\nLokacija, poredjenje " + manifestation.getLocation().getCity().equals(location) + " ocekivano true");
+					System.out.println("\nProvjera praznog polja  " + location.equals("") + " Treba biti false");
+					System.out.println("\nLocation check " + checkLocation + " ocekivan true");
+					System.out.println("\n Ilii " + (location.equals("") || checkLocation));
+				}
+				
+				if(manifestations.isEmpty()) {
+					return false;
+				}else {
+					return g.toJson(manifestations);
+				}
+				
+				
+				
 			});
 			
 	}
