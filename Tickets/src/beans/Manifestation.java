@@ -12,13 +12,14 @@ public class Manifestation {
 	private boolean isActive;
 	private Location location;
 	private String posterPath; //maybe bufferedImage instead String
+	private int availableTickets;
 	
 	public Manifestation() {
 		super();
 	}
 
 	public Manifestation(String title, ManifestationType manifestationType, Date realisationDate, int price,
-			boolean isActive, Location location, String posterPath) {
+			boolean isActive, Location location, String posterPath , int availableTickets) {
 		super();
 		this.title = title;
 		this.manifestationType = manifestationType;
@@ -27,6 +28,7 @@ public class Manifestation {
 		this.isActive = isActive;
 		this.location = location;
 		this.posterPath = posterPath;
+		this.availableTickets = availableTickets;
 	}
 
 	public String getTitle() {
@@ -85,6 +87,17 @@ public class Manifestation {
 		this.posterPath = posterPath;
 	}
 	
+	
+	public int getAvailableTickets() {
+		return availableTickets;
+	}
+
+	public void setAvailableTickets(int availableTickets) {
+		this.availableTickets = availableTickets;
+	}
+
+
+
 	public static Comparator<Manifestation> dateComparator = new Comparator<Manifestation>() {
 
 		public int compare(Manifestation m1, Manifestation m2) {
