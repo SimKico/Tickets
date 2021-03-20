@@ -13,12 +13,15 @@ import java.util.Collections;
 import java.util.Date;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import beans.BuyerType;
 import beans.Gender;
+import beans.Location;
 import beans.Manifestation;
+import beans.ManifestationType;
 import beans.Role;
 import beans.Ticket;
 import beans.TicketStatus;
@@ -723,7 +726,7 @@ public class SparkAppMain {
 				System.out.print(data);
 			
 				JsonObject job = new JsonParser().parse(data).getAsJsonObject();
-				
+	
 				String title = job.get("title").getAsString().toLowerCase();
 				String location = job.get("location").getAsString().toLowerCase();
 				String fromDate = job.get("fromDate").getAsString().toLowerCase();
@@ -803,12 +806,158 @@ public class SparkAppMain {
 				}
 				
 				if(manifestations.isEmpty()) {
-					return false;
+					return null;
 				}else {
 					return g.toJson(manifestations);
 				}
 				
 				
+				
+			});
+			
+			post("/manifestations/sortAsc", (req, res)->{
+				
+				res.type("application/json");
+				String data = req.body();
+				
+				JsonObject job = new JsonParser().parse(data).getAsJsonObject();
+				JsonArray manifestationsJson = job.get("manifestations").getAsJsonArray();
+				String criteria = job.get("criteria").getAsString().toLowerCase();
+				
+				ArrayList<Manifestation> manifestations = new ArrayList<Manifestation>();
+				
+				for(int i=0; i<manifestationsJson.size(); i++) {
+					
+				   Location l = new Location();
+				   l.setCity(manifestationsJson.get(i).getAsJsonObject().get("location").getAsJsonObject().get("city").getAsString());
+				   l.setNumber(manifestationsJson.get(i).getAsJsonObject().get("location").getAsJsonObject().get("number").getAsString());
+				   l.setStreet(manifestationsJson.get(i).getAsJsonObject().get("location").getAsJsonObject().get("street").getAsString());
+				   l.setZipCode(manifestationsJson.get(i).getAsJsonObject().get("location").getAsJsonObject().get("zipCode").getAsInt());
+				   l.setLat(manifestationsJson.get(i).getAsJsonObject().get("location").getAsJsonObject().get("lat").getAsDouble());
+				   l.setLng(manifestationsJson.get(i).getAsJsonObject().get("location").getAsJsonObject().get("lng").getAsDouble());
+				
+			       Manifestation m = new Manifestation();
+			       m.setLocation(l);
+			       m.setActive(manifestationsJson.get(i).getAsJsonObject().get("isActive").getAsBoolean());
+			       m.setPrice(manifestationsJson.get(i).getAsJsonObject().get("price").getAsInt());
+			       m.setTitle(manifestationsJson.get(i).getAsJsonObject().get("title").getAsString());
+			       m.setManifestationType(ManifestationType.valueOf(manifestationsJson.get(i).getAsJsonObject().get("manifestationType").getAsString()));
+			       m.setRealisationDate(new Date(manifestationsJson.get(i).getAsJsonObject().get("realisationDate").getAsString()));
+			       m.setPosterPath(manifestationsJson.get(i).getAsJsonObject().get("posterPath").getAsString());
+			       m.setAvailableTickets(manifestationsJson.get(i).getAsJsonObject().get("availableTickets").getAsInt());
+			       m.setAverageRating(manifestationsJson.get(i).getAsJsonObject().get("averageRating").getAsDouble());
+			       manifestations.add(m);
+			    }
+			    
+				if(criteria.equals("title")) {
+					Collections.sort(manifestations, Manifestation.titleComparatorAsc);
+				}else if(criteria.equals("city")) {
+					Collections.sort(manifestations, Manifestation.cityComparatorAsc);
+				}else if(criteria.equals("price")) {
+					Collections.sort(manifestations, Manifestation.priceComparatorAsc);
+				}else {
+					Collections.sort(manifestations, Manifestation.dateComparator);
+				}
+				
+				
+				return g.toJson(manifestations);
+				
+			});
+			
+			post("/manifestations/sortDesc", (req, res)->{
+				
+				res.type("application/json");
+				String data = req.body();
+				
+				JsonObject job = new JsonParser().parse(data).getAsJsonObject();
+				JsonArray manifestationsJson = job.get("manifestations").getAsJsonArray();
+				String criteria = job.get("criteria").getAsString().toLowerCase();
+				
+				ArrayList<Manifestation> manifestations = new ArrayList<Manifestation>();
+				
+				for(int i=0; i<manifestationsJson.size(); i++) {
+					
+				   Location l = new Location();
+				   l.setCity(manifestationsJson.get(i).getAsJsonObject().get("location").getAsJsonObject().get("city").getAsString());
+				   l.setNumber(manifestationsJson.get(i).getAsJsonObject().get("location").getAsJsonObject().get("number").getAsString());
+				   l.setStreet(manifestationsJson.get(i).getAsJsonObject().get("location").getAsJsonObject().get("street").getAsString());
+				   l.setZipCode(manifestationsJson.get(i).getAsJsonObject().get("location").getAsJsonObject().get("zipCode").getAsInt());
+				   l.setLat(manifestationsJson.get(i).getAsJsonObject().get("location").getAsJsonObject().get("lat").getAsDouble());
+				   l.setLng(manifestationsJson.get(i).getAsJsonObject().get("location").getAsJsonObject().get("lng").getAsDouble());
+				
+			       Manifestation m = new Manifestation();
+			       m.setLocation(l);
+			       m.setActive(manifestationsJson.get(i).getAsJsonObject().get("isActive").getAsBoolean());
+			       m.setPrice(manifestationsJson.get(i).getAsJsonObject().get("price").getAsInt());
+			       m.setTitle(manifestationsJson.get(i).getAsJsonObject().get("title").getAsString());
+			       m.setManifestationType(ManifestationType.valueOf(manifestationsJson.get(i).getAsJsonObject().get("manifestationType").getAsString()));
+			       m.setRealisationDate(new Date(manifestationsJson.get(i).getAsJsonObject().get("realisationDate").getAsString()));
+			       m.setPosterPath(manifestationsJson.get(i).getAsJsonObject().get("posterPath").getAsString());
+			       m.setAvailableTickets(manifestationsJson.get(i).getAsJsonObject().get("availableTickets").getAsInt());
+			       m.setAverageRating(manifestationsJson.get(i).getAsJsonObject().get("averageRating").getAsDouble());
+			       manifestations.add(m);
+			    }
+			    
+				if(criteria.equals("title")) {
+					Collections.sort(manifestations, Manifestation.titleComparatorDesc);
+				}else if(criteria.equals("city")) {
+					Collections.sort(manifestations, Manifestation.cityComparatorDesc);
+				}else if(criteria.equals("price")) {
+					Collections.sort(manifestations, Manifestation.priceComparatorDesc);
+				}else {
+					Collections.sort(manifestations, Manifestation.dateComparatorDesc);
+				}
+				
+				
+				return g.toJson(manifestations);
+				
+			});
+			
+			post("/manifestations/filter", (req, res)->{
+				
+				res.type("application/json");
+				String data = req.body();
+				
+				JsonObject job = new JsonParser().parse(data).getAsJsonObject();
+				JsonArray manifestationsJson = job.get("manifestations").getAsJsonArray();
+				String type = job.get("type").getAsString();
+				boolean available = job.get("available").getAsBoolean();
+				
+				ArrayList<Manifestation> manifestations = new ArrayList<Manifestation>();
+				
+				for(int i=0; i<manifestationsJson.size(); i++) {
+					
+				   Location l = new Location();
+				   l.setCity(manifestationsJson.get(i).getAsJsonObject().get("location").getAsJsonObject().get("city").getAsString());
+				   l.setNumber(manifestationsJson.get(i).getAsJsonObject().get("location").getAsJsonObject().get("number").getAsString());
+				   l.setStreet(manifestationsJson.get(i).getAsJsonObject().get("location").getAsJsonObject().get("street").getAsString());
+				   l.setZipCode(manifestationsJson.get(i).getAsJsonObject().get("location").getAsJsonObject().get("zipCode").getAsInt());
+				   l.setLat(manifestationsJson.get(i).getAsJsonObject().get("location").getAsJsonObject().get("lat").getAsDouble());
+				   l.setLng(manifestationsJson.get(i).getAsJsonObject().get("location").getAsJsonObject().get("lng").getAsDouble());
+				
+			       Manifestation m = new Manifestation();
+			       m.setLocation(l);
+			       m.setActive(manifestationsJson.get(i).getAsJsonObject().get("isActive").getAsBoolean());
+			       m.setPrice(manifestationsJson.get(i).getAsJsonObject().get("price").getAsInt());
+			       m.setTitle(manifestationsJson.get(i).getAsJsonObject().get("title").getAsString());
+			       m.setManifestationType(ManifestationType.valueOf(manifestationsJson.get(i).getAsJsonObject().get("manifestationType").getAsString()));
+			       m.setRealisationDate(new Date(manifestationsJson.get(i).getAsJsonObject().get("realisationDate").getAsString()));
+			       m.setPosterPath(manifestationsJson.get(i).getAsJsonObject().get("posterPath").getAsString());
+			       m.setAvailableTickets(manifestationsJson.get(i).getAsJsonObject().get("availableTickets").getAsInt());
+			       m.setAverageRating(manifestationsJson.get(i).getAsJsonObject().get("averageRating").getAsDouble());
+			       manifestations.add(m);
+			    }
+			    
+				if(available && !type.equals("none")) {
+					manifestations.removeIf(p -> p.getManifestationType() != ManifestationType.valueOf(type) || p.getAvailableTickets() == 0);
+				}else if(!available && type != "none") {
+					manifestations.removeIf(p -> p.getManifestationType() != ManifestationType.valueOf(type));
+				}else if(available && type.equals("none")) {
+					manifestations.removeIf(p -> p.getAvailableTickets() == 0);
+				}
+				
+				
+				return g.toJson(manifestations);
 				
 			});
 			

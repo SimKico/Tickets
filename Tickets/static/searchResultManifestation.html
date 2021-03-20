@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Search result</title>
+<link href="assets/img/favicon.png" rel="icon">
+<link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+<!--JQuery 3.4.1 CDN CDN-->
+<script src="https://code.jquery.com/jquery-3.4.1.js"
+	integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+	crossorigin="anonymous">
+	</script>
+
+
+<!--Bootsrap 4 CDN-->
+<link rel="stylesheet"
+	href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+	integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+	crossorigin="anonymous">
+
+<!--Fontawesome CDN-->
+<link rel="stylesheet"
+	href="https://use.fontawesome.com/releases/v5.3.1/css/all.css"
+	integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU"
+	crossorigin="anonymous">
+
+<!-- <!--Custom styles-->
+
+<link rel="stylesheet" type="text/css"
+	href="css/manifestationHomepage.css">
+
+<script src="js/homepage.js"></script>
+
+<script src="https://unpkg.com/gijgo@1.9.13/js/gijgo.min.js"
+	type="text/javascript"></script>
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+	integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+	crossorigin="anonymous">
+<link href="https://unpkg.com/gijgo@1.9.13/css/gijgo.min.css"
+	rel="stylesheet" type="text/css" />
+
+
+<script>
+
+	function readSearchResult(){
+		if(localStorage.getItem('resultManifestation') != null){
+			var data = JSON.parse(localStorage.getItem('resultManifestation')); 
+			localStorage.setItem('dataForSort', JSON.stringify(data));
+			showSearchResult(data);
+			showFilter(data);
+		}
+		
+	}
+
+	function showSearchResult(data){
+
+		var i = 0;
+		for(i; i<data.length; i++){
+			var rating = data[i].averageRating == 0 ? "Not held" : data[i].averageRating;
+			var date = new Date((data[i].realisationDate));
+			$("#cards")
+			.append($("<div class='col-md-4 div-space'>")
+					.append($("<div class='card'>")
+							.append($("<div class='card-header'>").append($("<h5>").text(data[i].manifestationType)))
+							.append($("<img src='"+data[i].posterPath+"'>"))
+							.append($("<div class='card-body text-center'>")
+									.append($("<div class='card-title'>").append($("<h5>").text(data[i].title)))
+									.append($("<p class='card-text'>").text(date.toLocaleString("sr-sp")))
+									.append($("<p class='card-text'>").text(data[i].location.street +" " + data[i].location.number + ", " + data[i].location.city))
+								
+									)
+							.append($("<div class='card-footer'>").text("Price: " + data[i].price +" RSD")
+																  .append($("<p class='card-text p_text'>").text("Rating: " + rating)))
+									));
+				
+		
+       }		
+	
+	}
+
+	function showFilter(data){
+		var i = 0;
+		if(data.length > 0){
+			 $("#filterByType")
+			   .append($("<p class='mb-1 mr-sm-2'>").text("By manifestation type: "));
+			$("#typeFilter")
+			   .append($("<button class='btn search_btn mb-1' onclick='filter()'>").text("Apply"))
+			   .append($("<button id='removeTypeFilter' class='btn search_btn mb-1'  hidden='true' onclick='removeTypeFilter()'>").text("Reset"));
+		}
+		for(i; i<data.length; i++){
+			
+			$("#filterByType")
+			   .append($("<div id='typeFilter' class='mb-1 mr-sm-2'>").append($("<input id='manType' type='radio' name='choiceType' value='"+data[i].manifestationType+"' >"))
+					   							  .append($("<a>").text(data[i].manifestationType)));	
+		}
+		
+		
+	}
+
+	function sortAsc(criteria){
+		var manifestations = JSON.parse(localStorage.getItem('dataForSort'));
+		data = JSON.stringify({manifestations : manifestations, criteria : criteria});
+		console.log(data);
+		$.ajax({
+            url:"/manifestations/sortAsc",
+            method:"post",
+            contentType: "application/json",
+            data: data,
+            dataType: "JSON",
+            success:function(data){
+                console.log(data);
+                $( "#cards" ).empty();
+                showSearchResult(data);
+                
+            },
+            error: function(xhr, textStatus, error){
+                console.log(xhr.statusText);
+                console.log(textStatus);
+                console.log(error);
+            }
+		});
+		}
+
+	function sortDesc(criteria){
+		var manifestations = JSON.parse(localStorage.getItem('dataForSort'));
+		data = JSON.stringify({manifestations : manifestations, criteria : criteria});
+		console.log(data);
+		$.ajax({
+            url:"/manifestations/sortDesc",
+            method:"post",
+            contentType: "application/json",
+            data: data,
+            dataType: "JSON",
+            success:function(data){
+                console.log(data);
+                $( "#cards" ).empty();
+                showSearchResult(data);  
+            },
+            error: function(xhr, textStatus, error){
+                console.log(xhr.statusText);
+                console.log(textStatus);
+                console.log(error);
+            }
+		});		
+	}
+
+	function filter(){
+		var type = $("input[name=choiceType]:checked").val() == undefined ? "none" : $("input[name=choiceType]:checked").val();
+		var available = $("input[name=choiceStatus]:checked").val() == "available" ? true : false;
+
+		var manifestations = JSON.parse(localStorage.getItem('resultManifestation'));
+		data = JSON.stringify({manifestations : manifestations, type : type, available : available});
+
+		$.ajax({
+            url:"/manifestations/filter",
+            method:"post",
+            contentType: "application/json",
+            data: data,
+            dataType: "JSON",
+            success:function(data){
+            	if(type != "none")
+                	$("#removeTypeFilter").prop('hidden', false);
+                if(available == true)
+                	$("#removeFilter").prop('hidden', false);
+            	
+                console.log(data);
+                localStorage.setItem('dataForSort', JSON.stringify(data));
+                $( "#cards" ).empty();
+                showSearchResult(data);  
+            },
+            error: function(xhr, textStatus, error){
+                console.log(xhr.statusText);
+                console.log(textStatus);
+                console.log(error);
+            }
+		});		
+		
+		
+	}
+
+	function removeTypeFilter(){
+		$("input[name=choiceType]:checked").prop('checked', false);
+		$("#removeTypeFilter").prop('hidden', true);
+		if($("input[name=choiceStatus]:checked").val() == "available"){
+			filter();
+		}else{
+			$( "#cards" ).empty();
+			var data = JSON.parse(localStorage.getItem('resultManifestation'));
+			localStorage.setItem('dataForSort', JSON.stringify(data));
+			showSearchResult(data);
+		}
+		
+	}
+
+	function removeAvailableFilter(){
+		$("input[name=choiceStatus]:checked").prop('checked', false);
+		$("#removeFilter").prop('hidden', true);
+		if($("input[name=choiceType]:checked") != undefined){
+			filter();
+		}else{
+			$( "#cards" ).empty();
+			var data = JSON.parse(localStorage.getItem('resultManifestation'));
+			localStorage.setItem('dataForSort', JSON.stringify(data));
+			showSearchResult(data);
+		}
+	}
+
+	function clearSearch(){
+	
+		localStorage.removeItem("resultManifestation");
+		localStorage.removeItem("dataForSort");		
+		location.href = "homepage.html";
+			
+		}
+</script>
+</head>
+
+<body onload="readSearchResult()">
+	<nav class="navbar navbar-expand-sm navbar-dark nav-backround">
+		<a class="navbar-brand" href="homepage.html">Home</a>
+		<button class="navbar-toggler" type="button" data-toggle="collapse"
+			data-target="#collapsibleNavbar" onclick="">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+		<div class="collapse navbar-collapse" id="collapsibleNavbar">
+			<ul class="navbar-nav ml-auto">
+
+				<li class="nav-item"><a class="nav-link" href="login.html">Log
+						In</a></li>
+				<li class="nav-item"><a class="nav-link" href="signIn.html">Sign
+						Up</a></li>
+
+			</ul>
+		</div>
+	</nav>
+	<div class="container"  title="Back to homepage">	
+		<button class = "btn search_btn" style = "background-color:darkgoldenrod;" onclick="clearSearch()"><i class="fa fa-backward" ></i></button>
+	</div>
+	<section class="flex align-items-center" title="Filter search result">
+		<div class="container">
+			<div>
+				<h3 style="color: #FFC312;">Filter</h3>
+			</div>
+
+			<div class="form-inline">
+				<div id="availableTickets" class="input-group mb-1 mr-sm-2">
+					<p class="mb-1 mr-sm-3">
+						By tickets availability:</b>
+					</p>
+					<div class="mb-1 mr-sm-2">
+						<input id="available" type="radio" name="choiceStatus"
+							value="available" /> <a> AVAILABLE TICKETS </a>
+					</div>
+				</div>
+				<button class="btn search_btn mb-1" onclick="filter()">
+					Apply</button>
+				<button class="btn search_btn mb-1" id="removeFilter" hidden="true" onclick="removeAvailableFilter()">Reset</button>
+			</div>
+
+
+			<div class="form-inline" id="typeFilter">
+				<div id="filterByType" class="input-group  mb-1 mr-sm-2"></div>
+			</div>
+
+		</div>
+	</section>
+
+	<section class="flex align-items-center" title="Sort search result">
+		<div class="container">
+			<div class="form-inline">
+				<div class="mb-1 mr-sm-5">
+					<h3 style="color: #FFC312;">Sort</h3>
+				</div>
+				<div class=" form-check-inline mb-1 mr-sm-5">
+					<p class="mb-1 mr-sm-1">By title:</p>
+					<button class="btn search_btn" onclick="sortAsc('title')">
+						<i class="fas fa-arrow-up"></i>
+					</button>
+					<button class="btn search_btn" onclick="sortDesc('title')">
+						<i class="fas fa-arrow-down"></i>
+					</button>
+				</div>
+				<div class="form-check-inline mb-1 mr-sm-5">
+					<p class="mb-1 mr-sm-1">By date:</p>
+					<button class="btn search_btn">
+						<i class="fas fa-arrow-up" onclick="sortAsc('date')"></i>
+					</button>
+					<button class="btn search_btn" onclick="sortDesc('date')">
+						<i class="fas fa-arrow-down"></i>
+					</button>
+				</div>
+				<div class=" form-check-inline mb-1 mr-sm-5">
+					<p class="mb-1 mr-sm-1">By price:</p>
+					<button class="btn search_btn" onclick="sortAsc('price')">
+						<i class="fas fa-arrow-up"></i>
+					</button>
+					<button class="btn search_btn" onclick="sortDesc('price')">
+						<i class="fas fa-arrow-down"></i>
+					</button>
+				</div>
+				<div class=" form-check-inline mb-1 mr-sm-5">
+					<p class="mb-1 mr-sm-1">By location:</p>
+					<button class="btn search_btn" onclick="sortAsc('city')">
+						<i class="fas fa-arrow-up"></i>
+					</button>
+					<button class="btn search_btn" onclick="sortDesc('city')">
+						<i class="fas fa-arrow-down"></i>
+					</button>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<section id="hero" class="d-flex align-items-center">
+		<div class="container">
+			<div id="cards" class="row"></div>
+		</div>
+	</section>
+
+</body>
+</html>

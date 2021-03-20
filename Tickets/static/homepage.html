@@ -100,6 +100,14 @@
             dataType: "JSON",
             success:function(data){
                 console.log(data);
+                localStorage.setItem('resultManifestation', JSON.stringify(data));
+                console.log(localStorage.getItem('resultManifestation'));
+                window.location = "searchResultManifestation.html";
+            },
+            error: function(xhr, textStatus, error){
+                console.log(xhr.statusText);
+                console.log(textStatus);
+                console.log(error);
             }
 		});
 			
@@ -131,7 +139,7 @@
 	<section class="flex align-items-center" title="Fill in one or more fields for search">
 		<div class="container">
 		<h3 style="color: #FFC312;">Search</h3>
-				<form class="form-inline">
+				<div class="form-inline">
 		<label class="sr-only" for="title">Title</label> 
 		<div class="input-group mb-1 mr-sm-1">
 		<input
@@ -173,7 +181,7 @@
 			<i class="fa fa-search"></i>
 		</button>
 
-	</form>
+	</div>
 		</div>
 	</section>
 

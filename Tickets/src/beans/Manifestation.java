@@ -117,7 +117,77 @@ public class Manifestation {
 		   else
 			   return 0;
 
-	    }};
+    }};
+	    
+    public static Comparator<Manifestation> dateComparatorDesc = new Comparator<Manifestation>() {
+
+		public int compare(Manifestation m1, Manifestation m2) {
+		   Date date1 = m1.getRealisationDate();
+		   Date date2 = m2.getRealisationDate();
+		   
+		   if(date1.after(date2))
+			   return -1;
+		   else
+			   return 0;
+
+    }};
+    
+    public static Comparator<Manifestation> titleComparatorDesc = new Comparator<Manifestation>() {
+
+		public int compare(Manifestation m1, Manifestation m2) {
+		   String title1 = m1.getTitle().toLowerCase();
+		   String title2 = m2.getTitle().toLowerCase();
+		   
+		   return title2.compareTo(title1);
+    }};
+    
+    public static Comparator<Manifestation> titleComparatorAsc = new Comparator<Manifestation>() {
+
+    	public int compare(Manifestation m1, Manifestation m2) {
+ 		   String title1 = m1.getTitle().toLowerCase();
+ 		   String title2 = m2.getTitle().toLowerCase();
+ 		   
+ 		   return title1.compareTo(title2);
+
+    }};
+    
+    public static Comparator<Manifestation> cityComparatorDesc = new Comparator<Manifestation>() {
+
+		public int compare(Manifestation m1, Manifestation m2) {
+		   String city1 = m1.getLocation().getCity().toLowerCase();
+		   String city2 = m2.getLocation().getCity().toLowerCase();
+		   
+		   return city2.compareTo(city1);
+    }};
+    
+    public static Comparator<Manifestation> cityComparatorAsc = new Comparator<Manifestation>() {
+
+    	public int compare(Manifestation m1, Manifestation m2) {
+ 		   String city1 = m1.getLocation().getCity().toLowerCase();
+ 		   String city2 = m2.getLocation().getCity().toLowerCase();
+ 		   
+ 		   return city1.compareTo(city2);
+
+    }};
+    
+    public static Comparator<Manifestation> priceComparatorAsc = new Comparator<Manifestation>() {
+
+		public int compare(Manifestation m1, Manifestation m2) {
+		   int price1 = m1.getPrice();
+		   int price2 = m2.getPrice();
+		   
+		   return price1-price2;
+    }};
+    
+    public static Comparator<Manifestation> priceComparatorDesc = new Comparator<Manifestation>() {
+
+    	public int compare(Manifestation m1, Manifestation m2) {
+ 		   int price1 = m1.getPrice();
+ 		   int price2 = m2.getPrice();
+ 		   
+ 		   return price2-price1;
+
+    }};
 	    
    
 }
