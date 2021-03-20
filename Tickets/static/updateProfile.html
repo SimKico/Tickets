@@ -31,9 +31,6 @@
 		
 		function loadProfile(){
 			console.log("You are in");
-			var username = localStorage.getItem("username");
-			// console.log("loadProfile " + username);
-			// var usernameData = JSON.stringify({username});
 			
 			$.ajax({
                     url:"/profile",
@@ -47,16 +44,24 @@
 						
 						$("#lastName").val(data.lastName);
 
-						$("#date_of_birth").val(data.birthDay.split(", 12")[0]);
+						var dateOfBirth1 = new Date(data.birthDay);
+						var day = ("0" + dateOfBirth1.getDate()).slice(-2);
+						var month = ("0" + (dateOfBirth1.getMonth() + 1)).slice(-2);
+						var today = dateOfBirth1.getFullYear()+"-"+(month)+"-"+(day) ;
+						$("#date_of_birth").val(today);
+						if(data.gender === "MALE"){
+							$('#male').prop('checked', true)
+						}else{
+
+							$('#female').prop('checked', true)
+						}
 						
-						$("#gender").val(data.gender);
 
                     }
                 })
 		}
 		function is_valid() {
 
-			console.log("validate input");
 			var username = $("#username").val();
 
 			var password = $("#password").val();
@@ -79,39 +84,7 @@
 				}
 			}
 
-			console.log(gender);
-			console.log(dateOfBirth);
-
-			if (username == "") {
-				$("#username").css("border-width", "medium");
-				$("#username").css("border-color", "rgba(255, 14, 14)");
-				$("#username").addClass("my-class");
-				document.getElementById("username").placeholder = "Insert username!";
-				return false;
-			} else if (password == "") {
-				$("#password").css("border-width", "medium");
-				$("#password").css("border-color", "rgba(255, 14, 14)");
-				$("#password").addClass("my-class");
-				document.getElementById("password").placeholder = "Insert password!";
-				return false;
-			} else if (firstName == "") {
-				$("#firstName").css("border-width", "medium");
-				$("#firstName").css("border-color", "rgba(255, 14, 14)");
-				$("#firstName").addClass("my-class");
-				document.getElementById("firstName").placeholder =
-					"Insert firstName!";
-				return false;
-			} else if (lastName == "") {
-				$("#lastName").css("border-width", "medium");
-				$("#lastName").css("border-color", "rgba(255, 14, 14)");
-				$("#lastName").addClass("my-class");
-				document.getElementById("lastName").placeholder = "Insert lastName!";
-				return false;
-			} else if (gender == undefined) {
-				$("#gender").css("border-width", "medium");
-				$("#gender").css("border-color", "rgba(255, 14, 14)");
-				$("#gender").addClass("my-class");
-				document.getElementById("gender").append("must be selected!");
+			if (username == "" && password == "" && firstName == "" && lastName == "" && dateOfBirth == "" && gender == undefined) {	
 				return false;
 			}else {
 				return true;
@@ -125,7 +98,7 @@
 		function timeConverter(UNIX_timestamp){
 			var a = new Date(UNIX_timestamp);
 			var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-			var year = a.getFullYear();
+			var year = a.getFullYear();	
 			var month = months[a.getMonth()];
 			var date = a.getDate();
 			var time = date + ' ' + month + ', ' + year + ', ' +'12:00:00 AM' ;
@@ -144,14 +117,15 @@
 				var lastName = $("#lastName").val();
 
 				var dateOfBirth = document.querySelector('input[type="date"]').value;
-
+				console.log(dateOfBirth);
+				if (dateOfBirth === ""){
+				}
 				var dateOfBirthTimpestamp = document.querySelector('input[type="date"]').valueAsNumber;
 				var date1 = new Date(dateOfBirthTimpestamp);
 				var date = timeConverter(dateOfBirthTimpestamp);
-				console.log(date);
 
 				const genders = document.querySelectorAll('input[name="choice"]');
-
+			
 				let gender;
 				for (const rb of genders) {
 					if (rb.checked) {
@@ -160,14 +134,15 @@
 					}
 				}
 
-				var registrationData = JSON.stringify({ "username" : username, "password": password, "firstName" : firstName, "lastName" : lastName, "birthDay": date1, "gender":gender });
+
+				var registrationData = JSON.stringify({ "username" : username, "password": password, "firstName" : firstName, "lastName" : lastName, "gender":gender, "birthDay": date1});
 				$.ajax({
 					type : "PUT",
 					url : "/profileUpdate",
 					data : registrationData,
 					dataType : "json",
 					complete : function(data){
-						if(data.responseText){
+						if(data.responseText === "true"){
 							location.href = "profil.html";
 						}else
 						{
@@ -175,6 +150,8 @@
 						}
 					}
 				})
+			}else{
+				alert("There are no changes!");
 			}
 		}
 	</script>
@@ -191,6 +168,8 @@
 		<div class="collapse navbar-collapse" id="collapsibleNavbar">
 			<ul class="navbar-nav ml-auto">
 
+				
+				<li class="nav-item"><a class="nav-link" href="tickets.html">Tickets</a></li>
 				<li class="nav-item"><a class="nav-link" href="profil.html">My profile</a></li>
 				
 				<li class="nav-item"><a class="nav-link" href="login.html" onclick="logOut()">Log out</a></li>
@@ -262,7 +241,7 @@
 								<span class="input-group-text" id="birth">
 									<a> Date of birth </a>
 								</span>
-								<input type="date" class="form-control" id="date_of_birth"  value="1991-07-22" min="1900-01-01" max="2021-06-06" />
+								<input type="date" class="form-control" id="date_of_birth" min="1900-01-01" max="2021-06-06" />
 							</p>
 						</div>
 

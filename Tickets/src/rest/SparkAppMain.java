@@ -138,14 +138,14 @@ public class SparkAppMain {
 			User oldUserData = req.session().attribute("user");
 			String oldUsername = oldUserData.getUsername();
 			
-			System.out.println(oldUserData.getUsername());
-			
 			Date date = new SimpleDateFormat("yyyy-MM-dd").parse(job.get("birthDay").getAsString());
 			
-			Gender gender = job.get("gender").getAsString() == ("MALE") ? Gender.MALE : Gender.FEMALE;
+			Gender gender = null;
+			if(job.get("gender").getAsString()!= null) {
+				 gender = job.get("gender").getAsString() == ("MALE") ? Gender.MALE : Gender.FEMALE;
+			}
 		
 			BuyerType buyerType = new BuyerType("none",0,0);
-			
 			
 			User newUserData = new User(job.get("username").getAsString(), job.get("password").getAsString(), job.get("firstName").getAsString(), job.get("lastName").getAsString(), gender, date, Role.BUYER, null, null, 0, buyerType);
 		
@@ -154,7 +154,10 @@ public class SparkAppMain {
 			for(User kk: Database.users) {
 				if(kk.getUsername().equals(newUserData.getUsername())) {
 						return false;
-					}else {
+					}
+			}
+			
+			
 						for(User oneUser : Database.users) {
 							if(oneUser.getUsername().equals(oldUsername)) {
 								oneUser.setUsername(newUserData.getUsername());
@@ -170,8 +173,6 @@ public class SparkAppMain {
 								Database.saveUsers();
 								return true;
 							}
-						}
-					}
 				}						
 			
 			return false;	
