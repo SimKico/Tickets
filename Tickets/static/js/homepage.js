@@ -1,33 +1,84 @@
+function getManifestations() {
+	$.ajax({
+		url: "/manifestations/all",
+		method: "get",
+		dataType: "JSON",
+		success: function (data) {
+			console.log(data);
+			var i = 0;
+			for (i; i < data.length; i++) {
+				var date = new Date(data[i].realisationDate);
+				$("#cards").append(
+					$("<div class='col-md-4 div-space'>").append(
+						$("<div class='card'>")
+							.append(
+								$("<div class='card-header'>").append(
+									$("<h5>").text(data[i].manifestationType)
+								)
+							)
+							.append($("<img src='" + data[i].posterPath + "'>"))
+							.append(
+								$("<div class='card-body text-center'>")
+									.append(
+										$("<div class='card-title'>").append(
+											$("<h5>").text(data[i].title)
+										)
+									)
+									.append(
+										$("<p class='card-text'>").text(
+											date.toLocaleString("sr-sp")
+										)
+									)
+									.append(
+										$("<p class='card-text'>").text(
+											data[i].location.street +
+											" " +
+											data[i].location.number +
+											", " +
+											data[i].location.city
+										)
+									)
+							)
+							.append(
+								$("<div class='card-footer'>")
+									.append($("<h5>").text("Book a ticket:"))
+									.append(
+										$("<p class='card-text'>").append(
+											$(
+												"<button class = 'btn' onclick = 'book_regular()'>"
+											).text("Regular " + data[i].price + " RSD")
+										)
+									)
+									.append(
+										$("<p class='card-text'>").append(
+											$(
+												"<button class = 'btn' onclick = 'book_fanpit()'>"
+											).text("Fanpit " + data[i].price * 2 + " RSD")
+										)
+									)
+									.append(
+										$("<p class='card-text'>").append(
+											$(
+												"<button class = 'btn' onclick = 'book_vip()'>"
+											).text("Vip " + data[i].price * 4 + " RSD")
+										)
+									)
+							)
+					)
+				);
+			}
+		},
+	});
+}
 
-	function getManifestations(){
-		$.ajax({
-            url:"/manifestations/all",
-            method:"get",
-            dataType: "JSON",
-            success:function(data){
-				console.log(data);
-				var i = 0;
-				for(i; i<data.length; i++){
+function book_regular() {
+	console.log("nja");
+}
 
-					var date = new Date((data[i].realisationDate));
-					$("#cards")
-					.append($("<div class='col-md-4 div-space'>")
-							.append($("<div class='card'>")
-									.append($("<div class='card-header'>").append($("<h5>").text(data[i].manifestationType)))
-									.append($("<img src='"+data[i].posterPath+"'>"))
-									.append($("<div class='card-body text-center'>")
-											.append($("<div class='card-title'>").append($("<h5>").text(data[i].title)))
-											.append($("<p class='card-text'>").text(date.toLocaleString("sr-sp")))
-											.append($("<p class='card-text'>").text(data[i].location.street +" " + data[i].location.number + ", " + data[i].location.city))
-										
-											)
-									.append($("<div class='card-footer'>").text("Price: " + data[i].price +" RSD"))
-											));
-						
-				
-            }
-            }
-		});
-		}
-	
-	
+function book_regular() {
+	console.log("nja");
+}
+
+function book_regular() {
+	console.log("nja");
+}

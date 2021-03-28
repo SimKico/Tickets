@@ -13,6 +13,9 @@ public class Manifestation {
 	private Location location;
 	private String posterPath; //maybe bufferedImage instead String
 	private int availableTickets;
+	private int availableRegularTickets;
+	private int availableFanpitTickets;
+	private int availableVipTickets;
 	private double averageRating;
 	
 	public Manifestation() {
@@ -20,7 +23,8 @@ public class Manifestation {
 	}
 
 	public Manifestation(String title, ManifestationType manifestationType, Date realisationDate, int price,
-			boolean isActive, Location location, String posterPath , int availableTickets, double averageRating) {
+			boolean isActive, Location location, String posterPath, int availableTickets, int availableRegularTickets,
+			int availableFanpitTickets, int availableVipTickets, double averageRating) {
 		super();
 		this.title = title;
 		this.manifestationType = manifestationType;
@@ -30,8 +34,13 @@ public class Manifestation {
 		this.location = location;
 		this.posterPath = posterPath;
 		this.availableTickets = availableTickets;
+		this.availableRegularTickets = availableRegularTickets;
+		this.availableFanpitTickets = availableFanpitTickets;
+		this.availableVipTickets = availableVipTickets;
 		this.averageRating = averageRating;
 	}
+
+
 
 	public String getTitle() {
 		return title;
@@ -103,6 +112,33 @@ public class Manifestation {
 
 	public void setAverageRating(double averageRating) {
 		this.averageRating = averageRating;
+	}
+
+
+	public int getAvailableRegularTickets() {
+		return availableRegularTickets;
+	}
+
+	public void setAvailableRegularTickets(int availableRegularTickets) {
+		this.availableRegularTickets = availableRegularTickets;
+	}
+
+
+	public int getAvailableVipTickets() {
+		return availableVipTickets;
+	}
+
+	public void setAvailableVipTickets(int availableVipTickets) {
+		this.availableVipTickets = availableVipTickets;
+	}
+
+
+	public int getAvailableFanpitTickets() {
+		return availableFanpitTickets;
+	}
+
+	public void setAvailableFanpitTickets(int availableFanpitTickets) {
+		this.availableFanpitTickets = availableFanpitTickets;
 	}
 
 
