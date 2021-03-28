@@ -727,21 +727,21 @@ public class SparkAppMain {
 				System.out.print(data);
 			
 				JsonObject job = new JsonParser().parse(data).getAsJsonObject();
-	
+				System.out.print(data);
 				String title = job.get("title").getAsString().toLowerCase();
 				String location = job.get("location").getAsString().toLowerCase();
 				String fromDate = job.get("fromDate").getAsString().toLowerCase();
 				String toDate = job.get("toDate").getAsString().toLowerCase();
 				int fromPrice = job.get("fromPrice").getAsInt();
 				int toPrice = job.get("toPrice").getAsInt();
-				
+				System.out.print(data);
 				boolean checkTitle = false;
 				boolean checkLocation = false;
 				boolean checkFromDate = false;
 				boolean checkToDate = false;
 				boolean checkFromPrice = false;
 				boolean checkToPrice = false;
-				
+				System.out.print(data);
 				
 				ArrayList<Manifestation> manifestations = new ArrayList<Manifestation>();
 				
@@ -798,8 +798,8 @@ public class SparkAppMain {
 							&& (location.equals("") || checkLocation) 
 							&& (fromDate.equals("") || checkFromDate)
 							&& (toDate.equals("") || checkToDate)
-							&& (fromPrice == 500 || checkFromPrice)
-							&& (toPrice == 3000 || checkToPrice)) {
+							&& (fromPrice >= 500 || checkFromPrice)
+							&& (toPrice <= 3000 || checkToPrice)) {
 						 System.out.println("Imaa");
 						 manifestations.add(manifestation);
 					}
@@ -951,7 +951,7 @@ public class SparkAppMain {
 			    
 				if(available && !type.equals("none")) {
 					manifestations.removeIf(p -> p.getManifestationType() != ManifestationType.valueOf(type) || p.getAvailableTickets() == 0);
-				}else if(!available && type != "none") {
+				}else if(!available && !type.equals("none")) {
 					manifestations.removeIf(p -> p.getManifestationType() != ManifestationType.valueOf(type));
 				}else if(available && type.equals("none")) {
 					manifestations.removeIf(p -> p.getAvailableTickets() == 0);

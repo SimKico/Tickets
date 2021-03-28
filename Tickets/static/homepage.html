@@ -42,84 +42,12 @@
 <style type="text/css">
 
 </style>
-<script>
-	$(document).ready(function(){
-	    $("#toPrice").on("input", function(){
-	    	var toPrice = $("#toPrice").val();
-	    	if(toPrice==""){
-				$("#fromPrice").css('background-color', "#FFFFFF");
-				$("#search").prop("disabled",false);
-			}
-	    	else if(toPrice < 500 || toPrice > 3000){
-				$("#toPrice").css('background-color',"rgba(255,0,0,0.5)");
-				$("#search").prop("disabled",true);
-			}else{
-				$("#toPrice").css('background-color', "#FFFFFF");
-				$("#search").prop("disabled",false);
-			}
-	    });
-	    
-	    $("#fromPrice").on("input", function(){
-	    	var fromPrice = $("#fromPrice").val();
-	    	if(fromPrice==""){
-				$("#fromPrice").css('background-color', "#FFFFFF");
-				$("#search").prop("disabled",false);
-			}
-	    	else if(fromPrice < 500 || fromPrice > 3000){
-				$("#fromPrice").css('background-color', "rgba(255,0,0,0.5)");
-				$("#search").prop("disabled",true);
-			}else{
-				$("#fromPrice").css('background-color', "#FFFFFF");
-				$("#search").prop("disabled",false);
-				}
-	    });
-
-	    
-	});
-	
-	function search(){
-		console.log("Uso sam");
-		var title = $("#title").val();
-		var location = $("#location").val();
-		var fromDate = $("#datepicker").val();
-		var toDate = $("#datepicker2").val();
-		var fromPrice = $("#fromPrice").val()  == "" ? 500 :  parseInt($("#fromPrice").val());
-		var toPrice = $("#toPrice").val() == "" ? 3000 :  parseInt($("#toPrice").val());
-		console.log(title);
-		console.log(location);
-		console.log(fromDate);
-		console.log(toDate);
-		console.log(fromPrice);
-		console.log(toPrice);
-		dataForSearch = JSON.stringify({ "title": title, "location" : location, "fromDate" : fromDate, "toDate" : toDate, "fromPrice" : fromPrice, "toPrice" : toPrice });
-		$.ajax({
-            url:"/manifestations/search",
-            method:"post",
-            contentType: "application/json",
-            data: dataForSearch,
-            dataType: "JSON",
-            success:function(data){
-                console.log(data);
-                localStorage.setItem('resultManifestation', JSON.stringify(data));
-                console.log(localStorage.getItem('resultManifestation'));
-                window.location = "searchResultManifestation.html";
-            },
-            error: function(xhr, textStatus, error){
-                console.log(xhr.statusText);
-                console.log(textStatus);
-                console.log(error);
-            }
-		});
-			
-	}
-
-</script>
 
 </head>
 <body onload="getManifestations()">
 
 	<nav class="navbar navbar-expand-sm navbar-dark nav-backround">
-		<a class="navbar-brand" href="homepage.html">Home</a>
+		<a class="navbar-brand" href="#" onclick="goToHomepage();return false;">GetTickets</a>
 		<button class="navbar-toggler" type="button" data-toggle="collapse"
 			data-target="#collapsibleNavbar" onclick="">
 			<span class="navbar-toggler-icon"></span>
