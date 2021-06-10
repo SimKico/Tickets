@@ -134,10 +134,9 @@ public class SparkAppMain {
 			res.type("application/json");
 			String data = req.body();
 			JsonObject job = new JsonParser().parse(data).getAsJsonObject();
-			
+
 			User oldUserData = req.session().attribute("user");
 			String oldUsername = oldUserData.getUsername();
-			
 			Date date = new SimpleDateFormat("yyyy-MM-dd").parse(job.get("birthDay").getAsString());
 			
 			Gender gender = null;
@@ -145,35 +144,32 @@ public class SparkAppMain {
 				 gender = job.get("gender").getAsString() == ("MALE") ? Gender.MALE : Gender.FEMALE;
 			}
 		
-			BuyerType buyerType = new BuyerType("none",0,0);
-			
-			User newUserData = new User(job.get("username").getAsString(), job.get("password").getAsString(), job.get("firstName").getAsString(), job.get("lastName").getAsString(), gender, date, Role.BUYER, null, null, 0, buyerType);
+//			BuyerType buyerType = new BuyerType("none",0,0);
+			String passwordNew = oldUserData.getPassword();
+			if(!job.get("password").getAsString().equals("") && !job.get("password").getAsString().equals(oldUserData.getPassword())) {
+				System.out.println("nisu iste"+ job.get("password").getAsString());
+				passwordNew = job.get("password").getAsString();
+			}
+//			User newUserData = new User(job.get("username").getAsString(), passwordOldNew, job.get("firstName").getAsString(), job.get("lastName").getAsString(), gender, date, Role.BUYER, null, null, 0, buyerType);
 		
 			Session ss = req.session(true);
 					
-			for(User kk: Database.users) {
-				if(kk.getUsername().equals(newUserData.getUsername())) {
-						return false;
-					}
-			}
-			
-			
-						for(User oneUser : Database.users) {
-							if(oneUser.getUsername().equals(oldUsername)) {
-								oneUser.setUsername(newUserData.getUsername());
+			for(User oneUser : Database.users) {
+				if(oneUser.getUsername().equals(oldUsername)) {
+					oneUser.setUsername(job.get("username").getAsString());
 
-								oneUser.setFirstName(newUserData.getFirstName());
+					oneUser.setFirstName(job.get("firstName").getAsString());
 
-								oneUser.setLastName(newUserData.getLastName());
+					oneUser.setLastName(job.get("lastName").getAsString());
 
-								oneUser.setGender(newUserData.getGender());
+					oneUser.setGender(gender);
 
-								oneUser.setPassword(newUserData.getPassword());
+					oneUser.setPassword(passwordNew);
 								
-								Database.saveUsers();
-								return true;
-							}
-				}						
+					Database.saveUsers();
+					return true;
+					}
+			}					
 			
 			return false;	
 		});
