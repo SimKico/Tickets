@@ -961,5 +961,21 @@ public class SparkAppMain {
 				
 			});
 			
+			get("/manifestations/:username", (req, res) -> {
+				
+				res.type("application/json");
+				String username = req.params(":username");
+				User user = new User();
+				for(User u : Database.users) {
+					if(u.getUsername().equalsIgnoreCase(username)) {
+						user = u;
+						break;
+					}
+				}
+				return g.toJson(user.getManifestations());
+						
+			});
+			
+			
 	}
 }

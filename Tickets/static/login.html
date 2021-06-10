@@ -79,7 +79,9 @@
 								$("#error").append("Wrong username or password!")
 							}else{
 								console.log(data.responseText);
+								localStorage.setItem("username", param1);
 								localStorage.setItem("role", data.responseText);
+								
 								if(data.responseText === "ADMIN"){
 									location.href = "homepageAdmin.html";
 								}else if(data.responseText === "SELLER"){

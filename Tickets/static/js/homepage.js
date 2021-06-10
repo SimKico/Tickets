@@ -176,14 +176,4 @@ function goToHomepage(){
 	}
 }
 
-function book_regular() {
-	console.log("nja");
-}
 
-function book_regular() {
-	console.log("nja");
-}
-
-function book_regular() {
-	console.log("nja");
-}

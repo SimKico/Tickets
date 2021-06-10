@@ -1,6 +1,7 @@
 function logOut(){
 	console.log("log out");
 	localStorage.removeItem('role');
+	localStorage.removeItem('username');
 				$.ajax({
 							url: "/logout",
 							method: "get",
