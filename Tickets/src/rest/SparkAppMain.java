@@ -718,15 +718,15 @@ public class SparkAppMain {
 				
 				JsonObject job = new JsonParser().parse(data).getAsJsonObject();
 				String sortBy = job.get("sortBy").getAsString();
+				System.out.println("sort By" + sortBy);
 				
 				ArrayList<User> users = new ArrayList<User>();
 				
-				for(User user : users) {
+				for(User user :  Database.users) {
 					if(!user.isDeleted()) {
 						users.add(user);
 					}
 				}
-				
 				if(sortBy.equals("firstName")) {
 					Collections.sort(users, User.firstNameComparatorDSC);
 				}else if(sortBy.equals("lastName")) {

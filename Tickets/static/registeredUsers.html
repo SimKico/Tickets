@@ -242,7 +242,7 @@
 		function descending(par) {
 
 			var dataToJson = JSON.stringify({ "sortBy": par });
-
+			console.log(dataToJson);
 			$.ajax({
 				url: "/users/sortDsc",
 				type: "post",
@@ -250,7 +250,6 @@
 				dataType: "JSON",
 				complete: function (data) {
 					if (data.responseText == 'false') {
-						console.log("No result!");
 						localStorage.setItem('resultTickets', null);
 						location.href = "searchResultUsers.html";
 					} else {
