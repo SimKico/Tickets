@@ -17,9 +17,31 @@ public class User {
 	private ArrayList<Manifestation> manifestations;
 	private int points;
 	private BuyerType buyerType;
+	private boolean isDeleted;
+	private boolean isBlocked;
 	
 	public User() {
 		super();
+	}
+	
+	public User(String username, String password, String firstName, String lastName, Gender gender, Date birthDay,
+			Role role, ArrayList<Ticket> tickets, ArrayList<Manifestation> manifestations, int points,
+			BuyerType buyerType, boolean isDeleted, boolean isBlocked) {
+		super();
+		this.username = username;
+		this.password = password;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.gender = gender;
+		this.birthDay = birthDay;
+		this.role = role;
+		this.tickets = tickets;
+		this.manifestations = manifestations;
+		this.points = points;
+		this.buyerType = buyerType;
+		this.isDeleted = isDeleted;
+		this.isBlocked = isBlocked;
+		System.out.println(this.birthDay);
 	}
 
 	public User(String username, String password, String firstName, String lastName, Gender gender, Date birthDay,
@@ -37,6 +59,8 @@ public class User {
 		this.manifestations = manifestations;
 		this.points = points;
 		this.buyerType = buyerType;
+		this.isDeleted = false;
+		this.isBlocked = false;
 		System.out.println(this.birthDay);
 	}
 
@@ -128,6 +152,24 @@ public class User {
 		this.buyerType = buyerType;
 	}
 	
+	public boolean isDeleted() {
+		return isDeleted;
+	}
+
+	public void setDeleted(boolean isDeleted) {
+		this.isDeleted = isDeleted;
+	}
+
+	public boolean isBlocked() {
+		return isBlocked;
+	}
+
+	public void setBlocked(boolean isBlocked) {
+		this.isBlocked = isBlocked;
+	}
+
+
+
 	public static Comparator<User> firstNameComparatorASC = new Comparator<User>() {
 
 		public int compare(User m1, User m2) {

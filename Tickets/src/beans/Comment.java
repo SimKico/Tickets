@@ -6,17 +6,19 @@ public class Comment {
 	private Manifestation manifestation;
 	private String commentText;
 	private double grade;
+	private boolean isDeleted;
 	
 	public Comment() {
 		super();
 	}
 	
-	public Comment(User buyer, Manifestation manifestation, String commentText, double grade) {
+	public Comment(User buyer, Manifestation manifestation, String commentText, double grade, boolean isDeleted) {
 		super();
 		this.buyer = buyer;
 		this.manifestation = manifestation;
 		this.commentText = commentText;
 		this.grade = grade;
+		this.isDeleted = isDeleted;
 	}
 	
 	public User getBuyer() {
@@ -43,4 +45,13 @@ public class Comment {
 	public void setGrade(double grade) {
 		this.grade = grade;
 	}
+
+	public boolean isDeleted() {
+		return isDeleted;
+	}
+
+	public void setDeleted(boolean isDeleted) {
+		this.isDeleted = isDeleted;
+	}
+	
 }

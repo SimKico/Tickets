@@ -14,14 +14,14 @@ public class Ticket{
 	private String buyerLastName;
 	private TicketStatus status;
 	private TicketType type;
-	
+	private boolean isDeleted;
 	
 	public Ticket() {
 		super();
 	}
 
 	public Ticket(String ticketID, String manifestation, Date manifestationDate, int price, String buyerFirstName,
-			String buyerLastName, TicketStatus status, TicketType type) {
+			String buyerLastName, TicketStatus status, TicketType type, boolean isDeleted) {
 		super();
 		this.ticketID = ticketID;
 		this.manifestation = manifestation;
@@ -31,6 +31,7 @@ public class Ticket{
 		this.buyerLastName = buyerLastName;
 		this.status = status;
 		this.type = type;
+		this.isDeleted = isDeleted;
 	}
 
 	public String getTicketID() {
@@ -97,6 +98,18 @@ public class Ticket{
 		this.type = type;
 	}
 	
+	
+	
+	public boolean isDeleted() {
+		return isDeleted;
+	}
+
+	public void setDeleted(boolean isDeleted) {
+		this.isDeleted = isDeleted;
+	}
+
+
+
 	public static Comparator<Ticket> dateComparatorDSC = new Comparator<Ticket>() {
 
 		public int compare(Ticket m1, Ticket m2) {

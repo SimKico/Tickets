@@ -202,12 +202,12 @@ public class Data {
 		Location location5 = new Location(19.863, 45.252, "Beogradska", "bb", "Petrovaradin", 21131);
 		Location location6 = new Location(19.845, 45.255, "Trg Slobode", "bb", "Novi Sad", 21000);
 		
-		Manifestation manifestation1 = new Manifestation("Koncert1", ManifestationType.CONCERTS, date1, 1500, true, location4, "source/cloud-desktop-background.jpg", 10, 7, 2, 1, 4.5);
-		Manifestation manifestation2 = new Manifestation("Festival1", ManifestationType.FESTIVALS, date2, 1200, true, location5, "source/cloud-desktop-background.jpg", 20, 12, 5, 3, 0);
-		Manifestation manifestation3 = new Manifestation("Pozoriste1", ManifestationType.THEATERS, date3, 789, true, location1, "source/cloud-desktop-background.jpg", 20, 12, 5, 3, 0);
-		Manifestation manifestation4 = new Manifestation("Koncert2", ManifestationType.CONCERTS, date3, 1500, false, location3, "source/cloud-desktop-background.jpg", 20, 12, 5, 3, 0);
-		Manifestation manifestation5 = new Manifestation("Festival2", ManifestationType.FESTIVALS, date2, 1200, false, location6, "source/cloud-desktop-background.jpg", 20, 12, 5, 3, 0);
-		Manifestation manifestation6 = new Manifestation("Pozoriste2", ManifestationType.THEATERS, date1, 789, true, location2, "source/cloud-desktop-background.jpg", 20,  12, 5, 3,4.3);
+		Manifestation manifestation1 = new Manifestation("Koncert1", ManifestationType.CONCERTS, date1, 1500, true, location4, "source/cloud-desktop-background.jpg", 10, 7, 2, 1, 4.5, false);
+		Manifestation manifestation2 = new Manifestation("Festival1", ManifestationType.FESTIVALS, date2, 1200, true, location5, "source/cloud-desktop-background.jpg", 20, 12, 5, 3, 0, false);
+		Manifestation manifestation3 = new Manifestation("Pozoriste1", ManifestationType.THEATERS, date3, 789, true, location1, "source/cloud-desktop-background.jpg", 20, 12, 5, 3, 0, false);
+		Manifestation manifestation4 = new Manifestation("Koncert2", ManifestationType.CONCERTS, date3, 1500, false, location3, "source/cloud-desktop-background.jpg", 20, 12, 5, 3, 0, false);
+		Manifestation manifestation5 = new Manifestation("Festival2", ManifestationType.FESTIVALS, date2, 1200, false, location6, "source/cloud-desktop-background.jpg", 20, 12, 5, 3, 0, false);
+		Manifestation manifestation6 = new Manifestation("Pozoriste2", ManifestationType.THEATERS, date1, 789, true, location2, "source/cloud-desktop-background.jpg", 20,  12, 5, 3,4.3,false);
 		
 		ArrayList<Manifestation> manifestations = new ArrayList<Manifestation>();
 		manifestations.add(manifestation1);
@@ -215,17 +215,17 @@ public class Data {
 		manifestations.add(manifestation3);
 		manifestations.add(manifestation4);
 		
-		users.add(new User("admin1", "123", "Petra", "Peric", Gender.FEMALE, date1, Role.ADMIN,null,null,0,null));
+		users.add(new User("admin1", "123", "Petra", "Peric", Gender.FEMALE, date1, Role.ADMIN,null,null,0,null, false, false));
 
-		users.add(new User("admin2", "123", "Nikola", "Nikolic", Gender.MALE, date2, Role.ADMIN,null,null,0,null));
+		users.add(new User("admin2", "123", "Nikola", "Nikolic", Gender.MALE, date2, Role.ADMIN,null,null,0,null, false, false));
 
-		users.add(new User("seller1", "123", "Petar", "Petrovic", Gender.MALE, date3, Role.SELLER ,null, manifestations, 0, null));
+		users.add(new User("seller1", "123", "Petar", "Petrovic", Gender.MALE, date3, Role.SELLER ,null, manifestations, 0, null, false, false));
 
-		users.add(new User("buyer1", "123", "Natasa", "Kovacevic", Gender.FEMALE, date4, Role.BUYER,null,null,4500, gold));
+		users.add(new User("buyer1", "123", "Natasa", "Kovacevic", Gender.FEMALE, date4, Role.BUYER,null,null,4500, gold, false, false));
 
-		users.add(new User("buyer2", "123", "Snjezana", "Simic", Gender.FEMALE, date5, Role.BUYER, null, null, 3500, silver));
+		users.add(new User("buyer2", "123", "Snjezana", "Simic", Gender.FEMALE, date5, Role.BUYER, null, null, 3500, silver, false, false));
 		
-		users.add(new User("buyer3", "123", "Goran", "Stanic", Gender.MALE, date6, Role.BUYER, null, null, 2500, bronze));
+		users.add(new User("buyer3", "123", "Goran", "Stanic", Gender.MALE, date6, Role.BUYER, null, null, 2500, bronze, false, false));
 		
 		
 		String json = new Gson().toJson(users);
@@ -282,12 +282,12 @@ public class Data {
 		Location location5 = new Location(19.863, 45.252, "Beogradska", "bb", "Petrovaradin", 21131);
 		Location location6 = new Location(19.845, 45.255, "Trg Slobode", "bb", "Novi Sad", 21000);
 		
-		manifestations.add(new Manifestation("Koncert1", ManifestationType.CONCERTS, date1, 1500, true, location4, "source/cloud-desktop-background.jpg", 10, 5, 3, 2, 4.5));
-		manifestations.add(new Manifestation("Festival1", ManifestationType.FESTIVALS, date2, 1200, true, location5, "source/cloud-desktop-background.jpg", 20, 12, 5, 3, 0));
-		manifestations.add(new Manifestation("Pozoriste1", ManifestationType.THEATERS, date3, 789, true, location1, "source/cloud-desktop-background.jpg", 20, 12, 5, 3, 0));
-		manifestations.add(new Manifestation("Koncert2", ManifestationType.CONCERTS, date3, 1500, false, location3, "source/cloud-desktop-background.jpg", 20, 12, 5, 3, 0));
-		manifestations.add(new Manifestation("Festival2", ManifestationType.FESTIVALS, date2, 1200, false, location6, "source/cloud-desktop-background.jpg", 20, 12, 5, 3, 0));
-		manifestations.add(new Manifestation("Pozoriste2", ManifestationType.THEATERS, date1, 789, true, location2, "source/cloud-desktop-background.jpg", 20, 12, 5, 3, 4.3));
+		manifestations.add(new Manifestation("Koncert1", ManifestationType.CONCERTS, date1, 1500, true, location4, "source/cloud-desktop-background.jpg", 10, 5, 3, 2, 4.5, false));
+		manifestations.add(new Manifestation("Festival1", ManifestationType.FESTIVALS, date2, 1200, true, location5, "source/cloud-desktop-background.jpg", 20, 12, 5, 3, 0, false));
+		manifestations.add(new Manifestation("Pozoriste1", ManifestationType.THEATERS, date3, 789, true, location1, "source/cloud-desktop-background.jpg", 20, 12, 5, 3, 0, false));
+		manifestations.add(new Manifestation("Koncert2", ManifestationType.CONCERTS, date3, 1500, false, location3, "source/cloud-desktop-background.jpg", 20, 12, 5, 3, 0, false));
+		manifestations.add(new Manifestation("Festival2", ManifestationType.FESTIVALS, date2, 1200, false, location6, "source/cloud-desktop-background.jpg", 20, 12, 5, 3, 0, false));
+		manifestations.add(new Manifestation("Pozoriste2", ManifestationType.THEATERS, date1, 789, true, location2, "source/cloud-desktop-background.jpg", 20, 12, 5, 3, 4.3, false));
 		System.out.println(manifestations.get(0).getLocation().getStreet());
 		String json = new Gson().toJson(manifestations);
 		
@@ -325,16 +325,16 @@ public class Data {
 
 		int pricePozoriste3Regular = 789;
 		
-		Ticket ticket1 = new Ticket("t1", "Koncert1", date1, priceKoncert1Regular, "Natasa", "Kovacevic", TicketStatus.RESERVED, TicketType.REGULAR);
-		Ticket ticket2 = new Ticket("t2", "Koncert1", date1, priceKoncert1Regular * 2, "Snjezana", "Simic", TicketStatus.RESERVED, TicketType.FANPIT);
-		Ticket ticket3 = new Ticket("t3", "Koncert1", date1, priceKoncert1Regular * 4, "Goran", "Stanic", TicketStatus.RESERVED, TicketType.VIP);
-		Ticket ticket4 = new Ticket("t4", "Festival1", date2, priceFestival1Regular, "Natasa", "Kovacevic", TicketStatus.RESERVED, TicketType.REGULAR);
-		Ticket ticket5 = new Ticket("t5", "Festival1", date2, priceFestival1Regular * 2,  "Snjezana", "Simic", TicketStatus.RESERVED, TicketType.FANPIT);
-		Ticket ticket6 = new Ticket("t6", "Festival1", date2, priceFestival1Regular * 4,  "Goran", "Stanic", TicketStatus.CANCELD, TicketType.VIP);
-		Ticket ticket7 = new Ticket("t7", "Pozoriste1", date3, pricePozoriste1Regular, "Natasa", "Kovacevic", TicketStatus.RESERVED, TicketType.REGULAR);
-		Ticket ticket8 = new Ticket("t8", "Koncert2", date3, priceKoncert2Regural, "Snjezana", "Simic", TicketStatus.RESERVED, TicketType.REGULAR);
-		Ticket ticket9 = new Ticket("t9", "Festival2", date2, priceFestival2Regular, "Goran", "Stanic", TicketStatus.RESERVED, TicketType.REGULAR);
-		Ticket ticket10 = new Ticket("t10", "Pozoriste2", date1, pricePozoriste3Regular, "Natasa", "Kovacevic", TicketStatus.CANCELD, TicketType.REGULAR);
+		Ticket ticket1 = new Ticket("t1", "Koncert1", date1, priceKoncert1Regular, "Natasa", "Kovacevic", TicketStatus.RESERVED, TicketType.REGULAR, false);
+		Ticket ticket2 = new Ticket("t2", "Koncert1", date1, priceKoncert1Regular * 2, "Snjezana", "Simic", TicketStatus.RESERVED, TicketType.FANPIT, false);
+		Ticket ticket3 = new Ticket("t3", "Koncert1", date1, priceKoncert1Regular * 4, "Goran", "Stanic", TicketStatus.RESERVED, TicketType.VIP, false);
+		Ticket ticket4 = new Ticket("t4", "Festival1", date2, priceFestival1Regular, "Natasa", "Kovacevic", TicketStatus.RESERVED, TicketType.REGULAR, false);
+		Ticket ticket5 = new Ticket("t5", "Festival1", date2, priceFestival1Regular * 2,  "Snjezana", "Simic", TicketStatus.RESERVED, TicketType.FANPIT, false);
+		Ticket ticket6 = new Ticket("t6", "Festival1", date2, priceFestival1Regular * 4,  "Goran", "Stanic", TicketStatus.CANCELD, TicketType.VIP, false);
+		Ticket ticket7 = new Ticket("t7", "Pozoriste1", date3, pricePozoriste1Regular, "Natasa", "Kovacevic", TicketStatus.RESERVED, TicketType.REGULAR, false);
+		Ticket ticket8 = new Ticket("t8", "Koncert2", date3, priceKoncert2Regural, "Snjezana", "Simic", TicketStatus.RESERVED, TicketType.REGULAR, false);
+		Ticket ticket9 = new Ticket("t9", "Festival2", date2, priceFestival2Regular, "Goran", "Stanic", TicketStatus.RESERVED, TicketType.REGULAR, false);
+		Ticket ticket10 = new Ticket("t10", "Pozoriste2", date1, pricePozoriste3Regular, "Natasa", "Kovacevic", TicketStatus.CANCELD, TicketType.REGULAR, false);
 		
 		tickets.add(ticket1);
 		tickets.add(ticket2);
@@ -370,7 +370,7 @@ public class Data {
 		
 		BuyerType gold = new BuyerType("gold", 30, 4000); 
 		
-		User user1 = new User("buyer1", "123", "Natasa", "Kovacevic", Gender.FEMALE, date4, Role.BUYER,null,null,4500, gold);
+		User user1 = new User("buyer1", "123", "Natasa", "Kovacevic", Gender.FEMALE, date4, Role.BUYER,null,null,4500, gold, false, false);
 		
 		String sDate1="13.12.2020";
 		
@@ -378,9 +378,9 @@ public class Data {
 		
 		Location location4 = new Location(20.421, 44.814, "Bulevar Arsenija Čarnojevića", "58", "Beograd", 11000);
 		
-		Manifestation manifestation1 = new Manifestation("Koncert1", ManifestationType.CONCERTS, date1, 1500, true, location4, "static/source/cloud-desktop-background.jpg", 10, 5, 3, 2, 4.5);
+		Manifestation manifestation1 = new Manifestation("Koncert1", ManifestationType.CONCERTS, date1, 1500, true, location4, "static/source/cloud-desktop-background.jpg", 10, 5, 3, 2, 4.5, false);
 		
-		Comment comment1 = new Comment(user1, manifestation1, "Sve pohvale.", 5);
+		Comment comment1 = new Comment(user1, manifestation1, "Sve pohvale.", 5, false);
 		
 		comments.add(comment1);
 		

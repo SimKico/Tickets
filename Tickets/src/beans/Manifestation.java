@@ -17,6 +17,7 @@ public class Manifestation {
 	private int availableFanpitTickets;
 	private int availableVipTickets;
 	private double averageRating;
+	private boolean isDeleted;
 	
 	public Manifestation() {
 		super();
@@ -24,7 +25,7 @@ public class Manifestation {
 
 	public Manifestation(String title, ManifestationType manifestationType, Date realisationDate, int price,
 			boolean isActive, Location location, String posterPath, int availableTickets, int availableRegularTickets,
-			int availableFanpitTickets, int availableVipTickets, double averageRating) {
+			int availableFanpitTickets, int availableVipTickets, double averageRating, boolean isDeleted) {
 		super();
 		this.title = title;
 		this.manifestationType = manifestationType;
@@ -37,6 +38,7 @@ public class Manifestation {
 		this.availableRegularTickets = availableRegularTickets;
 		this.availableFanpitTickets = availableFanpitTickets;
 		this.availableVipTickets = availableVipTickets;
+		this.isDeleted = isDeleted;
 		this.averageRating = averageRating;
 	}
 
@@ -140,6 +142,17 @@ public class Manifestation {
 	public void setAvailableFanpitTickets(int availableFanpitTickets) {
 		this.availableFanpitTickets = availableFanpitTickets;
 	}
+	
+	
+
+	public boolean isDeleted() {
+		return isDeleted;
+	}
+
+	public void setDeleted(boolean isDeleted) {
+		this.isDeleted = isDeleted;
+	}
+
 
 
 	public static Comparator<Manifestation> dateComparator = new Comparator<Manifestation>() {
