@@ -29,13 +29,13 @@
 
 	<script>
 
+
 		function getUsers() {
 			$.ajax({
 				url: "/users",
 				method: "get",
 				dataType: "JSON",
 				success: function (data) {
-					console.log(data);
 					var i = 0;
 					for (i; i < data.length; i++) {
 						$("#cards")
@@ -43,6 +43,8 @@
 								.append($("<div class='card'>")
 									.append($("<div class='card-header text-center'>").append($("<h6>").text(data[i].role)))
 									.append($("<div class='card-header text-center'>").append($("<h3>").text(data[i].username)))
+									
+									.append($("<div class='card-header text-center'>").append($('<td id ="'+data[i].username+'" class = "btn">delete</td>').click(function() {deleteUser(this.id);})))
 									.append($("<div class='card-body text-center'>")
 										.append($("<div class='card-title'>").append($("<h5>").text(data[i].type)))
 										.append($("<p class='card-text'>").text(data[i].firstName + " " + data[i].lastName))
@@ -52,12 +54,16 @@
 									)
 									.append($("<div class='card-footer'>").text( data[i].role === "BUYER" ? data[i].points :  "" ))
 									.append($("<div class='card-footer'>").text( data[i].buyerType ? "typeName: "+ data[i].buyerType.typeName :"" ))
-									.append($("<div class='card-footer'>").text( data[i].buyerType ? "Discount: "+data[i].buyerType.discount :"" ))
-									.append($("<div class='card-footer'>").text( data[i].buyerType ? "Next Level Points: "+data[i].buyerType.nextLevelPoints :"" ))
+									.append($("<div class='card-footer'>").text( data[i].buyerType ? "Discount: "+ data[i].buyerType.discount :"" ))
+									.append($("<div class='card-footer'>").text( data[i].buyerType ? "Next Level Points: "+ data[i].buyerType.nextLevelPoints :"" ))
 								));
 					}
 				}
 			});
+		}
+		
+		function deleteUser(username){
+			console.log("userName" + username);
 		}
 
 		function searchFirstName() {
