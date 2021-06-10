@@ -560,13 +560,11 @@ public class SparkAppMain {
 				}
 			});
 //search
-			get("/users/firstName/:firstName", (req, res) -> {
+			get("/users/searchFirstName/:firstName", (req, res) -> {
 				res.type("application/json");
 				User k = req.session().attribute("user");
 				
 				String firstName = req.params(":firstName").toLowerCase();
-				System.out.println("firstName search" + firstName);
-				
 				ArrayList<User> users = new ArrayList<User>();
 				
 				for(User user : Database.users) {
@@ -582,12 +580,12 @@ public class SparkAppMain {
 			
 			});
 
-			get("/users/lastName/:lastName", (req, res) -> {
+			get("/users/searchLastName/:lastName", (req, res) -> {
 				res.type("application/json");
 				User k = req.session().attribute("user");
 				
 				String lastName = req.params(":lastName").toLowerCase();
-				System.out.println("lastName search" + lastName);
+				
 				ArrayList<User> users = new ArrayList<User>();
 				
 				for(User user : Database.users) {
@@ -602,15 +600,12 @@ public class SparkAppMain {
 				}
 			});
 
-			post("/users/searchUsername", (req, res) -> {
+			get("/users/searchUsername/:username", (req, res) -> {
 				res.type("application/json");
 				User k = req.session().attribute("user");
 				
-				String data = req.body();
-			
-				JsonObject job = new JsonParser().parse(data).getAsJsonObject();
-				
-				String username = job.get("username").getAsString().toLowerCase();
+				String username = req.params(":username").toLowerCase();
+				System.out.println("lastName username" + username);
 				ArrayList<User> users = new ArrayList<User>();
 				
 				for(User user : Database.users) {
@@ -625,21 +620,17 @@ public class SparkAppMain {
 				}
 			});
 //filter
-			post("/users/filterRole", (req, res) -> {
+			get("/users/filterRole/:choiceRole", (req, res) -> {
 				res.type("application/json");
 				User k = req.session().attribute("user");
 				
-				String data = req.body();
-			
-				JsonObject job = new JsonParser().parse(data).getAsJsonObject();
+				String choiceRole = req.params(":choiceRole");
+				System.out.println("choiceRole" + choiceRole);
 				
-				String choiceRole = job.get("choiceRole").getAsString().toUpperCase();
-				
-
 				Role role;
-				if(choiceRole.equals( "ADMIN")) {
+				if(choiceRole.equalsIgnoreCase("admin")) {
 					role = Role.ADMIN;
-				}else if(choiceRole.equals( "BUYER")) {
+				}else if(choiceRole.equalsIgnoreCase( "buyer")) {
 					role = Role.BUYER;
 				}else {
 					role = Role.SELLER;
@@ -659,20 +650,15 @@ public class SparkAppMain {
 				}
 			});
 
-			post("/users/filterType", (req, res) -> {
+			get("/users/filterType/:choiceType", (req, res) -> {
 				res.type("application/json");
 				User k = req.session().attribute("user");
 				
-				String data = req.body();
-			
-				JsonObject job = new JsonParser().parse(data).getAsJsonObject();
-				
-				String choiceType = job.get("choiceType").getAsString();
-				System.out.println("choice type" +choiceType );
+				String choiceType = req.params(":choiceType");
 				ArrayList<User> users = new ArrayList<User>();
 				
 				for(User user : Database.users) {
-					if(!user.isDeleted() && user.getBuyerType()!=null && user.getBuyerType().getTypeName().equals(choiceType)) {
+					if(!user.isDeleted() && user.getBuyerType()!=null && user.getBuyerType().getTypeName().equalsIgnoreCase(choiceType)) {
 						users.add(user);
 					}
 				}
@@ -683,13 +669,10 @@ public class SparkAppMain {
 				}
 			});
 			
-			post("/users/sortAsc", (req, res) -> {
+			get("/users/sortAsc/:sortBy", (req, res) -> {
 
 				res.type("application/json");
-				String data = req.body();
-				
-				JsonObject job = new JsonParser().parse(data).getAsJsonObject();
-				String sortBy = job.get("sortBy").getAsString();
+				String sortBy =  req.params(":sortBy");
 				
 				ArrayList<User> users = new ArrayList<User>();
 				
@@ -699,11 +682,11 @@ public class SparkAppMain {
 					}
 				}
 				
-				if(sortBy.equals("firstName")) {
+				if(sortBy.equalsIgnoreCase("firstName")) {
 					Collections.sort(users, User.firstNameComparatorASC);
-				}else if(sortBy.equals("lastName")) {
+				}else if(sortBy.equalsIgnoreCase("lastName")) {
 					Collections.sort(users, User.lastNameComparatorASC);
-				}else if(sortBy.equals("username")) {
+				}else if(sortBy.equalsIgnoreCase("username")) {
 					Collections.sort(users, User.usernameComparatorASC);
 				}else {
 					Collections.sort(users, User.scoreComparatorASC);
@@ -711,14 +694,11 @@ public class SparkAppMain {
 				return g.toJson(users);
 			});
 			
-			post("/users/sortDsc", (req, res) -> {
+			get("/users/sortDsc/:sortBy", (req, res) -> {
 
 				res.type("application/json");
-				String data = req.body();
-				
-				JsonObject job = new JsonParser().parse(data).getAsJsonObject();
-				String sortBy = job.get("sortBy").getAsString();
-				System.out.println("sort By" + sortBy);
+			
+				String sortBy = req.params(":sortBy");
 				
 				ArrayList<User> users = new ArrayList<User>();
 				
@@ -727,11 +707,11 @@ public class SparkAppMain {
 						users.add(user);
 					}
 				}
-				if(sortBy.equals("firstName")) {
+				if(sortBy.equalsIgnoreCase("firstName")) {
 					Collections.sort(users, User.firstNameComparatorDSC);
-				}else if(sortBy.equals("lastName")) {
+				}else if(sortBy.equalsIgnoreCase("lastName")) {
 					Collections.sort(users, User.lastNameComparatorDSC);
-				}else if(sortBy.equals("usrename")) {
+				}else if(sortBy.equalsIgnoreCase("usrename")) {
 					Collections.sort(users, User.usernameComparatorDSC);
 				}else {
 					Collections.sort(users, User.scoreComparatorDSC);

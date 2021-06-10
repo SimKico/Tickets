@@ -83,7 +83,7 @@
 
 			var firstName = $("#firstName").val();
 			$.ajax({
-				url: "/users/firstName/" + firstName,
+				url: "/users/searchFirstName/" + firstName,
 				type: "get",
 				dataType: "JSON",
 				complete: function (data) {
@@ -105,7 +105,7 @@
 
 			var lastName = $("#lastName").val();
 			$.ajax({
-				url: "/users/lastName/" + lastName,
+				url: "/users/searchLastName/" + lastName,
 				type: "get",
 				dataType: "JSON",
 				complete: function (data) {
@@ -127,11 +127,9 @@
 
 			var username = $("#username").val();
 
-			var dataToJson = JSON.stringify({ "username": username });
 			$.ajax({
-				url: "/users/searchUsername",
-				type: "post",
-				data: dataToJson,
+				url: "/users/searchUsername/" + username,
+				type: "get",
 				dataType: "JSON",
 				complete: function (data) {
 					if (data.responseText == 'false') {
@@ -159,13 +157,10 @@
 					break;
 				}
 			}
-			console.log("odabrali ste" + choiceRole);
-
-			var dataToJson = JSON.stringify({ "choiceRole": choiceRole });
+			console.log(choiceRole);
 			$.ajax({
-				url: "/users/filterRole",
-				type: "post",
-				data: dataToJson,
+				url: "/users/filterRole/" + choiceRole,
+				type: "get",
 				dataType: "JSON",
 				complete: function (data) {
 					if (data.responseText == 'false') {
@@ -194,11 +189,9 @@
 			}
 			console.log("odabrali ste" + choiceType);
 
-			var dataToJson = JSON.stringify({ "choiceType": choiceType });
 			$.ajax({
-				url: "/users/filterType",
-				type: "post",
-				data: dataToJson,
+				url: "/users/filterType/" + choiceType,
+				type: "get",
 				dataType: "JSON",
 				complete: function (data) {
 					if (data.responseText == 'false') {
@@ -217,12 +210,9 @@
 
 		function ascending(par) {
 
-			var dataToJson = JSON.stringify({ "sortBy": par });
-
 			$.ajax({
-				url: "/users/sortAsc",
-				type: "post",
-				data: dataToJson,
+				url: "/users/sortAsc/" + par,
+				type: "get",
 				dataType: "JSON",
 				complete: function (data) {
 					if (data.responseText == 'false') {
@@ -241,12 +231,9 @@
 
 		function descending(par) {
 
-			var dataToJson = JSON.stringify({ "sortBy": par });
-			console.log(dataToJson);
 			$.ajax({
-				url: "/users/sortDsc",
-				type: "post",
-				data: dataToJson,
+				url: "/users/sortDsc/" + par,
+				type: "get",
 				dataType: "JSON",
 				complete: function (data) {
 					if (data.responseText == 'false') {
@@ -254,7 +241,6 @@
 						location.href = "searchResultUsers.html";
 					} else {
 						var result = data.responseJSON;
-						console.log(typeof (data.responseJSON));
 						localStorage.setItem('resultTickets', JSON.stringify(result));
 						location.href = "searchResultUsers.html";
 					}
