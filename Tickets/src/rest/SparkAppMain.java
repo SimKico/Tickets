@@ -11,6 +11,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -177,7 +178,9 @@ public class SparkAppMain {
 		get("/manifestations/all", (req, res) -> {
 			
 			res.type("application/json");
-			Collections.sort(Database.manifestations, Manifestation.dateComparator);
+			List<Manifestation> list = Database.manifestations;
+			list.removeIf(s -> !s.isActive());
+			Collections.sort(list, Manifestation.dateComparator);
 			return g.toJson(Database.manifestations);
 					
 		});
