@@ -4,6 +4,7 @@ import static spark.Spark.get;
 import static spark.Spark.port;
 import static spark.Spark.post;
 import static spark.Spark.put;
+import static spark.Spark.delete;
 import static spark.Spark.staticFiles;
 
 import java.io.File;
@@ -538,11 +539,25 @@ public class SparkAppMain {
 			});
 			
 //			users ***************************************
+			
+			
+			
 			get("/users", (req, res) -> {
 				
 				res.type("application/json");
-				return g.toJson(Database.users);
 				
+				ArrayList<User> users = new ArrayList<User>();
+				
+				for(User user : Database.users) {
+					if(!user.isDeleted()) {
+						users.add(user);
+					}
+				}
+				if(users.isEmpty()) {
+					return false;
+				}else {
+					return g.toJson(users);
+				}
 			});
 //search
 			get("/users/firstName/:firstName", (req, res) -> {
@@ -555,8 +570,7 @@ public class SparkAppMain {
 				ArrayList<User> users = new ArrayList<User>();
 				
 				for(User user : Database.users) {
-					if(user.getFirstName().toLowerCase().equals(firstName)) {
-						System.out.println("User"  + user.getFirstName());
+					if(!user.isDeleted() && user.getFirstName().toLowerCase().equals(firstName)) {
 						users.add(user);
 					}
 				}
@@ -577,7 +591,7 @@ public class SparkAppMain {
 				ArrayList<User> users = new ArrayList<User>();
 				
 				for(User user : Database.users) {
-					if(user.getLastName().toLowerCase().equals(lastName)) {
+					if(!user.isDeleted() && user.getLastName().toLowerCase().equals(lastName)) {
 						users.add(user);
 					}
 				}
@@ -600,7 +614,7 @@ public class SparkAppMain {
 				ArrayList<User> users = new ArrayList<User>();
 				
 				for(User user : Database.users) {
-					if(user.getUsername().toLowerCase().equals(username)) {
+					if(!user.isDeleted() && user.getUsername().toLowerCase().equals(username)) {
 						users.add(user);
 					}
 				}
@@ -634,7 +648,7 @@ public class SparkAppMain {
 				ArrayList<User> users = new ArrayList<User>();
 				
 				for(User user : Database.users) {
-					if(user.getRole().equals(role)) {
+					if(!user.isDeleted() && user.getRole().equals(role)) {
 						users.add(user);
 					}
 				}
@@ -658,7 +672,7 @@ public class SparkAppMain {
 				ArrayList<User> users = new ArrayList<User>();
 				
 				for(User user : Database.users) {
-					if(user.getBuyerType()!=null && user.getBuyerType().getTypeName().equals(choiceType)) {
+					if(!user.isDeleted() && user.getBuyerType()!=null && user.getBuyerType().getTypeName().equals(choiceType)) {
 						users.add(user);
 					}
 				}
@@ -677,7 +691,13 @@ public class SparkAppMain {
 				JsonObject job = new JsonParser().parse(data).getAsJsonObject();
 				String sortBy = job.get("sortBy").getAsString();
 				
-				ArrayList<User> users = Database.users;
+				ArrayList<User> users = new ArrayList<User>();
+				
+				for(User user : Database.users) {
+					if(!user.isDeleted()) {
+						users.add(user);
+					}
+				}
 				
 				if(sortBy.equals("firstName")) {
 					Collections.sort(users, User.firstNameComparatorASC);
@@ -699,7 +719,13 @@ public class SparkAppMain {
 				JsonObject job = new JsonParser().parse(data).getAsJsonObject();
 				String sortBy = job.get("sortBy").getAsString();
 				
-				ArrayList<User> users = Database.users;
+				ArrayList<User> users = new ArrayList<User>();
+				
+				for(User user : users) {
+					if(!user.isDeleted()) {
+						users.add(user);
+					}
+				}
 				
 				if(sortBy.equals("firstName")) {
 					Collections.sort(users, User.firstNameComparatorDSC);
@@ -712,6 +738,37 @@ public class SparkAppMain {
 				}
 				return g.toJson(users);
 			});
+//delete users
+			
+			delete("users/:username", (req, res) -> {
+				
+				String username = req.params(":username").toLowerCase();
+				System.out.println("username delete" + username);
+				ArrayList<User> users = new ArrayList<User>();
+				
+				for(User user : Database.users) {
+					if(!user.isDeleted()) {
+						users.add(user);
+					}
+				}
+				for(User user : users) {
+					if(user.getUsername().equals(username)) {
+						if(user.isDeleted()) {
+							res.status(404);
+							return false;
+							}else {
+								System.out.println("User to be deleted"  + user.getFirstName());
+								user.setDeleted(true);
+								Database.saveUsers();
+								res.status(200);
+								return true;
+							}
+					}
+				}
+				return false;
+			});
+			
+// **********************manifestations**********************************//
 			
 			post("/manifestations/search", (req, res) -> {
 				

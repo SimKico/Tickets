@@ -44,7 +44,7 @@
 									.append($("<div class='card-header text-center'>").append($("<h6>").text(data[i].role)))
 									.append($("<div class='card-header text-center'>").append($("<h3>").text(data[i].username)))
 
-									.append($("<div class='card-header text-center'>").append($('<td id ="' + data[i].username + '" class = "btn">delete</td>').click(function () { deleteUser(this.id); })))
+									.append($("<div class='card-header text-center'>").append($('<button  style="background-color:#b12828e0;" id ="' + data[i].username + '" class = "btn">delete</button>').click(function () { deleteUser(this.id); })))
 									.append($("<div class='card-body text-center'>")
 										.append($("<div class='card-title'>").append($("<h5>").text(data[i].type)))
 										.append($("<p class='card-text'>").text(data[i].firstName + " " + data[i].lastName))
@@ -64,6 +64,19 @@
 
 		function deleteUser(username) {
 			console.log("userName" + username);
+
+			$.ajax({
+				type: "DELETE",
+				url: "/users/" + username,
+				dataType: "json",
+				complete: function (data) {
+					if (data.responseText === "true") {
+						location.href = "registeredUsers.html";
+					} else {
+						alert("User can not delete!");
+					}
+				}
+			})
 		}
 
 		function searchFirstName() {
