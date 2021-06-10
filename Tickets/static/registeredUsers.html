@@ -43,38 +43,35 @@
 								.append($("<div class='card'>")
 									.append($("<div class='card-header text-center'>").append($("<h6>").text(data[i].role)))
 									.append($("<div class='card-header text-center'>").append($("<h3>").text(data[i].username)))
-									
-									.append($("<div class='card-header text-center'>").append($('<td id ="'+data[i].username+'" class = "btn">delete</td>').click(function() {deleteUser(this.id);})))
+
+									.append($("<div class='card-header text-center'>").append($('<td id ="' + data[i].username + '" class = "btn">delete</td>').click(function () { deleteUser(this.id); })))
 									.append($("<div class='card-body text-center'>")
 										.append($("<div class='card-title'>").append($("<h5>").text(data[i].type)))
 										.append($("<p class='card-text'>").text(data[i].firstName + " " + data[i].lastName))
 										.append($("<p class='card-text'>").text(data[i].birthDay.split(", 12")[0]))
 										.append($("<p class='card-text'>").text(data[i].status))
-										.append($("<p class='card-text'>").text( data[i].gender))
+										.append($("<p class='card-text'>").text(data[i].gender))
 									)
-									.append($("<div class='card-footer'>").text( data[i].role === "BUYER" ? data[i].points :  "" ))
-									.append($("<div class='card-footer'>").text( data[i].buyerType ? "typeName: "+ data[i].buyerType.typeName :"" ))
-									.append($("<div class='card-footer'>").text( data[i].buyerType ? "Discount: "+ data[i].buyerType.discount :"" ))
-									.append($("<div class='card-footer'>").text( data[i].buyerType ? "Next Level Points: "+ data[i].buyerType.nextLevelPoints :"" ))
+									.append($("<div class='card-footer'>").text(data[i].role === "BUYER" ? data[i].points : ""))
+									.append($("<div class='card-footer'>").text(data[i].buyerType ? "typeName: " + data[i].buyerType.typeName : ""))
+									.append($("<div class='card-footer'>").text(data[i].buyerType ? "Discount: " + data[i].buyerType.discount : ""))
+									.append($("<div class='card-footer'>").text(data[i].buyerType ? "Next Level Points: " + data[i].buyerType.nextLevelPoints : ""))
 								));
 					}
 				}
 			});
 		}
-		
-		function deleteUser(username){
+
+		function deleteUser(username) {
 			console.log("userName" + username);
 		}
 
 		function searchFirstName() {
 
 			var firstName = $("#firstName").val();
-			console.log("first name" + firstName)
-			var dataToJson = JSON.stringify({ "firstName": firstName });
 			$.ajax({
-				url: "/users/searchFirstName",
-				type: "post",
-				data: dataToJson,
+				url: "/users/firstName/" + firstName,
+				type: "get",
 				dataType: "JSON",
 				complete: function (data) {
 					if (data.responseText == 'false') {
@@ -93,13 +90,10 @@
 
 		function searchLastName() {
 
-		var lastName = $("#lastName").val();
-
-		var dataToJson = JSON.stringify({ "lastName": lastName });
+			var lastName = $("#lastName").val();
 			$.ajax({
-				url: "/users/searchLastName",
-				type: "post",
-				data: dataToJson,
+				url: "/users/lastName/" + lastName,
+				type: "get",
 				dataType: "JSON",
 				complete: function (data) {
 					if (data.responseText == 'false') {
@@ -115,12 +109,12 @@
 				}
 			})
 		}
-		
+
 		function searchUsername() {
 
-		var username = $("#username").val();
+			var username = $("#username").val();
 
-		var dataToJson = JSON.stringify({ "username": username });
+			var dataToJson = JSON.stringify({ "username": username });
 			$.ajax({
 				url: "/users/searchUsername",
 				type: "post",
@@ -208,8 +202,8 @@
 			})
 		}
 
-		function ascending(par){
-		
+		function ascending(par) {
+
 			var dataToJson = JSON.stringify({ "sortBy": par });
 
 			$.ajax({
@@ -232,10 +226,10 @@
 			})
 		}
 
-		function descending(par){
-		
+		function descending(par) {
+
 			var dataToJson = JSON.stringify({ "sortBy": par });
-			
+
 			$.ajax({
 				url: "/users/sortDsc",
 				type: "post",
@@ -298,20 +292,20 @@
 						class="fa fa-search" aria-hidden="true"></i></button>
 			</div>
 		</div>
-	<div>
-		
-	<label for="maxPrice">Username:</label>
-	<div>
-		<input type="text" class="form-control" id="username" placeholder="user1">
-		<button class="btn" style="background-color:darkgoldenrod;" onclick="searchUsername()"><i
-				class="fa fa-search" aria-hidden="true"></i></button>
-	</div>
-	</div>
+		<div>
+
+			<label for="maxPrice">Username:</label>
+			<div>
+				<input type="text" class="form-control" id="username" placeholder="user1">
+				<button class="btn" style="background-color:darkgoldenrod;" onclick="searchUsername()"><i
+						class="fa fa-search" aria-hidden="true"></i></button>
+			</div>
+		</div>
 	</div>
 
-</div>
+	</div>
 
-	
+
 	</div>
 	<nav class="navbar navbar-expand-sm navbar-dark nav-backround">
 		<h1 class="navbar-brand" style="color:darkgoldenrod; ">Sort by </h1>
@@ -325,21 +319,21 @@
 		<div class="collapse navbar-collapse" id="collapsibleNavbar">
 			<div class="form-group">
 				<h6 style="color:darkgoldenrod; ">Last name</h6>
-				<input type="button" value="ascending" class="btn left" onclick="ascending('lastName')"  />
+				<input type="button" value="ascending" class="btn left" onclick="ascending('lastName')" />
 				<input type="button" value="descending" class="btn left" onclick="descending('lastName')" />
 			</div>
 		</div>
 		<div class="collapse navbar-collapse" id="collapsibleNavbar">
 			<div class="form-group">
 				<h6 style="color:darkgoldenrod; ">Username</h6>
-				<input type="button" value="ascending" class="btn left" onclick="ascending('username')"  />
+				<input type="button" value="ascending" class="btn left" onclick="ascending('username')" />
 				<input type="button" value="descending" class="btn left" onclick="descending('username')" />
 			</div>
 		</div>
 		<div class="collapse navbar-collapse" id="collapsibleNavbar">
 			<div class="form-group">
 				<h6 style="color:darkgoldenrod; ">Score</h6>
-				<input type="button" value="ascending" class="btn left" onclick="ascending('score')"  />
+				<input type="button" value="ascending" class="btn left" onclick="ascending('score')" />
 				<input type="button" value="descending" class="btn left" onclick="descending('score')" />
 			</div>
 		</div>

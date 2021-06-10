@@ -545,19 +545,18 @@ public class SparkAppMain {
 				
 			});
 //search
-			post("/users/searchFirstName", (req, res) -> {
+			get("/users/firstName/:firstName", (req, res) -> {
 				res.type("application/json");
 				User k = req.session().attribute("user");
 				
-				String data = req.body();
-			
-				JsonObject job = new JsonParser().parse(data).getAsJsonObject();
+				String firstName = req.params(":firstName").toLowerCase();
+				System.out.println("firstName search" + firstName);
 				
-				String firstName = job.get("firstName").getAsString().toLowerCase();
 				ArrayList<User> users = new ArrayList<User>();
 				
 				for(User user : Database.users) {
 					if(user.getFirstName().toLowerCase().equals(firstName)) {
+						System.out.println("User"  + user.getFirstName());
 						users.add(user);
 					}
 				}
@@ -569,16 +568,12 @@ public class SparkAppMain {
 			
 			});
 
-			post("/users/searchLastName", (req, res) -> {
+			get("/users/lastName/:lastName", (req, res) -> {
 				res.type("application/json");
 				User k = req.session().attribute("user");
 				
-				String data = req.body();
-			
-				JsonObject job = new JsonParser().parse(data).getAsJsonObject();
-				
-				String lastName = job.get("lastName").getAsString().toLowerCase();
-				System.out.println(lastName);
+				String lastName = req.params(":lastName").toLowerCase();
+				System.out.println("lastName search" + lastName);
 				ArrayList<User> users = new ArrayList<User>();
 				
 				for(User user : Database.users) {
