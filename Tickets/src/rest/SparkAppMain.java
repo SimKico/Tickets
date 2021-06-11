@@ -752,29 +752,71 @@ public class SparkAppMain {
 			post("manifestations/bookTicket", (req, res)-> {
 				
 				res.type("application/json");
-				User k = req.session().attribute("user");
-				String username = k.getUsername();
+				User user = req.session().attribute("user");
+				System.out.println(user.getUsername());
+				String username = user.getUsername();
 				
 				String data = req.body();
 				JsonObject job = new JsonParser().parse(data).getAsJsonObject();
 				
-				String title = job.get("title").getAsString().toLowerCase();
-				String typeOfTicket = job.get("typeOfTicket").getAsString().toLowerCase();
+				String title = job.get("title").getAsString();
+				String typeOfTicket = job.get("typeOfTicket").getAsString();
 				
 				for(Manifestation manifestation : Database.manifestations) {
-					if((!manifestation.isDeleted() && manifestation.getTitle().equals(title))) {
-						if(typeOfTicket == "REGULAR") {
-							
-						}else if(typeOfTicket == "FANPIT") {
-							
+					if((!manifestation.isDeleted() && manifestation.getTitle().equalsIgnoreCase(title))) {
+						if(typeOfTicket.equalsIgnoreCase("REGULAR")) {
+							if(manifestation.getAvailableRegularTickets() !=0) {
+								
+								String id =String.valueOf("t" + Database.tickets.size() + 1);
+								Ticket newTicket = new Ticket(id, title , manifestation.getRealisationDate(), manifestation.getPrice(),user.getUsername(), user.getFirstName(), user.getLastName(), TicketStatus.RESERVED, TicketType.REGULAR, false);
+								//add ticket to tickets
+								Database.addTicket(newTicket);
+								Database.saveTickets();
+								
+								//reduce number of available tickets
+								manifestation.setAvailableRegularTickets(manifestation.getAvailableRegularTickets()-1);
+								Database.saveManifestations();
+								return true;
+							}else {
+								return false;
+							}
+						}else if(typeOfTicket.equalsIgnoreCase("FANPIT") ) {
+							if(manifestation.getAvailableFanpitTickets() !=0) {
+								
+								String id =String.valueOf("t" + Database.tickets.size() + 1);
+								Ticket newTicket = new Ticket(id, title , manifestation.getRealisationDate(), manifestation.getPrice() * 2,user.getUsername(), user.getFirstName(), user.getLastName(), TicketStatus.RESERVED, TicketType.FANPIT, false);
+								//add ticket to tickets
+								Database.addTicket(newTicket);
+								Database.saveTickets();
+								
+								//reduce number of available tickets
+								manifestation.setAvailableFanpitTickets(manifestation.getAvailableFanpitTickets()-1);
+								Database.saveManifestations();
+								return true;
+							}else {
+								return false;
+							}
 						}else {
-							
+							if(manifestation.getAvailableVipTickets() !=0) {
+								
+								String id =String.valueOf("t" + Database.tickets.size() + 1);
+								Ticket newTicket = new Ticket(id, title , manifestation.getRealisationDate(), manifestation.getPrice() * 4,user.getUsername(), user.getFirstName(), user.getLastName(), TicketStatus.RESERVED, TicketType.VIP, false);
+								//add ticket to tickets
+								Database.addTicket(newTicket);
+								Database.saveTickets();
+								
+								//reduce number of available tickets
+								manifestation.setAvailableVipTickets(manifestation.getAvailableVipTickets()-1);
+								manifestation.setAvailableTickets(manifestation.getAvailableTickets()-1);
+								Database.saveManifestations();
+								return true;
+							}else {
+								return false;
+							}
 						}
 					}
 				}
-				
-				return true;
-				
+				return false;
 			});
 			
 // **********************manifestations**********************************//

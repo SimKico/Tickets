@@ -54,18 +54,18 @@ function getManifestations() {
 									.append($("<h5>").text("Book a ticket:"))
 									.append($("<p class='card-text'>")
 										.append($('<button id ="' + data[i].title + '" class = "btn" ' + regular + ' >').
-										text("Regular " + data[i].price  + " RSD").click(function () { bookRegular(this.id); })))
+										text("Regular " + data[i].price  + " RSD").click(function () { bookTicket(this.id, "regular"); })))
 				
 						.append(
 							$("<p class='card-text'>")						
 							.append($("<p class='card-text'>")
 							.append($('<button id ="' + data[i].title + '" class = "btn" ' + fanpit + '>').
-							text("Fanpit " + data[i].price * 2 + " RSD").click(function () { bookFanpit(this.id); })))
+							text("Fanpit " + data[i].price * 2 + " RSD").click(function () { bookTicket(this.id, "fanpit"); })))
 						)
 						.append(
 							$("<p class='card-text'>")
 							.append($('<button id ="' + data[i].title + '" class = "btn"' + vip + ' >').
-							text("Vip " + data[i].price * 4 + " RSD").click(function () { bookVip(this.id); })))
+							text("Vip " + data[i].price * 4 + " RSD").click(function () { bookTicket(this.id, "vip"); })))
 				)
 					)
 				);	}else{
@@ -175,9 +175,9 @@ function goToHomepage(){
 	}
 }
 
-function bookRegular(manifestationTitle){
-	console.log("bookRegular" + manifestationTitle );
-	dataForBooking = JSON.stringify({ "title": title, "typeOfTicket" : "regular"});
+function bookTicket(title, typeOfTicket){
+	console.log( title + " " + typeOfTicket );
+	dataForBooking = JSON.stringify({ "title": title, "typeOfTicket" : typeOfTicket});
 	
 	$.ajax({
         url:"/manifestations/bookTicket",
@@ -187,13 +187,8 @@ function bookRegular(manifestationTitle){
         dataType: "JSON",
         success:function(data){
             console.log(data);
-            // localStorage.setItem('resultManifestation', JSON.stringify(data));
-            // console.log(localStorage.getItem('resultManifestation'));
-            // if(localStorage.getItem('role') !== null){
-            // 	window.location = "searchResultManUsers.html";
-            // }else{
-            // 	window.location = "searchResultManifestation.html";
-            // }
+			alert("You have successfully booked a ticket.")
+			location.href = "homepageBuyer.html";
             
         },
         error: function(xhr, textStatus, error){
@@ -205,11 +200,4 @@ function bookRegular(manifestationTitle){
 
 }
 
-function bookFanpit(manifestationTitle){
-	console.log("bookFanpit" + manifestationTitle );
-}
-
-function bookVip(manifestationTitle){
-	console.log("bookVip" + manifestationTitle );
-}
 

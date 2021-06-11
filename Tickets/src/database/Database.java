@@ -45,6 +45,36 @@ public class Database {
 		
 	}
 	
+	public static void saveTickets() {
+		
+		String json = new Gson().toJson(tickets);
+		
+		try {
+			System.out.println("save");
+			file = new FileWriter(new File("src/database/tickets.json"));
+			file.write(json);
+			file.close();
+	
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+	}
+	
+	public static void saveManifestations() {
+		
+		String json = new Gson().toJson(manifestations);
+		
+		try {
+			System.out.println("save");
+			file = new FileWriter(new File("src/database/manifestations.json"));
+			file.write(json);
+			file.close();
+	
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+	}
+	
 	public static boolean addUser(User newUser) {
 
 			users.add(newUser);
@@ -52,6 +82,22 @@ public class Database {
 
 			return true;
 		}
+	
+	public static boolean addTicket(Ticket newTicket) {
+
+		tickets.add(newTicket);
+		saveTickets();
+
+		return true;
+	}
+	
+	public static boolean addManifestation(Manifestation newManifestation) {
+
+		manifestations.add(newManifestation);
+		saveTickets();
+
+		return true;
+	}
 	
 	public static boolean  isSellersManifestation(User seller, String searchManifestition) {
 		for(User user : Database.users) {

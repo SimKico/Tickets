@@ -325,16 +325,16 @@ public class Data {
 
 		int pricePozoriste3Regular = 789;
 		
-		Ticket ticket1 = new Ticket("t1", "Koncert1", date1, priceKoncert1Regular, "Natasa", "Kovacevic", TicketStatus.RESERVED, TicketType.REGULAR, false);
-		Ticket ticket2 = new Ticket("t2", "Koncert1", date1, priceKoncert1Regular * 2, "Snjezana", "Simic", TicketStatus.RESERVED, TicketType.FANPIT, false);
-		Ticket ticket3 = new Ticket("t3", "Koncert1", date1, priceKoncert1Regular * 4, "Goran", "Stanic", TicketStatus.RESERVED, TicketType.VIP, false);
-		Ticket ticket4 = new Ticket("t4", "Festival1", date2, priceFestival1Regular, "Natasa", "Kovacevic", TicketStatus.RESERVED, TicketType.REGULAR, false);
-		Ticket ticket5 = new Ticket("t5", "Festival1", date2, priceFestival1Regular * 2,  "Snjezana", "Simic", TicketStatus.RESERVED, TicketType.FANPIT, false);
-		Ticket ticket6 = new Ticket("t6", "Festival1", date2, priceFestival1Regular * 4,  "Goran", "Stanic", TicketStatus.CANCELD, TicketType.VIP, false);
-		Ticket ticket7 = new Ticket("t7", "Pozoriste1", date3, pricePozoriste1Regular, "Natasa", "Kovacevic", TicketStatus.RESERVED, TicketType.REGULAR, false);
-		Ticket ticket8 = new Ticket("t8", "Koncert2", date3, priceKoncert2Regural, "Snjezana", "Simic", TicketStatus.RESERVED, TicketType.REGULAR, false);
-		Ticket ticket9 = new Ticket("t9", "Festival2", date2, priceFestival2Regular, "Goran", "Stanic", TicketStatus.RESERVED, TicketType.REGULAR, false);
-		Ticket ticket10 = new Ticket("t10", "Pozoriste2", date1, pricePozoriste3Regular, "Natasa", "Kovacevic", TicketStatus.CANCELD, TicketType.REGULAR, false);
+		Ticket ticket1 = new Ticket("t1", "Koncert1", date1, priceKoncert1Regular, "buyer1", "Natasa", "Kovacevic", TicketStatus.RESERVED, TicketType.REGULAR, false);
+		Ticket ticket2 = new Ticket("t2", "Koncert1", date1, priceKoncert1Regular * 2, "buyer2", "Snjezana", "Simic", TicketStatus.RESERVED, TicketType.FANPIT, false);
+		Ticket ticket3 = new Ticket("t3", "Koncert1", date1, priceKoncert1Regular * 4, "buyer3", "Goran", "Stanic", TicketStatus.RESERVED, TicketType.VIP, false);
+		Ticket ticket4 = new Ticket("t4", "Festival1", date2, priceFestival1Regular,"buyer1", "Natasa", "Kovacevic", TicketStatus.RESERVED, TicketType.REGULAR, false);
+		Ticket ticket5 = new Ticket("t5", "Festival1", date2, priceFestival1Regular * 2,  "buyer2", "Snjezana", "Simic", TicketStatus.RESERVED, TicketType.FANPIT, false);
+		Ticket ticket6 = new Ticket("t6", "Festival1", date2, priceFestival1Regular * 4,  "buyer3",  "Goran", "Stanic", TicketStatus.CANCELD, TicketType.VIP, false);
+		Ticket ticket7 = new Ticket("t7", "Pozoriste1", date3, pricePozoriste1Regular, "buyer1",  "Natasa", "Kovacevic", TicketStatus.RESERVED, TicketType.REGULAR, false);
+		Ticket ticket8 = new Ticket("t8", "Koncert2", date3, priceKoncert2Regural, "buyer2", "Snjezana", "Simic", TicketStatus.RESERVED, TicketType.REGULAR, false);
+		Ticket ticket9 = new Ticket("t9", "Festival2", date2, priceFestival2Regular,  "buyer3", "Goran", "Stanic", TicketStatus.RESERVED, TicketType.REGULAR, false);
+		Ticket ticket10 = new Ticket("t10", "Pozoriste2", date1, pricePozoriste3Regular, "buyer1", "Natasa", "Kovacevic", TicketStatus.CANCELD, TicketType.REGULAR, false);
 		
 		tickets.add(ticket1);
 		tickets.add(ticket2);

@@ -10,6 +10,7 @@ public class Ticket{
 	private String manifestation;
 	private Date manifestationDate;
 	private int price;
+	private String username;
 	private String buyerFirstName;
 	private String buyerLastName;
 	private TicketStatus status;
@@ -20,18 +21,27 @@ public class Ticket{
 		super();
 	}
 
-	public Ticket(String ticketID, String manifestation, Date manifestationDate, int price, String buyerFirstName,
-			String buyerLastName, TicketStatus status, TicketType type, boolean isDeleted) {
+	public Ticket(String ticketID, String manifestation, Date manifestationDate, int price, String username,
+			String buyerFirstName, String buyerLastName, TicketStatus status, TicketType type, boolean isDeleted) {
 		super();
 		this.ticketID = ticketID;
 		this.manifestation = manifestation;
 		this.manifestationDate = manifestationDate;
 		this.price = price;
+		this.username = username;
 		this.buyerFirstName = buyerFirstName;
 		this.buyerLastName = buyerLastName;
 		this.status = status;
 		this.type = type;
 		this.isDeleted = isDeleted;
+	}
+
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
 	}
 
 	public String getTicketID() {
