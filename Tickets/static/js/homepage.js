@@ -9,8 +9,14 @@ function getManifestations() {
 			console.log(data);
 			var i = 0;
 			for (i; i < data.length; i++) {
+				
+				let regular = (data[i].availableRegularTickets != 0) ? "visible" : "disabled";
+				let fanpit = (data[i].availableFanpitTickets != 0) ?  "visible" : "disabled";
+				let vip = (data[i].availableVipTickets != 0) ? "visible" : "disabled";
+
 				var date = new Date(data[i].realisationDate);
 				if(localStorage.getItem("role") === 'BUYER'){
+
 					
 				$("#cards").append(
 					$("<div class='col-md-4 div-space'>").append(
@@ -46,28 +52,21 @@ function getManifestations() {
 							.append(
 								$("<div class='card-footer'>")
 									.append($("<h5>").text("Book a ticket:"))
-									.append(
-										$("<p class='card-text'>").append(
-											$(
-												"<button class = 'btn' onclick = 'book_regular()'>"
-											).text("Regular " + data[i].price + " RSD")
-										)
-									)
-									.append(
-										$("<p class='card-text'>").append(
-											$(
-												"<button class = 'btn' onclick = 'book_fanpit()'>"
-											).text("Fanpit " + data[i].price * 2 + " RSD")
-										)
-									)
-									.append(
-										$("<p class='card-text'>").append(
-											$(
-												"<button class = 'btn' onclick = 'book_vip()'>"
-											).text("Vip " + data[i].price * 4 + " RSD")
-										)
-									)
-							)
+									.append($("<p class='card-text'>")
+										.append($('<button id ="' + data[i].title + '" class = "btn" ' + regular + ' >').
+										text("Regular " + data[i].price  + " RSD").click(function () { bookRegular(this.id); })))
+				
+						.append(
+							$("<p class='card-text'>")						
+							.append($("<p class='card-text'>")
+							.append($('<button id ="' + data[i].title + '" class = "btn" ' + fanpit + '>').
+							text("Fanpit " + data[i].price * 2 + " RSD").click(function () { bookFanpit(this.id); })))
+						)
+						.append(
+							$("<p class='card-text'>")
+							.append($('<button id ="' + data[i].title + '" class = "btn"' + vip + ' >').
+							text("Vip " + data[i].price * 4 + " RSD").click(function () { bookVip(this.id); })))
+				)
 					)
 				);	}else{
 					$("#cards")
@@ -176,4 +175,41 @@ function goToHomepage(){
 	}
 }
 
+function bookRegular(manifestationTitle){
+	console.log("bookRegular" + manifestationTitle );
+	dataForBooking = JSON.stringify({ "title": title, "typeOfTicket" : "regular"});
+	
+	$.ajax({
+        url:"/manifestations/bookTicket",
+        method:"post",
+        contentType: "application/json",
+        data: dataForBooking,
+        dataType: "JSON",
+        success:function(data){
+            console.log(data);
+            // localStorage.setItem('resultManifestation', JSON.stringify(data));
+            // console.log(localStorage.getItem('resultManifestation'));
+            // if(localStorage.getItem('role') !== null){
+            // 	window.location = "searchResultManUsers.html";
+            // }else{
+            // 	window.location = "searchResultManifestation.html";
+            // }
+            
+        },
+        error: function(xhr, textStatus, error){
+            console.log(xhr.statusText);
+            console.log(textStatus);
+            console.log(error);
+        }
+	});
+
+}
+
+function bookFanpit(manifestationTitle){
+	console.log("bookFanpit" + manifestationTitle );
+}
+
+function bookVip(manifestationTitle){
+	console.log("bookVip" + manifestationTitle );
+}
 

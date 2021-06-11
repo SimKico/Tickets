@@ -747,6 +747,35 @@ public class SparkAppMain {
 				}
 				return false;
 			});
+//***********************user reserve ticket*****************************//
+			
+			post("manifestations/bookTicket", (req, res)-> {
+				
+				res.type("application/json");
+				User k = req.session().attribute("user");
+				String username = k.getUsername();
+				
+				String data = req.body();
+				JsonObject job = new JsonParser().parse(data).getAsJsonObject();
+				
+				String title = job.get("title").getAsString().toLowerCase();
+				String typeOfTicket = job.get("typeOfTicket").getAsString().toLowerCase();
+				
+				for(Manifestation manifestation : Database.manifestations) {
+					if((!manifestation.isDeleted() && manifestation.getTitle().equals(title))) {
+						if(typeOfTicket == "REGULAR") {
+							
+						}else if(typeOfTicket == "FANPIT") {
+							
+						}else {
+							
+						}
+					}
+				}
+				
+				return true;
+				
+			});
 			
 // **********************manifestations**********************************//
 			

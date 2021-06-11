@@ -201,8 +201,8 @@ public class Data {
 		Location location4 = new Location(20.421, 44.814, "Bulevar Arsenija Čarnojevića", "58", "Beograd", 11000);
 		Location location5 = new Location(19.863, 45.252, "Beogradska", "bb", "Petrovaradin", 21131);
 		Location location6 = new Location(19.845, 45.255, "Trg Slobode", "bb", "Novi Sad", 21000);
-		
-		Manifestation manifestation1 = new Manifestation("Koncert1", ManifestationType.CONCERTS, date1, 1500, true, location4, "source/cloud-desktop-background.jpg", 10, 7, 2, 1, 4.5, false);
+
+		Manifestation manifestation1 = new Manifestation("Koncert1", ManifestationType.CONCERTS, date1, 1500, true, location4, "source/cloud-desktop-background.jpg", 10, 8, 0, 1, 4.5, false);
 		Manifestation manifestation2 = new Manifestation("Festival1", ManifestationType.FESTIVALS, date2, 1200, true, location5, "source/cloud-desktop-background.jpg", 20, 12, 5, 3, 0, false);
 		Manifestation manifestation3 = new Manifestation("Pozoriste1", ManifestationType.THEATERS, date3, 789, true, location1, "source/cloud-desktop-background.jpg", 20, 12, 5, 3, 0, false);
 		Manifestation manifestation4 = new Manifestation("Koncert2", ManifestationType.CONCERTS, date3, 1500, false, location3, "source/cloud-desktop-background.jpg", 20, 12, 5, 3, 0, false);
@@ -282,7 +282,7 @@ public class Data {
 		Location location5 = new Location(19.863, 45.252, "Beogradska", "bb", "Petrovaradin", 21131);
 		Location location6 = new Location(19.845, 45.255, "Trg Slobode", "bb", "Novi Sad", 21000);
 		
-		manifestations.add(new Manifestation("Koncert1", ManifestationType.CONCERTS, date1, 1500, true, location4, "source/cloud-desktop-background.jpg", 10, 5, 3, 2, 4.5, false));
+		manifestations.add(new Manifestation("Koncert1", ManifestationType.CONCERTS, date1, 1500, true, location4, "source/cloud-desktop-background.jpg", 10, 8, 0, 2, 4.5, false));
 		manifestations.add(new Manifestation("Festival1", ManifestationType.FESTIVALS, date2, 1200, true, location5, "source/cloud-desktop-background.jpg", 20, 12, 5, 3, 0, false));
 		manifestations.add(new Manifestation("Pozoriste1", ManifestationType.THEATERS, date3, 789, true, location1, "source/cloud-desktop-background.jpg", 20, 12, 5, 3, 0, false));
 		manifestations.add(new Manifestation("Koncert2", ManifestationType.CONCERTS, date3, 1500, false, location3, "source/cloud-desktop-background.jpg", 20, 12, 5, 3, 0, false));
