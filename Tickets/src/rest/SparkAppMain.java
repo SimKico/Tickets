@@ -8,6 +8,7 @@ import static spark.Spark.delete;
 import static spark.Spark.staticFiles;
 
 import java.io.File;
+import java.io.StringReader;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -16,14 +17,17 @@ import java.util.List;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.google.gson.stream.JsonReader;
 
 import beans.BuyerType;
 import beans.Gender;
 import beans.Location;
 import beans.Manifestation;
 import beans.ManifestationType;
+import beans.Reservation;
 import beans.Role;
 import beans.Ticket;
 import beans.TicketStatus;
@@ -69,7 +73,7 @@ public class SparkAppMain {
 						user = kk;
 						ss.attribute("user", user);	
 					}
-					return user.getRole();
+					return g.toJson(user);
 				}						
 			}
 			return false;			
@@ -753,38 +757,63 @@ public class SparkAppMain {
 				
 				res.type("application/json");
 				User user = req.session().attribute("user");
-				System.out.println(user.getUsername());
-				String username = user.getUsername();
-				
+
 				String data = req.body();
-				JsonObject job = new JsonParser().parse(data).getAsJsonObject();
+			
+				JsonArray job = new JsonParser().parse(data).getAsJsonArray();
 				
-				String title = job.get("title").getAsString();
-				String typeOfTicket = job.get("typeOfTicket").getAsString();
-				
-				for(Manifestation manifestation : Database.manifestations) {
+				for(JsonElement r : job) {
+					JsonObject dd = r.getAsJsonObject();
+					String title = dd.get("title").getAsString().toLowerCase();
+					String typeOfTicket = dd.get("typeOfTicket").getAsString().toLowerCase();
+					String priceString = dd.get("price").getAsString().toLowerCase();
+					Integer price = Integer.valueOf(priceString);
+					for(Manifestation manifestation : Database.manifestations) {
+					
+						
 					if((!manifestation.isDeleted() && manifestation.getTitle().equalsIgnoreCase(title))) {
+						
 						if(typeOfTicket.equalsIgnoreCase("REGULAR")) {
+							
 							if(manifestation.getAvailableRegularTickets() !=0) {
-								
+							
 								String id =String.valueOf("t" + Database.tickets.size() + 1);
 								Ticket newTicket = new Ticket(id, title , manifestation.getRealisationDate(), manifestation.getPrice(),user.getUsername(), user.getFirstName(), user.getLastName(), TicketStatus.RESERVED, TicketType.REGULAR, false);
 								//add ticket to tickets
+								
+//								ArrayList<Ticket> tickets;
+//								if(user.getTickets().isEmpty()) {
+//									tickets = new ArrayList<Ticket>();
+//								}else {
+//									tickets = user.getTickets();
+//								}
+//								tickets.add(newTicket);
+//								user.setTickets(tickets);
+								user.setPoints(user.getPoints() + (price/1000)*3);
+								if(4000 <= user.getPoints() + (price/1000)*3) {
+									user.setBuyerType(new BuyerType("GOLDEN", 30, 0));
+								}else if(3000 <= user.getPoints() + (price/1000)*3) {
+									user.setBuyerType(new BuyerType("SILVER", 20, 4000 - user.getPoints() + (price/1000)*3));
+								}else {
+									user.setBuyerType(new BuyerType("BRONZE", 10, 3000 - user.getPoints() + (price/1000)*3));
+								}
+								Database.saveUsers();
+								
 								Database.addTicket(newTicket);
 								Database.saveTickets();
 								
 								//reduce number of available tickets
 								manifestation.setAvailableRegularTickets(manifestation.getAvailableRegularTickets()-1);
 								Database.saveManifestations();
-								return true;
+								System.out.println("SAVED" + title);
 							}else {
 								return false;
 							}
-						}else if(typeOfTicket.equalsIgnoreCase("FANPIT") ) {
+						}else if(typeOfTicket.equalsIgnoreCase("FANPIT")) {
 							if(manifestation.getAvailableFanpitTickets() !=0) {
-								
+								System.out.println(manifestation.getAvailableFanpitTickets());
 								String id =String.valueOf("t" + Database.tickets.size() + 1);
-								Ticket newTicket = new Ticket(id, title , manifestation.getRealisationDate(), manifestation.getPrice() * 2,user.getUsername(), user.getFirstName(), user.getLastName(), TicketStatus.RESERVED, TicketType.FANPIT, false);
+								Ticket newTicket = new Ticket(id, title , manifestation.getRealisationDate(), manifestation.getPrice()*2,user.getUsername(), user.getFirstName(), user.getLastName(), TicketStatus.RESERVED, TicketType.FANPIT, false);
 								//add ticket to tickets
 								Database.addTicket(newTicket);
 								Database.saveTickets();
@@ -792,7 +821,8 @@ public class SparkAppMain {
 								//reduce number of available tickets
 								manifestation.setAvailableFanpitTickets(manifestation.getAvailableFanpitTickets()-1);
 								Database.saveManifestations();
-								return true;
+
+								System.out.println("SAVED" + title);
 							}else {
 								return false;
 							}
@@ -809,14 +839,17 @@ public class SparkAppMain {
 								manifestation.setAvailableVipTickets(manifestation.getAvailableVipTickets()-1);
 								manifestation.setAvailableTickets(manifestation.getAvailableTickets()-1);
 								Database.saveManifestations();
-								return true;
+
+								System.out.println("SAVED" + title);
 							}else {
 								return false;
 							}
 						}
 					}
 				}
-				return false;
+				}
+				return true;
+				
 			});
 			
 // **********************manifestations**********************************//

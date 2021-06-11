@@ -70,6 +70,8 @@
 						contentType: "application/json",
 						dataType: "json", // ova pet su obavezna
 						complete: function (data) {
+							console.log("data");
+							console.log(data);
 							
 							if(data.responseText == 'false'){
 								console.log("WRONG USERNAME OR PASSWORD!")
@@ -80,13 +82,14 @@
 							}else{
 								console.log(data.responseText);
 								localStorage.setItem("username", param1);
-								localStorage.setItem("role", data.responseText);
+								localStorage.setItem("role", data.responseJSON.role);
 								
-								if(data.responseText === "ADMIN"){
+								if(data.responseJSON.role === "ADMIN"){
 									location.href = "homepageAdmin.html";
-								}else if(data.responseText === "SELLER"){
+								}else if(data.responseJSON.role === "SELLER"){
 									location.href = "homepageSeller.html";
 								}else{
+									localStorage.setItem("discount", data.responseJSON.buyerType.discount);
 									location.href = "homepageBuyer.html";
 								}
 								}

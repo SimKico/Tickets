@@ -1,3 +1,7 @@
+var ticketList = [];
+var ticket = {title : "title", type : "type", price : 1};
+
+
 function getManifestations() {
 	localStorage.removeItem("resultManifestation");
 	localStorage.removeItem("dataForSort");
@@ -9,10 +13,19 @@ function getManifestations() {
 			console.log(data);
 			var i = 0;
 			for (i; i < data.length; i++) {
+				let r = 0;
+				let f = 0;
+				let v = 0;
+
+				let rr = data[i].availableRegularTickets;
+				let ff = data[i].availableFanpitTickets;
+				let vv = data[i].availableVipTickets;
 				
-				let regular = (data[i].availableRegularTickets != 0) ? "visible" : "disabled";
+				let regular = (rr != 0) ? "visible" : "disabled";
 				let fanpit = (data[i].availableFanpitTickets != 0) ?  "visible" : "disabled";
 				let vip = (data[i].availableVipTickets != 0) ? "visible" : "disabled";
+				let price = (data[i].price);
+				let regularNumber = "";
 
 				var date = new Date(data[i].realisationDate);
 				if(localStorage.getItem("role") === 'BUYER'){
@@ -22,7 +35,7 @@ function getManifestations() {
 					$("<div class='col-md-4 div-space'>").append(
 						$("<div class='card'>")
 							.append(
-								$("<div class='card-header'>").append(
+								$("<div class='card-header' >").append(
 									$("<h5>").text(data[i].manifestationType)
 								)
 							)
@@ -50,22 +63,22 @@ function getManifestations() {
 									)
 							)
 							.append(
-								$("<div class='card-footer'>")
+								$('<div class="card-footer" >')
 									.append($("<h5>").text("Book a ticket:"))
 									.append($("<p class='card-text'>")
-										.append($('<button id ="' + data[i].title + '" class = "btn" ' + regular + ' >').
-										text("Regular " + data[i].price  + " RSD").click(function () { bookTicket(this.id, "regular"); })))
+										.append($('<button id ="' + data[i].title+1+ '" class = "btn" ' + regular + ' >').
+										text("Regular " + data[i].price + "RSD " + r).click(function () { bookTicket(this.id, "regular", price,i); rr--; console.log(rr); if(rr === 0){$("#"+this.id+"").css("visibility", "hidden");alert("There is no more of these tickets!"); }else{r++;} })))
 				
 						.append(
 							$("<p class='card-text'>")						
 							.append($("<p class='card-text'>")
-							.append($('<button id ="' + data[i].title + '" class = "btn" ' + fanpit + '>').
-							text("Fanpit " + data[i].price * 2 + " RSD").click(function () { bookTicket(this.id, "fanpit"); })))
+							.append($('<button id ="' + data[i].title+2 + '" class = "btn" ' + fanpit + '>').
+							text("Fanpit " + data[i].price * 2 + " RSD").click(function () { bookTicket(this.id, "fanpit", price,i); ff--; if(ff === 0) { $("#"+this.id+"").css("visibility", "hidden"); alert("There is no more of these tickets!");} })))
 						)
 						.append(
 							$("<p class='card-text'>")
-							.append($('<button id ="' + data[i].title + '" class = "btn"' + vip + ' >').
-							text("Vip " + data[i].price * 4 + " RSD").click(function () { bookTicket(this.id, "vip"); })))
+							.append($('<button id ="' + data[i].title+3 + '" class = "btn"' + vip + ' >').
+							text("Vip " + data[i].price * 4 + " RSD").click(function () { bookTicket(this.id, "vip", price,i);vv--; if(vv === 0) {$("#"+this.id+"").css("visibility", "hidden"); alert("There is no more of these tickets!"); }  })))
 				)
 					)
 				);	}else{
@@ -175,21 +188,48 @@ function goToHomepage(){
 	}
 }
 
-function bookTicket(title, typeOfTicket){
-	console.log( title + " " + typeOfTicket );
+function bookTicket(title, typeOfTicket, regularPrice, i){
+	var price;
+	var totalPrice = 0;
+	if(typeOfTicket === "regular"){
+		price = regularPrice;
+	}else if( typeOfTicket === "fanpit"){
+		price = regularPrice * 2;
+	}else{
+		price = regularPrice * 4;
+	}
+
+	title = title.slice(0, -1);
+	var newTicket = {title : title, typeOfTicket : typeOfTicket, price : price};
+	ticketList.push(newTicket);
+	discount = (100 - localStorage.getItem("discount"))/100;
+
+	ticketList.forEach(ticket => {
+		totalPrice = (totalPrice + ticket.price) ;
+	});
+
+	console.log(totalPrice);
+	console.log(ticketList);
 	dataForBooking = JSON.stringify({ "title": title, "typeOfTicket" : typeOfTicket});
-	
+
+	$("#tickets").append($("<div class='card-footer'>").text("Ticket: " + title + " " + typeOfTicket + " " + price +" RSD"));
+	$("#price").text("Total price: " + totalPrice +" RSD   " + "With discount: " +  Math.round(totalPrice* discount)+ " RSD");
+	// $("#price").css("visibility", "visible");
+	$("#button1").css("visibility", "visible");
+}
+
+function confirmBooking(){
+	console.log(ticketList);
 	$.ajax({
         url:"/manifestations/bookTicket",
         method:"post",
         contentType: "application/json",
-        data: dataForBooking,
+        data: JSON.stringify(ticketList),
         dataType: "JSON",
         success:function(data){
             console.log(data);
 			alert("You have successfully booked a ticket.")
 			location.href = "homepageBuyer.html";
-            
         },
         error: function(xhr, textStatus, error){
             console.log(xhr.statusText);
@@ -197,7 +237,6 @@ function bookTicket(title, typeOfTicket){
             console.log(error);
         }
 	});
-
 }
 
 
