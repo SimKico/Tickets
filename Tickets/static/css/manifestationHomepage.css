@@ -44,6 +44,16 @@ html,body{
 	border-color:#c0c0c0 !important;
 }
 
+.cancel_btn {
+	border-color:  rgba(124, 186, 228, 0.5) !important;
+}
+
+.right {
+	margin-right: 0;
+	 margin-left:auto;
+
+}
+
 .p_text{
 	color: #FFC312;
 	text-shadow: 0 0 3px #000000, 0 0 5px #c0c0c0;

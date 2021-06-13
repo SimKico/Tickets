@@ -1,33 +1,35 @@
 package rest;
 
+import static spark.Spark.delete;
 import static spark.Spark.get;
 import static spark.Spark.port;
 import static spark.Spark.post;
 import static spark.Spark.put;
-import static spark.Spark.delete;
 import static spark.Spark.staticFiles;
 
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.StringReader;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+
+import javax.imageio.ImageIO;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.google.gson.stream.JsonReader;
 
 import beans.BuyerType;
 import beans.Gender;
 import beans.Location;
 import beans.Manifestation;
 import beans.ManifestationType;
-import beans.Reservation;
 import beans.Role;
 import beans.Ticket;
 import beans.TicketStatus;
@@ -1109,6 +1111,60 @@ public class SparkAppMain {
 					}
 				}
 				return g.toJson(user.getManifestations());
+						
+			});
+			
+			post("/manifestations", (req, res) -> {
+				
+				res.type("application/json");
+				String data = req.body();
+				
+				JsonObject job = new JsonParser().parse(data).getAsJsonObject();
+				
+			
+			    Location l = new Location();
+			    l.setCity(job.get("city").getAsString());
+			    l.setNumber(job.get("number").getAsString());
+			    l.setStreet(job.get("street").getAsString());
+			    l.setZipCode(job.get("zipCode").getAsInt());
+			    l.setLat(job.get("lat").getAsDouble());
+			    l.setLng(job.get("lon").getAsDouble());
+			
+		        Manifestation m = new Manifestation();
+		        m.setLocation(l);
+		        m.setActive(true);
+		        m.setDeleted(false);
+		        m.setPrice(job.get("price").getAsInt());
+		        m.setTitle(job.get("title").getAsString());
+		       
+		        m.setManifestationType(ManifestationType.valueOf(job.get("type").getAsString()));
+		        Date date = new SimpleDateFormat("dd/MM/yyyy HH:mm").parse(job.get("date").getAsString() + " " + job.get("time").getAsString());  
+		        m.setRealisationDate(date);
+		       
+		        m.setAvailableTickets(job.get("seats").getAsInt());
+		        double seats =  m.getAvailableTickets()*0.7;
+		        m.setAvailableRegularTickets((int)seats);
+		        seats =  m.getAvailableTickets()*0.2;
+		        m.setAvailableFanpitTickets((int)seats);
+		        seats =  m.getAvailableTickets()*0.1;
+			    m.setAvailableVipTickets((int)seats); 
+			   
+			    System.out.println(job.get("poster"));
+			   
+			    String imageData = job.get("poster").getAsString();
+			    String base64Data = imageData.split(",")[1];
+
+			    byte[] decodedBytes = Base64.getDecoder().decode(base64Data);
+			    ByteArrayInputStream bis = new ByteArrayInputStream(decodedBytes);
+			    BufferedImage image = ImageIO.read(bis);
+
+			    File outputFile = new File("static/source",m.getTitle()+".jpg").getAbsoluteFile();
+			    ImageIO.write(image, "jpg", outputFile); 
+			   
+			    m.setPosterPath("source/"+m.getTitle()+".jpg");
+			    Database.manifestations.add(m);
+				System.out.println();
+				return g.toJson(Database.manifestations.get(Database.manifestations.indexOf(m)));
 						
 			});
 			

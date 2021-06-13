@@ -124,7 +124,7 @@
 		var available = $("input[name=choiceStatus]:checked").val() === "available" ? true : false;
 
 		var manifestations = JSON.parse(localStorage.getItem('resultManifestation'));
-		data = JSON.stringify({manifestations : manifestations, type : type, available : available});
+	    data = JSON.stringify({manifestations : manifestations, type : type, available : available});
 
 		$.ajax({
             url:"/manifestations/filter",
