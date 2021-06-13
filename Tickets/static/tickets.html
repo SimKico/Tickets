@@ -41,17 +41,21 @@
 						$("#cards")
 							.append($("<div class='col-md-4 div-space'>")
 								.append($("<div class='card'>")
+													.append($('<button  class = "btn" id = "' + data[i].ticketID + '" style = "visibility : visible" >').
+														text("Cancel ").click(function () {cancelTicket(this.id);}))
 									.append($("<div class='card-header text-center'>").append($("<h6>").text("Ticket for ")))
 									.append($("<div class='card-header text-center'>").append($("<h3>").text(data[i].manifestation)))
 									.append($("<div class='card-body text-center'>")
-										.append($("<div class='card-title'>").append($("<h5>").text(data[i].type)))
-										.append($("<p class='card-text'>").text(data[i].manifestationDate))
-										.append($("<p class='card-text'>").text(data[i].buyerFirstName + " " + data[i].buyerLastName))
-										.append($("<p class='card-text'>").text(data[i].status))
-										.append($("<p class='card-text'>").text("ID: " + data[i].ticketID))
-									)
-									.append($("<div class='card-footer'>").text("Price: " + data[i].price + " RSD"))
-								));
+
+												.append($("<div class='card-title'>").append($("<h5>").text(data[i].type)))
+												.append($("<p class='card-text'>").text(data[i].manifestationDate))
+												.append($("<p class='card-text'>").text(data[i].buyerFirstName + " " + data[i].buyerLastName))
+												.append($("<p class='card-text'>").text(data[i].status))
+												.append($("<p class='card-text'>").text("ID: " + data[i].ticketID))
+										)
+										.append($("<div class='card-footer'>").text("Price: " + data[i].price + " RSD"))
+									));
+								
 					}
 				}
 			});
@@ -202,8 +206,8 @@
 			})
 		}
 
-		function ascending(par){
-		
+		function ascending(par) {
+
 			var dataToJson = JSON.stringify({ "sortBy": par });
 
 			$.ajax({
@@ -226,10 +230,10 @@
 			})
 		}
 
-		function descending(par){
-		
+		function descending(par) {
+
 			var dataToJson = JSON.stringify({ "sortBy": par });
-			
+
 			$.ajax({
 				url: "/tickets/sortDsc",
 				type: "post",
@@ -250,6 +254,28 @@
 			})
 		}
 
+		function cancelTicket(ticketID){
+			console.log(ticketID);
+			
+			var ticketToCancel = JSON.stringify({ "ticketID" : ticketID});
+
+			$.ajax({
+				url: "/tickets/cancel",
+				type: "put",
+				data: ticketToCancel,
+				dataType: "JSON",
+				complete: function (data) {
+					if (data.responseText == 'false') {
+						console.log("No result!");
+						alert("Ticket can not be canceld!");
+						// location.href = "tickets.html";
+					} else {
+						alert("Ticket is canceled!");
+						location.href = "tickets.html";
+					}
+				}
+			})
+		}
 
 	</script>
 </head>
@@ -326,17 +352,17 @@
 			</div>
 		</div>
 		<div class="collapse navbar-collapse" id="collapsibleNavbar">
-			
+
 			<div class="form-group">
 				<h6 style="color:darkgoldenrod; ">Ticket's price</h6>
-				<input type="button" value="ascending" class="btn left"onclick="ascending('price')"  />
+				<input type="button" value="ascending" class="btn left" onclick="ascending('price')" />
 				<input type="button" value="descending" class="btn left" onclick="descending('price')" />
 			</div>
 		</div>
 		<div class="collapse navbar-collapse" id="collapsibleNavbar">
 			<div class="form-group">
 				<h6 style="color:darkgoldenrod; ">Date of maintenance</h6>
-				<input type="button" value="ascending" class="btn left" onclick="ascending('date')"  />
+				<input type="button" value="ascending" class="btn left" onclick="ascending('date')" />
 				<input type="button" value="descending" class="btn left" onclick="descending('date')" />
 			</div>
 		</div>

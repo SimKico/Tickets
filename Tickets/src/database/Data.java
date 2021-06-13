@@ -305,9 +305,9 @@ public class Data {
 		
 		ArrayList<Ticket> tickets = new ArrayList<Ticket>();
 		
-		String sDate1="13.12.2020";
-		String sDate2="18.04.2021";
-		String sDate3="15.10.2021";
+		String sDate1="13.12.2021";
+		String sDate2="18.07.2021";
+		String sDate3="15.8.2021";
 		
 		Date date1 = new SimpleDateFormat("dd.MM.yyyy").parse(sDate1);  
 		Date date2 = new SimpleDateFormat("dd.MM.yyyy").parse(sDate2);  
@@ -330,11 +330,11 @@ public class Data {
 		Ticket ticket3 = new Ticket("t3", "Koncert1", date1, priceKoncert1Regular * 4, "buyer3", "Goran", "Stanic", TicketStatus.RESERVED, TicketType.VIP, false);
 		Ticket ticket4 = new Ticket("t4", "Festival1", date2, priceFestival1Regular,"buyer1", "Natasa", "Kovacevic", TicketStatus.RESERVED, TicketType.REGULAR, false);
 		Ticket ticket5 = new Ticket("t5", "Festival1", date2, priceFestival1Regular * 2,  "buyer2", "Snjezana", "Simic", TicketStatus.RESERVED, TicketType.FANPIT, false);
-		Ticket ticket6 = new Ticket("t6", "Festival1", date2, priceFestival1Regular * 4,  "buyer3",  "Goran", "Stanic", TicketStatus.CANCELD, TicketType.VIP, false);
+		Ticket ticket6 = new Ticket("t6", "Festival1", date2, priceFestival1Regular * 4,  "buyer3",  "Goran", "Stanic", TicketStatus.CANCELED, TicketType.VIP, false);
 		Ticket ticket7 = new Ticket("t7", "Pozoriste1", date3, pricePozoriste1Regular, "buyer1",  "Natasa", "Kovacevic", TicketStatus.RESERVED, TicketType.REGULAR, false);
 		Ticket ticket8 = new Ticket("t8", "Koncert2", date3, priceKoncert2Regural, "buyer2", "Snjezana", "Simic", TicketStatus.RESERVED, TicketType.REGULAR, false);
 		Ticket ticket9 = new Ticket("t9", "Festival2", date2, priceFestival2Regular,  "buyer3", "Goran", "Stanic", TicketStatus.RESERVED, TicketType.REGULAR, false);
-		Ticket ticket10 = new Ticket("t10", "Pozoriste2", date1, pricePozoriste3Regular, "buyer1", "Natasa", "Kovacevic", TicketStatus.CANCELD, TicketType.REGULAR, false);
+		Ticket ticket10 = new Ticket("t10", "Pozoriste2", date1, pricePozoriste3Regular, "buyer1", "Natasa", "Kovacevic", TicketStatus.CANCELED, TicketType.REGULAR, false);
 		
 		tickets.add(ticket1);
 		tickets.add(ticket2);

@@ -13,6 +13,7 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -203,7 +204,7 @@ public class SparkAppMain {
 			ArrayList<Ticket> userTickets = new ArrayList<Ticket>();
 			if(k.getRole().equals(Role.BUYER)) {
 				for(Ticket ticket : Database.tickets) {
-					if(ticket.getBuyerFirstName().equals(k.getFirstName()) && ticket.getBuyerLastName().equals(k.getLastName())) {
+					if(ticket.getStatus().equals(TicketStatus.RESERVED) && ticket.getBuyerFirstName().equals(k.getFirstName()) && ticket.getBuyerLastName().equals(k.getLastName())) {
 						System.out.println(ticket.getBuyerFirstName()+ " " + ticket.getBuyerLastName());
 						userTickets.add(ticket);
 					}
@@ -255,7 +256,7 @@ public class SparkAppMain {
 					}
 				}else {
 					for(Ticket ticket : Database.tickets) {
-						if(ticket.getManifestation().toLowerCase().equals(manifestation) && ticket.getBuyerFirstName().equals(k.getFirstName()) && ticket.getBuyerLastName().equals(k.getLastName())) {
+						if(ticket.getStatus().equals(TicketStatus.RESERVED) && ticket.getManifestation().toLowerCase().equals(manifestation) && ticket.getBuyerFirstName().equals(k.getFirstName()) && ticket.getBuyerLastName().equals(k.getLastName())) {
 							satisfiesManifestation.add(ticket);
 						}
 					}
@@ -300,7 +301,7 @@ public class SparkAppMain {
 					}
 				}else {
 					for(Ticket ticket : Database.tickets) {
-						if(ticket.getBuyerFirstName().equals(k.getFirstName()) && ticket.getBuyerLastName().equals(k.getLastName()) && ticket.getPrice() >= minPrice && ticket.getPrice() <= maxPrice ) {
+						if(ticket.getStatus().equals(TicketStatus.RESERVED) && ticket.getBuyerFirstName().equals(k.getFirstName()) && ticket.getBuyerLastName().equals(k.getLastName()) && ticket.getPrice() >= minPrice && ticket.getPrice() <= maxPrice ) {
 							satisfiesManifestation.add(ticket);
 						}
 					}
@@ -343,7 +344,7 @@ public class SparkAppMain {
 					}
 				}else {
 					for(Ticket ticket : Database.tickets) {
-						if(ticket.getBuyerFirstName().equals(k.getFirstName()) && ticket.getBuyerLastName().equals(k.getLastName()) && ticket.getManifestationDate().after(fromDate) && ticket.getManifestationDate().before(toDate) ) {
+						if(ticket.getStatus().equals(TicketStatus.RESERVED) &&  ticket.getBuyerFirstName().equals(k.getFirstName()) && ticket.getBuyerLastName().equals(k.getLastName()) && ticket.getManifestationDate().after(fromDate) && ticket.getManifestationDate().before(toDate) ) {
 							satisfiesManifestation.add(ticket);
 						}
 					}
@@ -396,7 +397,7 @@ public class SparkAppMain {
 				}else {
 					for(Ticket ticket : Database.tickets) {
 						System.out.println(ticketType);
-						if(ticket.getBuyerFirstName().equals(k.getFirstName()) && ticket.getBuyerLastName().equals(k.getLastName()) && ticket.getType().equals(ticketType)) {
+						if(ticket.getStatus().equals(TicketStatus.RESERVED) && ticket.getBuyerFirstName().equals(k.getFirstName()) && ticket.getBuyerLastName().equals(k.getLastName()) && ticket.getType().equals(ticketType)) {
 							System.out.println("hehe");
 							satisfiesManifestation.add(ticket);
 						}
@@ -424,7 +425,7 @@ public class SparkAppMain {
 				if(type.equals("RESERVED")) {
 					ticketStatus = TicketStatus.RESERVED;
 				}else {
-					ticketStatus = TicketStatus.CANCELD;
+					ticketStatus = TicketStatus.CANCELED;
 				}
 				
 				ArrayList<Ticket> satisfiesManifestation = new ArrayList<Ticket>();
@@ -473,7 +474,7 @@ public class SparkAppMain {
 				
 				if(k.getRole().equals(Role.BUYER)) {
 					for(Ticket ticket : Database.tickets) {
-						if(ticket.getBuyerFirstName().equals(k.getFirstName()) && ticket.getBuyerLastName().equals(k.getLastName())) {
+						if(ticket.getStatus().equals(TicketStatus.RESERVED) && ticket.getBuyerFirstName().equals(k.getFirstName()) && ticket.getBuyerLastName().equals(k.getLastName())) {
 							System.out.println(ticket.getBuyerFirstName()+ " " + ticket.getBuyerLastName());
 							userTickets.add(ticket);
 						}
@@ -516,7 +517,7 @@ public class SparkAppMain {
 				
 				if(k.getRole().equals(Role.BUYER)) {
 					for(Ticket ticket : Database.tickets) {
-						if(ticket.getBuyerFirstName().equals(k.getFirstName()) && ticket.getBuyerLastName().equals(k.getLastName())) {
+						if(ticket.getStatus().equals(TicketStatus.RESERVED) && ticket.getBuyerFirstName().equals(k.getFirstName()) && ticket.getBuyerLastName().equals(k.getLastName())) {
 							System.out.println(ticket.getBuyerFirstName()+ " " + ticket.getBuyerLastName());
 							userTickets.add(ticket);
 						}
@@ -543,6 +544,51 @@ public class SparkAppMain {
 				}
 				return g.toJson(userTickets);
 			});
+			
+
+
+			put("/tickets/cancel", (req, res) ->{
+						res.type("application/json");
+						User k = req.session().attribute("user");
+						String data = req.body();
+						JsonObject job = new JsonParser().parse(data).getAsJsonObject();
+						String ticketID = job.get("ticketID").getAsString();
+
+						System.out.println(ticketID);
+						for(Ticket t : Database.tickets) {
+							if(t.getTicketID().equalsIgnoreCase(ticketID)) {
+
+								System.out.println(t.getManifestation());
+								 Calendar cal = Calendar.getInstance();
+							      cal.setTime(new Date());
+							      cal.add(Calendar.DATE, 7); //minus number would decrement the days
+							      Date date = cal.getTime();
+
+							      if(t.getManifestationDate().after(date) && t.getManifestationDate().after(new Date())) {
+										t.setStatus(TicketStatus.CANCELED);
+										Database.saveTickets();
+										
+										k.setPoints(k.getPoints() - ((t.getPrice()/1000)*532));
+										Database.saveUsers();
+										
+										if(4000 <= k.getPoints()) {
+											k.setBuyerType(new BuyerType("GOLDEN", 30, 0));
+										}else if(3000 <= k.getPoints()) {
+											k.setBuyerType(new BuyerType("SILVER", 20, 4000 - k.getPoints()));
+										}else {
+											k.setBuyerType(new BuyerType("BRONZE", 10, 3000 - k.getPoints()));
+										}
+										Database.saveUsers();
+										
+										return true;
+							      }else {
+							    	  	return false;
+							      }
+							}
+						}
+						return true;
+					});
+
 			
 //			users ***************************************
 			
