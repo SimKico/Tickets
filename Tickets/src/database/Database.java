@@ -94,7 +94,8 @@ public class Database {
 	public static boolean addManifestation(Manifestation newManifestation) {
 
 		manifestations.add(newManifestation);
-		saveTickets();
+		saveManifestations();
+		//saveTickets();
 
 		return true;
 	}

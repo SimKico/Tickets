@@ -1165,8 +1165,7 @@ public class SparkAppMain {
 				res.type("application/json");
 				String data = req.body();
 				
-				JsonObject job = new JsonParser().parse(data).getAsJsonObject();
-				
+				JsonObject job = new JsonParser().parse(data).getAsJsonObject();		
 			
 			    Location l = new Location();
 			    l.setCity(job.get("city").getAsString());
@@ -1178,13 +1177,13 @@ public class SparkAppMain {
 			
 		        Manifestation m = new Manifestation();
 		        m.setLocation(l);
-		        m.setActive(true);
+		        m.setActive(false);
 		        m.setDeleted(false);
 		        m.setPrice(job.get("price").getAsInt());
 		        m.setTitle(job.get("title").getAsString());
 		       
 		        m.setManifestationType(ManifestationType.valueOf(job.get("type").getAsString()));
-		        Date date = new SimpleDateFormat("dd/MM/yyyy HH:mm").parse(job.get("date").getAsString() + " " + job.get("time").getAsString());  
+		        Date date = new SimpleDateFormat("MM/dd/yyyy HH:mm").parse(job.get("date").getAsString() + " " + job.get("time").getAsString());  
 		        m.setRealisationDate(date);
 		       
 		        m.setAvailableTickets(job.get("seats").getAsInt());
@@ -1206,10 +1205,33 @@ public class SparkAppMain {
 
 			    File outputFile = new File("static/source",m.getTitle()+".jpg").getAbsoluteFile();
 			    ImageIO.write(image, "jpg", outputFile); 
-			   
 			    m.setPosterPath("source/"+m.getTitle()+".jpg");
-			    Database.manifestations.add(m);
-				System.out.println();
+			    
+			    if(m.getRealisationDate().before(new Date())) {
+		    		res.status(400);
+		    		return new Gson().toJson(Collections.singletonMap("message", "Your request could not be processed. Date chosen already passed!")); 
+
+		    	}
+			    
+			    for(Manifestation existingMan : Database.manifestations) {
+			    	if((existingMan.getLocation().getLat() == m.getLocation().getLat() && existingMan.getLocation().getLng()== m.getLocation().getLng()) && existingMan.getRealisationDate().getTime() == m.getRealisationDate().getTime()) {
+			    		res.status(400);
+			    		return new Gson().toJson(Collections.singletonMap("message", "Your request could not be processed. A manifestation on that date and time on given location already exists."));
+			    	}else if(existingMan.getTitle().equals(m.getTitle())) {
+			    		res.status(400);
+			    		return new Gson().toJson(Collections.singletonMap("message", "Your request could not be processed. A manifestation with that name already exists!")); 
+	
+			    	}
+			    }
+			   
+			    
+			    Database.addManifestation(m);
+				
+			    User k = req.session().attribute("user");
+			    System.out.println("username " + k.getUsername());
+			    Database.users.get(Database.users.indexOf(k)).getManifestations().add(m);
+			    Database.saveUsers();
+			    
 				return g.toJson(Database.manifestations.get(Database.manifestations.indexOf(m)));
 						
 			});

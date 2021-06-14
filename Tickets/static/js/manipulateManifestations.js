@@ -1,3 +1,9 @@
+function checkRole() {
+	if(localStorage.getItem('role') !== 'SELLER'){
+		goToHomepage();
+	}
+}
+
 function getSellerManifestations() {
 	if(localStorage.getItem('role') !== 'SELLER'){
 		goToHomepage();
@@ -80,8 +86,13 @@ function add(e){
 				data: newManifestation,
 				dataType: "JSON",
 				success: function (data) {
-					console.log(data)
-				}
+					
+				},
+				error: function(res){
+					console.log(res)
+				    alert(res.responseJSON.message);
+				     
+				  }
 			});
 			},
 		error : function(){
