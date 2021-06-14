@@ -187,7 +187,7 @@ public class SparkAppMain {
 			
 			res.type("application/json");
 			List<Manifestation> list = Database.manifestations;
-			list.removeIf(s -> !s.isActive());
+			list.removeIf(s -> !s.isActive() || s.isDeleted());
 			Collections.sort(list, Manifestation.dateComparator);
 			return g.toJson(Database.manifestations);
 					
@@ -927,8 +927,10 @@ public class SparkAppMain {
 				System.out.print(data);
 				
 				ArrayList<Manifestation> manifestations = new ArrayList<Manifestation>();
+				ArrayList<Manifestation> nonDeletedManifestations = Database.manifestations;
+				nonDeletedManifestations.removeIf(m -> m.isDeleted());
 				
-				for(Manifestation manifestation : Database.manifestations) {
+				for(Manifestation manifestation : nonDeletedManifestations) {
 					if((!title.isEmpty() && manifestation.getTitle().toLowerCase().contains(title))) {
 						checkTitle = true;
 					}else {
@@ -1233,6 +1235,33 @@ public class SparkAppMain {
 			    Database.saveUsers();
 			    
 				return g.toJson(Database.manifestations.get(Database.manifestations.indexOf(m)));
+						
+			});
+			
+			delete("/manifestations/:title", (req, res) -> {
+				
+				res.type("application/json");
+				String title = req.params(":title");
+				
+				
+				for(Manifestation m : Database.manifestations) {
+					if(m.getTitle().equalsIgnoreCase(title)) {
+						Database.manifestations.get(Database.manifestations.indexOf(m)).setDeleted(true);
+						break;
+					}
+				}
+				
+				for(Ticket t : Database.tickets) {
+					if(t.getManifestation().equalsIgnoreCase(title)) {
+						Database.tickets.get(Database.tickets.indexOf(t)).setDeleted(true);
+					}
+				}
+				
+				Database.saveManifestations();
+				Database.saveTickets();
+			    
+				res.status(200);
+				return true;
 						
 			});
 			

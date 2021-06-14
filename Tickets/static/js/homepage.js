@@ -81,7 +81,22 @@ function getManifestations() {
 							text("Vip " + data[i].price * 4 + " RSD").click(function () { bookTicket(this.id, "vip", price,i);vv--; if(vv === 0) {$("#"+this.id+"").css("visibility", "hidden"); alert("There is no more of these tickets!"); }  })))
 				)
 					)
-				);	}else{
+				);	}else if(localStorage.getItem("role") === 'ADMIN'){
+					$("#cards")
+					.append($("<div class='col-md-4 div-space'>")
+							.append($("<div class='card'>")
+									.append($("<div class='card-header d-flex justify-content-between align-items-center'>").append($("<h5>").text(data[i].manifestationType)).append($('<button id ="' + data[i].title + '" class = "btn"><i class="fa fa-trash" aria-hidden="true"></i></button>').click(function () { deleteManifestation(this.id); })))
+									.append($("<img src='"+data[i].posterPath+"'>"))
+									
+									.append($("<div class='card-body text-center'>")
+											.append($("<div class='card-title'>").append($("<h5>").text(data[i].title)))
+											.append($("<p class='card-text'>").text(data[i].realisationDate))
+											.append($("<p class='card-text'>").text(data[i].location.street +" " + data[i].location.number + ", " + data[i].location.city))
+										
+											)
+									.append($("<div class='card-footer'>").text("Regular price: " + data[i].price +" RSD"))
+											));
+				}else{
 					$("#cards")
 					.append($("<div class='col-md-4 div-space'>")
 							.append($("<div class='card'>")
@@ -230,6 +245,25 @@ function confirmBooking(){
             console.log(data);
 			alert("You have successfully booked a ticket.")
 			location.href = "homepageBuyer.html";
+        },
+        error: function(xhr, textStatus, error){
+            console.log(xhr.statusText);
+            console.log(textStatus);
+            console.log(error);
+        }
+	});
+}
+
+function deleteManifestation(title){
+	console.log(title);
+	$.ajax({
+        url:"/manifestations/" + title,
+        method:"delete",
+       
+        success:function(data){
+            console.log(data);
+			alert("You have successfully deleted a manifestation.")
+			location.href = "homepageAdmin.html";
         },
         error: function(xhr, textStatus, error){
             console.log(xhr.statusText);
