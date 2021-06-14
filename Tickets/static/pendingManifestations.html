@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="ISO-8859-1">
-<title>Homepage</title>
+<title>Pending manifestations</title>
 <link href="assets/img/favicon.png" rel="icon">
 <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
 
@@ -42,7 +42,7 @@
 	rel="stylesheet" type="text/css" />
 
 </head>
-<body onload="getManifestations()">
+<body onload="getInactiveManifestations()">
 
 	<nav class="navbar navbar-expand-sm navbar-dark nav-backround">
 		<a class="navbar-brand" href="#" onclick="goToHomepage();return false;">GetTickets</a>
@@ -64,55 +64,6 @@
 		</div>
 	</nav>
 	
-	
-	<section class="flex align-items-center" title="Fill in one or more fields for search">
-		<div class="container">
-		<h3 style="color: #FFC312;">Search</h3>
-				<div class="form-inline">
-		<label class="sr-only" for="title">Title</label> 
-		<div class="input-group mb-1 mr-sm-1">
-		<input
-			type="text" class="form-control" style="width: 140px"
-			id="title" placeholder="Title"> 
-		</div>
-		<label class="sr-only" for="location">Username</label>
-		<div class="input-group mb-1 mr-sm-1">
-			<input type="text" id="location" class="form-control input-size"
-				style="width: 140px"
-				placeholder="City or Country">
-
-		</div>
-		<div class="input-group mb-1 mr-sm-1">
-			<input id="datepicker" placeholder="From Date" width="150" />
-			<script>
-		        $('#datepicker').datepicker({
-		            uiLibrary: 'bootstrap4'
-		        });
-		    </script>
-				
-			<input id="datepicker2" placeholder="To Date" width="150" />
-			<script>
-		        $('#datepicker2').datepicker({
-		            uiLibrary: 'bootstrap4'
-		        });
-		    </script>
-	
-		</div>
-		<div class="input-group mb-1 mr-sm-1">
-			<input type="number" id="fromPrice" class="form-control" placeholder="From Price"
-				min=500 style="width: 140px">
-		
-			<input type="number" id="toPrice" class="form-control" placeholder="To Price"
-				max=3000 min=500 style="width: 140px">
-		</div>
-
-		<button type="button" class="search_btn btn mb-1" id="searchBtn" onclick="search()">
-			<i class="fa fa-search"></i>
-		</button>
-
-	</div>
-		</div>
-	</section>
 
 	<section id="hero" class="d-flex align-items-center">
 

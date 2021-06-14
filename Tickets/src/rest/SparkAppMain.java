@@ -183,13 +183,28 @@ public class SparkAppMain {
 			return false;	
 		});
 		
-		get("/manifestations/all", (req, res) -> {
+		get("/manifestations", (req, res) -> {
 			
 			res.type("application/json");
-			List<Manifestation> list = Database.manifestations;
-			list.removeIf(s -> !s.isActive() || s.isDeleted());
+			String active = req.queryParams("active"); 
+			System.out.println(active);
+			
+			List<Manifestation> list = new ArrayList<Manifestation>();
+			list.addAll(Database.manifestations);
+			System.out.println(list);
+			
+			if(active.equals("true")) {
+				
+				list.removeIf(s -> !s.isActive() || s.isDeleted());
+				System.out.println(list);
+			}else if(active.equals("false")) {
+				list.removeIf(s -> s.isActive() || s.isDeleted());
+				System.out.println(list);
+			}
+			
+			
 			Collections.sort(list, Manifestation.dateComparator);
-			return g.toJson(Database.manifestations);
+			return g.toJson(list);
 					
 		});
 		
@@ -1265,6 +1280,28 @@ public class SparkAppMain {
 						
 			});
 			
+			put("/manifestations/approve/:title", (req, res) -> {
+				
+				res.type("application/json");
+				String title = req.params(":title");
+				
+				
+				for(Manifestation m : Database.manifestations) {
+					if(m.getTitle().equalsIgnoreCase(title)) {
+						System.out.println("BRACOOO " + Database.manifestations.get(Database.manifestations.indexOf(m)).isActive());
+						Database.manifestations.get(Database.manifestations.indexOf(m)).setActive(true);
+						Database.saveManifestations();
+						System.out.println("I SESTREEE " + Database.manifestations.get(Database.manifestations.indexOf(m)).isActive());
+						res.status(200);
+						return true;
+					
+					}
+				}
+								
+				res.status(404);
+				return false;
+						
+			});
 			
 	}
 }
