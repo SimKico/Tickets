@@ -1167,13 +1167,15 @@ public class SparkAppMain {
 				res.type("application/json");
 				String username = req.params(":username");
 				User user = new User();
+				List<Manifestation> usersMan = new ArrayList<Manifestation>();
 				for(User u : Database.users) {
 					if(u.getUsername().equalsIgnoreCase(username)) {
-						user = u;
+						usersMan.addAll(u.getManifestations());
 						break;
 					}
 				}
-				return g.toJson(user.getManifestations());
+				usersMan.removeIf(s -> s.isDeleted());
+				return g.toJson(usersMan);
 						
 			});
 			
@@ -1272,8 +1274,20 @@ public class SparkAppMain {
 					}
 				}
 				
+				for(User u : Database.users) {
+					if(u.getManifestations() != null) {
+						for(Manifestation m : u.getManifestations()) {
+							if(m.getTitle().equalsIgnoreCase(title)) {
+								u.getManifestations().get(u.getManifestations().indexOf(m)).setDeleted(true);
+								break;
+							}
+						}
+					}
+				}
+				
 				Database.saveManifestations();
 				Database.saveTickets();
+			    Database.saveUsers();
 			    
 				res.status(200);
 				return true;
@@ -1285,6 +1299,17 @@ public class SparkAppMain {
 				res.type("application/json");
 				String title = req.params(":title");
 				
+				for(User u : Database.users) {
+					if(u.getManifestations() != null) {
+						for(Manifestation m : u.getManifestations()) {
+							if(m.getTitle().equalsIgnoreCase(title)) {
+								u.getManifestations().get(u.getManifestations().indexOf(m)).setActive(true);
+								Database.saveUsers();
+								break;
+							}
+						}
+					}
+				}
 				
 				for(Manifestation m : Database.manifestations) {
 					if(m.getTitle().equalsIgnoreCase(title)) {
