@@ -943,8 +943,7 @@ public class SparkAppMain {
 				
 				ArrayList<Manifestation> manifestations = new ArrayList<Manifestation>();
 				ArrayList<Manifestation> nonDeletedManifestations = Database.manifestations;
-				nonDeletedManifestations.removeIf(m -> m.isDeleted());
-				
+				nonDeletedManifestations.removeIf(m -> m.isDeleted() || !m.isActive());
 				for(Manifestation manifestation : nonDeletedManifestations) {
 					if((!title.isEmpty() && manifestation.getTitle().toLowerCase().contains(title))) {
 						checkTitle = true;
@@ -998,8 +997,8 @@ public class SparkAppMain {
 							&& (location.equals("") || checkLocation) 
 							&& (fromDate.equals("") || checkFromDate)
 							&& (toDate.equals("") || checkToDate)
-							&& (fromPrice >= 500 || checkFromPrice)
-							&& (toPrice <= 3000 || checkToPrice)) {
+							&& (fromPrice == 500 || checkFromPrice)
+							&& (toPrice == 3000 || checkToPrice)) {
 						 System.out.println("Imaa");
 						 manifestations.add(manifestation);
 					}
