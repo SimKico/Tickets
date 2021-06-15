@@ -12,7 +12,7 @@ function getSellerManifestations() {
 	localStorage.removeItem("resultManifestation");
 	localStorage.removeItem("dataForSort");
 	$.ajax({
-		url: "/manifestations/" + username,
+		url: "/manifestations/user/" + username,
 		method: "get",
 		dataType: "JSON",
 		success: function (data) {

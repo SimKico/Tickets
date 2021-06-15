@@ -25,7 +25,7 @@
 		
 		var i = 0;
 		for(i; i<data.length; i++){
-			var rating = data[i].averageRating === 0 ? "Not held" : data[i].averageRating;
+			var rating = data[i].averageRating === 0 ? "/" : data[i].averageRating;
 			var date = new Date((data[i].realisationDate));
 			$("#cards")
 			.append($("<div class='col-md-4 div-space'>")

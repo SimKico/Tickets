@@ -27,6 +27,7 @@ function getManifestations() {
 				let price = (data[i].price);
 				let regularNumber = "";
 
+				var rating = data[i].averageRating === 0 ? "/" : data[i].averageRating;
 				var date = new Date(data[i].realisationDate);
 				if(localStorage.getItem("role") === 'BUYER'){
 
@@ -39,7 +40,7 @@ function getManifestations() {
 									$("<h5>").text(data[i].manifestationType)
 								)
 							)
-							.append($("<img src='" + data[i].posterPath + "'>"))
+							.append($("<img class='image' src='" + data[i].posterPath + "'  id='"+data[i].title +"' title='Show manifestation'>").click(function () { showManifestation(this.id); }))
 							.append(
 								$("<div class='card-body text-center'>")
 									.append(
@@ -66,27 +67,31 @@ function getManifestations() {
 								$('<div class="card-footer" >')
 									.append($("<h5>").text("Book a ticket:"))
 									.append($("<p class='card-text'>")
-										.append($('<button id ="' + data[i].title+1+ '" class = "btn" ' + regular + ' >').
-										text("Regular " + data[i].price + "RSD " + r).click(function () { bookTicket(this.id, "regular", price,i); rr--; console.log(rr); if(rr === 0){$("#"+this.id+"").css("visibility", "hidden");alert("There is no more of these tickets!"); }else{r++;} })))
+										.append($('<button id ="' + data[i].title+1+ '" class = "btn" ' + regular + ' >').attr("disabled", !data[i].isActive || rr === 0).
+										text("Regular " + data[i].price + "RSD ").click(function () { bookTicket(this.id, "regular", price,i); rr--; console.log(rr); if(rr === 0){$("#"+this.id+"").css("visibility", "hidden");alert("There is no more of these tickets!"); }else{r++;} })))
 				
 						.append(
 							$("<p class='card-text'>")						
 							.append($("<p class='card-text'>")
-							.append($('<button id ="' + data[i].title+2 + '" class = "btn" ' + fanpit + '>').
+							.append($('<button id ="' + data[i].title+2 + '" class = "btn" ' + fanpit + '>').attr("disabled", !data[i].isActive || ff === 0).
 							text("Fanpit " + data[i].price * 2 + " RSD").click(function () { bookTicket(this.id, "fanpit", price,i); ff--; if(ff === 0) { $("#"+this.id+"").css("visibility", "hidden"); alert("There is no more of these tickets!");} })))
 						)
 						.append(
 							$("<p class='card-text'>")
-							.append($('<button id ="' + data[i].title+3 + '" class = "btn"' + vip + ' >').
+							.append($('<button id ="' + data[i].title+3 + '" class = "btn"' + vip + ' >').attr("disabled", !data[i].isActive || vv === 0).
 							text("Vip " + data[i].price * 4 + " RSD").click(function () { bookTicket(this.id, "vip", price,i);vv--; if(vv === 0) {$("#"+this.id+"").css("visibility", "hidden"); alert("There is no more of these tickets!"); }  })))
 				)
 					)
 				);	}else if(localStorage.getItem("role") === 'ADMIN'){
 					$("#cards")
 					.append($("<div class='col-md-4 div-space'>")
-							.append($("<div class='card'>")
-									.append($("<div class='card-header d-flex justify-content-between align-items-center'>").append($("<h5>").text(data[i].manifestationType)).append($('<button id ="' + data[i].title + '" class = "btn"><i class="fa fa-trash" aria-hidden="true"></i></button>').click(function () { deleteManifestation(this.id); })))
-									.append($("<img src='"+data[i].posterPath+"'>"))
+							.append($("<div class='card' >")
+									.append($("<div class='card-header d-flex justify-content-between align-items-center'>")
+											.append($("<h5>").text(data[i].manifestationType))
+											.append($("<div class='p-2'>")
+											.append($('<button id ="' + data[i].title + '" class = "btn"><i class="fa fa-check" aria-hidden="true"></i></button>').attr("hidden", data[i].isActive).click(function () { approveManifestation(this.id); }))
+											.append($('<button id ="' + data[i].title + '" class = "btn"><i class="fa fa-trash" aria-hidden="true"></i></button>').click(function () { deleteManifestation(this.id); }))))
+									.append($("<img  class='image'  src='"+data[i].posterPath+"'  id='"+data[i].title +"' title='Show manifestation'>").click(function () { showManifestation(this.id); }))
 									
 									.append($("<div class='card-body text-center'>")
 											.append($("<div class='card-title'>").append($("<h5>").text(data[i].title)))
@@ -94,21 +99,21 @@ function getManifestations() {
 											.append($("<p class='card-text'>").text(data[i].location.street +" " + data[i].location.number + ", " + data[i].location.city))
 										
 											)
-									.append($("<div class='card-footer'>").text("Regular price: " + data[i].price +" RSD"))
+									.append($("<div class='card-footer'>").text("Regular price: " + data[i].price +" RSD").append($("<p class='card-text p_text'>").text("Rating: " + rating)))
 											));
 				}else{
 					$("#cards")
 					.append($("<div class='col-md-4 div-space'>")
 							.append($("<div class='card'>")
 									.append($("<div class='card-header'>").append($("<h5>").text(data[i].manifestationType)))
-									.append($("<img src='"+data[i].posterPath+"'>"))
+									.append($("<img  class='image'  src='"+data[i].posterPath+"'   id='"+data[i].title +"' title='Show manifestation'>").click(function () { showManifestation(this.id); }))
 									.append($("<div class='card-body text-center'>")
 											.append($("<div class='card-title'>").append($("<h5>").text(data[i].title)))
 											.append($("<p class='card-text'>").text(data[i].realisationDate))
 											.append($("<p class='card-text'>").text(data[i].location.street +" " + data[i].location.number + ", " + data[i].location.city))
 										
 											)
-									.append($("<div class='card-footer'>").text("Regular price: " + data[i].price +" RSD"))
+									.append($("<div class='card-footer'>").text("Regular price: " + data[i].price +" RSD").append($("<p class='card-text p_text'>").text("Rating: " + rating)))
 											));
 				}
 			}
@@ -317,7 +322,47 @@ function approveManifestation(title){
 		dataType: "JSON",
 		success: function (data) {
 			console.log(data);
-			location.href="pendingManifestations.html";
+			window.location.reload();
+		},
+	});
+}
+
+function showManifestation(title){
+	console.log(title);
+	localStorage.setItem('showTitle', title);
+	location.href = "showManifestation.html";
+	
+}
+
+function getManifestation() {
+	var title = localStorage.getItem('showTitle');
+	console.log(title);
+	$.ajax({
+		url: "/manifestations/" + title,
+		method: "get",
+		dataType: "JSON",
+		success: function (data) {
+			
+			console.log(data);
+			var rating = data.averageRating === 0 ? "/" : data.averageRating;
+			available =  parseInt(data.availableRegularTickets) + parseInt(data.availableFanpitTickets) + parseInt(data.availableVipTickets);
+			$("#cards")
+			.append($("<div class='col-md-4 div-space'>")
+					.append($("<div class='card'>")
+							.append($("<div class='card-header'>").append($("<h5>").text(data.manifestationType)))
+							.append($("<img  class='image'  src='"+data.posterPath+"'   id='"+data.title +"'>"))
+							.append($("<div class='card-body text-center'>")
+									.append($("<div class='card-title'>").append($("<h5>").text(data.title)))
+									.append($("<p class='card-text'>").text("Status: " + data.isActive))
+									.append($("<p class='card-text'>").text("Date: " +data.realisationDate))
+									.append($("<p class='card-text'>").text("Location: " + data.location.street +" " + data.location.number + ", " + data.location.city))
+									.append($("<p class='card-text'>").text("Number of seats: " + data.availableTickets ))
+									.append($("<p class='card-text'>").text("Remaining tickets: " +  available))
+									)
+							.append($("<div class='card-footer'>").text("Regular price: " + data.price +" RSD").append($("<p class='card-text p_text'>").text("Rating: " + rating)))
+									));
+		
+			
 		},
 	});
 }

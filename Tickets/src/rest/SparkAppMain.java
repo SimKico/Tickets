@@ -195,7 +195,7 @@ public class SparkAppMain {
 			
 			if(active.equals("true")) {
 				
-				list.removeIf(s -> !s.isActive() || s.isDeleted());
+				list.removeIf(s -> s.isDeleted());
 				System.out.println(list);
 			}else if(active.equals("false")) {
 				list.removeIf(s -> s.isActive() || s.isDeleted());
@@ -943,7 +943,7 @@ public class SparkAppMain {
 				
 				ArrayList<Manifestation> manifestations = new ArrayList<Manifestation>();
 				ArrayList<Manifestation> nonDeletedManifestations = Database.manifestations;
-				nonDeletedManifestations.removeIf(m -> m.isDeleted() || !m.isActive());
+				nonDeletedManifestations.removeIf(m -> m.isDeleted());
 				for(Manifestation manifestation : nonDeletedManifestations) {
 					if((!title.isEmpty() && manifestation.getTitle().toLowerCase().contains(title))) {
 						checkTitle = true;
@@ -1161,7 +1161,7 @@ public class SparkAppMain {
 				
 			});
 			
-			get("/manifestations/:username", (req, res) -> {
+			get("/manifestations/user/:username", (req, res) -> {
 				
 				res.type("application/json");
 				String username = req.params(":username");
@@ -1326,6 +1326,28 @@ public class SparkAppMain {
 				return false;
 						
 			});
+			
+			get("/manifestations/:title", (req, res) -> {
+				System.out.println("WHAT THEEE FUUUCKKKADJNCFKAC");
+				res.type("application/json");
+				String title = req.params(":title");
+				System.out.println("WHAT THEEE FUUUCKKKADJNCFKAC");
+				Manifestation returnVal = new Manifestation();
+				System.out.println("WHAT THEEE FUUUCKKKADJNCFKAC");
+				for(Manifestation m : Database.manifestations) {
+					if(m.getTitle().equalsIgnoreCase(title)) {
+						
+						returnVal = Database.manifestations.get(Database.manifestations.indexOf(m));
+					
+					}
+				}
+				System.out.println("WHAT THEEE FUUUCKKKADJNCFKAC " + returnVal.getTitle());
+				
+				return g.toJson(returnVal);
+						
+			});
+			
+
 			
 	}
 }
