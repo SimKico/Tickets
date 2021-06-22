@@ -334,14 +334,17 @@ function showManifestation(title){
 	
 }
 
+
 function getManifestation() {
 	var title = localStorage.getItem('showTitle');
 	console.log(title);
-	$.ajax({
+	return $.ajax({
 		url: "/manifestations/" + title,
 		method: "get",
 		dataType: "JSON",
 		success: function (data) {
+			var lat = data.location.lat;
+			var lon = data.location.lng;
 			
 			console.log(data);
 			var rating = data.averageRating === 0 ? "/" : data.averageRating;
@@ -361,8 +364,41 @@ function getManifestation() {
 									)
 							.append($("<div class='card-footer'>").text("Regular price: " + data.price +" RSD").append($("<p class='card-text p_text'>").text("Rating: " + rating)))
 									));
-		
+			
+			$("#mapa").append("<div id='map' class='map col'>");
+			var s = document.createElement("script");
+			s.type = "text/javascript";
+			s.innerHTML = "const map = new ol.Map({\
+				  target: 'map',\
+				  layers: [\
+				    new ol.layer.Tile({\
+				      source: new ol.source.OSM(),\
+				    }),\
+				    new ol.layer.Vector({\
+				      source: new ol.source.Vector({\
+				        features: [new ol.Feature({\
+							  geometry: new ol.geom.Point(ol.proj.fromLonLat(["+lon+","+ lat+"])),\
+							  name: 'Somewhere near Nottingham',\
+							})]\
+				      }),\
+				      style: new ol.style.Style({ \
+				        image: new ol.style.Icon({ \
+				          anchor: [0.5, 46],\
+				          anchorXUnits: 'fraction',\
+				          anchorYUnits: 'pixels',\
+				          src: 'https://openlayers.org/en/latest/examples/data/icon.png'\
+				        })\
+				      })\
+				    })\
+				  ],\
+				  view: new ol.View({\
+				    center: ol.proj.fromLonLat(["+lon+", "+lat+"]),\
+				    zoom: 6\
+				  })\
+				});";
+			$("#mapa").append(s);
 			
 		},
 	});
 }
+

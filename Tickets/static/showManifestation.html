@@ -28,6 +28,8 @@
 <link rel="stylesheet" type="text/css"
 	href="css/manifestationHomepage.css">
 	
+ <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.5.0/css/ol.css" type="text/css">
+ <script src="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.5.0/build/ol.js"></script>
 <script  src="js/homepage.js"></script>
 
 <script src = "functions1.js"></script>
@@ -40,7 +42,20 @@
 	crossorigin="anonymous">
 <link href="https://unpkg.com/gijgo@1.9.13/css/gijgo.min.css"
 	rel="stylesheet" type="text/css" />
-
+ <style>
+      .map {
+        height: 100%;
+        width: 65%;
+        position:absolute; 
+    right:0; 
+    top:90px;
+        
+      }
+      #cards{
+      position:absolute; 
+    right:0; 
+      }
+    </style>
 </head>
 <body onload="getManifestation()">
 
@@ -62,10 +77,13 @@
 
 	<section id="hero" class="d-flex align-items-center">
 
-		<div class="container">
-			<div id="cards" class="row">
+		<div class="container ">
+		<div class="row" id ="mapa">
+			<div id="cards" class="col">
 				
 			</div>
+
+		</div>
 		</div>
 	</section>
 
