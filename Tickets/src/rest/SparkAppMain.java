@@ -1312,10 +1312,10 @@ public class SparkAppMain {
 				
 				for(Manifestation m : Database.manifestations) {
 					if(m.getTitle().equalsIgnoreCase(title)) {
-						System.out.println("BRACOOO " + Database.manifestations.get(Database.manifestations.indexOf(m)).isActive());
+						
 						Database.manifestations.get(Database.manifestations.indexOf(m)).setActive(true);
 						Database.saveManifestations();
-						System.out.println("I SESTREEE " + Database.manifestations.get(Database.manifestations.indexOf(m)).isActive());
+					
 						res.status(200);
 						return true;
 					
@@ -1328,12 +1328,12 @@ public class SparkAppMain {
 			});
 			
 			get("/manifestations/:title", (req, res) -> {
-				System.out.println("WHAT THEEE FUUUCKKKADJNCFKAC");
+				
 				res.type("application/json");
 				String title = req.params(":title");
-				System.out.println("WHAT THEEE FUUUCKKKADJNCFKAC");
+			
 				Manifestation returnVal = new Manifestation();
-				System.out.println("WHAT THEEE FUUUCKKKADJNCFKAC");
+				
 				for(Manifestation m : Database.manifestations) {
 					if(m.getTitle().equalsIgnoreCase(title)) {
 						
@@ -1341,9 +1341,143 @@ public class SparkAppMain {
 					
 					}
 				}
-				System.out.println("WHAT THEEE FUUUCKKKADJNCFKAC " + returnVal.getTitle());
+				
 				
 				return g.toJson(returnVal);
+						
+			});
+			
+			put("/manifestations/:title", (req, res) -> {
+				
+				res.type("application/json");
+				
+				String title = req.params(":title");
+				String data = req.body();
+				
+				JsonObject job = new JsonParser().parse(data).getAsJsonObject();
+				
+				 Date date = new SimpleDateFormat("MM/dd/yyyy HH:mm").parse(job.get("date").getAsString() + " " + job.get("time").getAsString());  
+			       
+				
+				for(Manifestation m : Database.manifestations) {
+					
+					if(!m.getTitle().equalsIgnoreCase(title) && job.get("title").getAsString().equals(m.getTitle())){
+						
+						res.status(400);
+			    		return new Gson().toJson(Collections.singletonMap("message", "Your request could not be processed. A manifestation with that name already exists!")); 
+	
+						
+					}else if(!m.getTitle().equalsIgnoreCase(title) && m.getLocation().getLat() == job.get("lat").getAsDouble() && m.getLocation().getLng()== job.get("lon").getAsDouble() && m.getRealisationDate().getTime() == date.getTime()){
+						res.status(400);
+			    		return new Gson().toJson(Collections.singletonMap("message", "Your request could not be processed. A manifestation on that date and time on given location already exists."));
+						
+					}
+				}
+
+				for(Manifestation m : Database.manifestations) {
+					if(m.getTitle().equalsIgnoreCase(title)) {
+						
+					
+					    User k = req.session().attribute("user");
+						System.out.println("username " + k.getUsername());
+						
+						int index = -1;
+						
+						for(User u : Database.users) {
+							if(u.getManifestations() != null) {
+								for(Manifestation m1 : u.getManifestations()) {
+									if(m1.getTitle().equalsIgnoreCase(title)) {
+										index = u.getManifestations().indexOf(m1);
+									
+										
+									}
+								}
+							}
+						}
+						
+						if(date.before(new Date()) && !date.equals(m.getRealisationDate())) {
+				    		res.status(400);
+				    		return new Gson().toJson(Collections.singletonMap("message", "Your request could not be processed. Date chosen already passed!")); 
+
+				    	}
+						
+						 Location l = new Location();
+						 l.setCity(job.get("city").getAsString());
+						 l.setNumber(job.get("number").getAsString());
+						 l.setStreet(job.get("street").getAsString());
+						 l.setZipCode(job.get("zipCode").getAsInt());
+						 l.setLat(job.get("lat").getAsDouble());
+						 l.setLng(job.get("lon").getAsDouble());
+						 
+						 m.setLocation(l);
+				         m.setPrice(job.get("price").getAsInt());
+				         m.setTitle(job.get("title").getAsString());
+				         
+				         Database.users.get(Database.users.indexOf(k)).getManifestations().get(index).setLocation(l);
+				         Database.users.get(Database.users.indexOf(k)).getManifestations().get(index).setPrice(job.get("price").getAsInt());
+				         Database.users.get(Database.users.indexOf(k)).getManifestations().get(index).setTitle(job.get("title").getAsString());
+				       
+				         m.setManifestationType(ManifestationType.valueOf(job.get("type").getAsString()));
+				         Database.users.get(Database.users.indexOf(k)).getManifestations().get(index).setManifestationType(ManifestationType.valueOf(job.get("type").getAsString()));
+				        
+				         m.setRealisationDate(date);
+				         Database.users.get(Database.users.indexOf(k)).getManifestations().get(index).setRealisationDate(date);
+				       
+				         m.setAvailableTickets(job.get("seats").getAsInt());
+				         Database.users.get(Database.users.indexOf(k)).getManifestations().get(index).setAvailableTickets(job.get("seats").getAsInt());
+				         
+				         double seats =  m.getAvailableTickets()*0.7;
+				         m.setAvailableRegularTickets((int)seats);
+				         Database.users.get(Database.users.indexOf(k)).getManifestations().get(index).setAvailableRegularTickets((int)seats);
+				         
+				         seats =  m.getAvailableTickets()*0.2;
+				         m.setAvailableFanpitTickets((int)seats);
+				         Database.users.get(Database.users.indexOf(k)).getManifestations().get(index).setAvailableFanpitTickets((int)seats);
+				         
+				         seats =  m.getAvailableTickets()*0.1;
+					     m.setAvailableVipTickets((int)seats); 
+					     Database.users.get(Database.users.indexOf(k)).getManifestations().get(index).setAvailableVipTickets((int)seats);
+					     
+					     
+					     
+					     System.out.println(job.get("poster"));
+					   
+					     String imageData = job.get("poster").getAsString();
+					    
+					     if(!imageData.isEmpty()) {
+					    	String base64Data = imageData.split(",")[1];
+
+						    byte[] decodedBytes = Base64.getDecoder().decode(base64Data);
+						    ByteArrayInputStream bis = new ByteArrayInputStream(decodedBytes);
+						    BufferedImage image = ImageIO.read(bis);
+
+						    File outputFile = new File("static/source",m.getTitle()+".jpg").getAbsoluteFile();
+						    ImageIO.write(image, "jpg", outputFile); 
+						    m.setPosterPath("source/"+m.getTitle()+".jpg");
+						    Database.users.get(Database.users.indexOf(k)).getManifestations().get(index).setPosterPath("source/"+m.getTitle()+".jpg");
+					    }
+					    
+					    
+					     for(Ticket t : Database.tickets) {
+								if(t.getManifestation().equalsIgnoreCase(title)) {
+									Database.tickets.get(Database.tickets.indexOf(t)).setManifestation(job.get("title").getAsString());
+									Database.tickets.get(Database.tickets.indexOf(t)).setManifestationDate(date);
+								}
+							}
+					
+					}
+				}
+				
+			
+			 
+			    Database.saveManifestations();
+				
+			   
+			    
+			   	Database.saveUsers();
+			    Database.saveTickets();
+			    
+				return true;
 						
 			});
 			

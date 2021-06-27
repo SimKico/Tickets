@@ -335,8 +335,8 @@ function showManifestation(title){
 }
 
 
-function getManifestation() {
-	var title = localStorage.getItem('showTitle');
+function getManifestation(t){
+	var title = localStorage.getItem(t);
 	console.log(title);
 	return $.ajax({
 		url: "/manifestations/" + title,
@@ -348,55 +348,75 @@ function getManifestation() {
 			
 			console.log(data);
 			var rating = data.averageRating === 0 ? "/" : data.averageRating;
-			available =  parseInt(data.availableRegularTickets) + parseInt(data.availableFanpitTickets) + parseInt(data.availableVipTickets);
-			$("#cards")
-			.append($("<div class='col-md-4 div-space'>")
-					.append($("<div class='card'>")
-							.append($("<div class='card-header'>").append($("<h5>").text(data.manifestationType)))
-							.append($("<img  class='image'  src='"+data.posterPath+"'   id='"+data.title +"'>"))
-							.append($("<div class='card-body text-center'>")
-									.append($("<div class='card-title'>").append($("<h5>").text(data.title)))
-									.append($("<p class='card-text'>").text("Status: " + data.isActive))
-									.append($("<p class='card-text'>").text("Date: " +data.realisationDate))
-									.append($("<p class='card-text'>").text("Location: " + data.location.street +" " + data.location.number + ", " + data.location.city))
-									.append($("<p class='card-text'>").text("Number of seats: " + data.availableTickets ))
-									.append($("<p class='card-text'>").text("Remaining tickets: " +  available))
-									)
-							.append($("<div class='card-footer'>").text("Regular price: " + data.price +" RSD").append($("<p class='card-text p_text'>").text("Rating: " + rating)))
-									));
+			var available =  parseInt(data.availableRegularTickets) + parseInt(data.availableFanpitTickets) + parseInt(data.availableVipTickets);
 			
-			$("#mapa").append("<div id='map' class='map col'>");
-			var s = document.createElement("script");
-			s.type = "text/javascript";
-			s.innerHTML = "const map = new ol.Map({\
-				  target: 'map',\
-				  layers: [\
-				    new ol.layer.Tile({\
-				      source: new ol.source.OSM(),\
-				    }),\
-				    new ol.layer.Vector({\
-				      source: new ol.source.Vector({\
-				        features: [new ol.Feature({\
-							  geometry: new ol.geom.Point(ol.proj.fromLonLat(["+lon+","+ lat+"])),\
-							  name: 'Somewhere near Nottingham',\
-							})]\
-				      }),\
-				      style: new ol.style.Style({ \
-				        image: new ol.style.Icon({ \
-				          anchor: [0.5, 46],\
-				          anchorXUnits: 'fraction',\
-				          anchorYUnits: 'pixels',\
-				          src: 'https://openlayers.org/en/latest/examples/data/icon.png'\
-				        })\
-				      })\
-				    })\
-				  ],\
-				  view: new ol.View({\
-				    center: ol.proj.fromLonLat(["+lon+", "+lat+"]),\
-				    zoom: 6\
-				  })\
-				});";
-			$("#mapa").append(s);
+			if(t === 'showTitle'){
+				$("#cards")
+				.append($("<div class='col-md-4 div-space'>")
+						.append($("<div class='card'>")
+								.append($("<div class='card-header'>").append($("<h5>").text(data.manifestationType)))
+								.append($("<img  class='image'  src='"+data.posterPath+"'   id='"+data.title +"'>"))
+								.append($("<div class='card-body text-center'>")
+										.append($("<div class='card-title'>").append($("<h5>").text(data.title)))
+										.append($("<p class='card-text'>").text("Status: " + data.isActive))
+										.append($("<p class='card-text'>").text("Date: " +data.realisationDate))
+										.append($("<p class='card-text'>").text("Location: " + data.location.street +" " + data.location.number + ", " + data.location.city))
+										.append($("<p class='card-text'>").text("Number of seats: " + data.availableTickets ))
+										.append($("<p class='card-text'>").text("Remaining tickets: " +  available))
+										)
+								.append($("<div class='card-footer'>").text("Regular price: " + data.price +" RSD").append($("<p class='card-text p_text'>").text("Rating: " + rating)))
+										));
+				
+				$("#mapa").append("<div id='map' class='map col'>");
+				var s = document.createElement("script");
+				s.type = "text/javascript";
+				s.innerHTML = "const map = new ol.Map({\
+					  target: 'map',\
+					  layers: [\
+					    new ol.layer.Tile({\
+					      source: new ol.source.OSM(),\
+					    }),\
+					    new ol.layer.Vector({\
+					      source: new ol.source.Vector({\
+					        features: [new ol.Feature({\
+								  geometry: new ol.geom.Point(ol.proj.fromLonLat(["+lon+","+ lat+"])),\
+								  name: 'Somewhere near Nottingham',\
+								})]\
+					      }),\
+					      style: new ol.style.Style({ \
+					        image: new ol.style.Icon({ \
+					          anchor: [0.5, 46],\
+					          anchorXUnits: 'fraction',\
+					          anchorYUnits: 'pixels',\
+					          src: 'https://openlayers.org/en/latest/examples/data/icon.png'\
+					        })\
+					      })\
+					    })\
+					  ],\
+					  view: new ol.View({\
+					    center: ol.proj.fromLonLat(["+lon+", "+lat+"]),\
+					    zoom: 17\
+					  })\
+					});";
+				$("#mapa").append(s);
+			}else{
+				
+				var date = new Date(data.realisationDate);
+				console.log("edit");
+				$("#title").val(data.title);
+				$("#type").val(data.manifestationType);
+				$("#seats").val(data.availableTickets);
+				$("#datepicker").val(((date.getMonth() + 1) < 10 ? "0" + (date.getMonth() + 1) : (date.getMonth() + 1)) +"/"+date.getDate()+"/"+date.getFullYear());
+				$("#time").val((date.getHours() < 10 ? "0" + date.getHours() : date.getHours()) + ":" + (date.getMinutes() == 0 ? "00" : date.getMinutes()));
+				$("#price").val(data.price);
+				$("#street").val(data.location.street);
+				$("#city").val(data.location.city);
+				$("#number").val(data.location.number);
+				$("#zipCode").val(data.location.zipCode);
+				
+				console.log(date.getHours() + ":" + date.getMinutes()); 
+			}
+			
 			
 		},
 	});

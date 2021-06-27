@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html>
+
 <head>
 <meta charset="ISO-8859-1">
-<title>Add Manifestations</title>
+<title>Edit Manifestation</title>
 <link href="assets/img/favicon.png" rel="icon">
 <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
 
@@ -45,39 +46,163 @@
 <link href="https://unpkg.com/gijgo@1.9.13/css/gijgo.min.css"
 	rel="stylesheet" type="text/css" />
 
-</head>
-<body onload="checkRole()">
 
+	<script type="text/javascript">
+		
+		function loadProfile(){
+			console.log("You are in");
+			
+			$.ajax({
+                    url:"/profile",
+                    method:"get",
+                    dataType: "JSON",
+                    success:function(data){
+						console.log(data);
+						$("#username").val(data.username);
+						
+						$("#firstName").val(data.firstName);
+						
+						$("#lastName").val(data.lastName);
+
+						var dateOfBirth1 = new Date(data.birthDay);
+						var day = ("0" + dateOfBirth1.getDate()).slice(-2);
+						var month = ("0" + (dateOfBirth1.getMonth() + 1)).slice(-2);
+						var today = dateOfBirth1.getFullYear()+"-"+(month)+"-"+(day) ;
+						$("#date_of_birth").val(today);
+						if(data.gender === "MALE"){
+							$('#male').prop('checked', true)
+						}else{
+							$('#female').prop('checked', true)
+						}
+                    }
+                })
+		}
+		function is_valid() {
+
+			var username = $("#username").val();
+
+			var password = $("#password").val();
+
+			var firstName = $("#firstName").val();
+
+			var lastName = $("#lastName").val();
+
+			var dateOfBirth = document.querySelector('input[type="date"]').value;
+			
+			var dateOfBirthTimpestamp = document.querySelector('input[type="date"]').valueAsNumber;
+
+			const genders = document.querySelectorAll('input[name="choice"]');
+
+			let gender;
+			for (const rb of genders) {
+				if (rb.checked) {
+					gender = rb.value;
+					break;
+				}
+			}
+
+			if (username == "" && password == "" && firstName == "" && lastName == "" && dateOfBirth == "" && gender == undefined) {	
+				return false;
+			}else {
+				return true;
+			}
+		}
+
+		function cancel() {
+			location.href = "profil.html";
+		}
+
+		function timeConverter(UNIX_timestamp){
+			var a = new Date(UNIX_timestamp);
+			var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+			var year = a.getFullYear();	
+			var month = months[a.getMonth()];
+			var date = a.getDate();
+			var time = date + ' ' + month + ', ' + year + ', ' +'12:00:00 AM' ;
+			return time;
+		}
+
+		function updateProfile() {
+			if(is_valid()){
+
+				var username = $("#username").val();
+
+				var password = $("#password").val();
+
+				var firstName = $("#firstName").val();
+
+				var lastName = $("#lastName").val();
+
+				var dateOfBirth = document.querySelector('input[type="date"]').value;
+				console.log(dateOfBirth);
+				if (dateOfBirth === ""){
+				}
+				var dateOfBirthTimpestamp = document.querySelector('input[type="date"]').valueAsNumber;
+				var date1 = new Date(dateOfBirthTimpestamp);
+				var date = timeConverter(dateOfBirthTimpestamp);
+
+				const genders = document.querySelectorAll('input[name="choice"]');
+			
+				let gender;
+				for (const rb of genders) {
+					if (rb.checked) {
+						gender = rb.value;
+						break;
+					}
+				}
+
+
+				var registrationData = JSON.stringify({ "username" : username, "password": password, "firstName" : firstName, "lastName" : lastName, "gender":gender, "birthDay": date1});
+				$.ajax({
+					type : "PUT",
+					url : "/profileUpdate",
+					data : registrationData,
+					dataType : "json",
+					complete : function(data){
+						if(data.responseText === "true"){
+							location.href = "profil.html";
+						}else
+						{
+							alert("User with that username already exists!");
+						}
+					}
+				})
+			}else{
+				alert("There are no changes!");
+			}
+		}
+	</script>
+</head>
+
+<body onload="getManifestation('editTitle')">
 	<nav class="navbar navbar-expand-sm navbar-dark nav-backround">
-		<a class="navbar-brand" href="#"
-			onclick="goToHomepage();return false;">GetTickets</a>
+		<!-- homepage for buyer -->
+		<a class="navbar-brand" href="#" onclick="homepage()">Tickets</a>
 		<button class="navbar-toggler" type="button" data-toggle="collapse"
 			data-target="#collapsibleNavbar" onclick="">
 			<span class="navbar-toggler-icon"></span>
 		</button>
 		<div class="collapse navbar-collapse" id="collapsibleNavbar">
 			<ul class="navbar-nav ml-auto">
-				<li class="nav-item"><a class="nav-link" href="#"
-					onclick="goToHomepage();return false;">Home Page</a></li>
-				<li class="nav-item"><a class="nav-link" href="tickets.html">Tickets</a></li>
-				<li class="nav-item"><a class="nav-link" href="profil.html">My
-						profile</a></li>
-				<li class="nav-item"><a class="nav-link" href="#"
-					onclick="logOut()">Log out</a></li>
+				
+				<li class="nav-item"><a class="nav-link" href="tickets.html">My tickets</a></li>
+				<li class="nav-item"><a class="nav-link" href="profil.html">My profile</a></li>
+				
+				<li class="nav-item"><a class="nav-link" href="login.html" onclick="logOut()">Log out</a></li>
+
 			</ul>
 		</div>
 	</nav>
-
 	<div class="container">
 		<div class="d-flex justify-content-center h-100">
 			<div class="card">
 				<div class="card-header">
-					<h3>Add new manifestation</h3>
+					<h3>Edit manifestation</h3>
 				</div>
 				<div class="card-body">
 					<div id="error" style="color: red;"></div>
 					<br />
-					<form id="add">
+					<form id="edit">
 						<div class="input-group form-group">
 
 							<input id="title" class="form-control" type="text"
@@ -174,7 +299,7 @@
 						</div>
 						<br />
 						<div class="right">
-							<input type="submit" value="Add" id="add" class="btn search_btn right" />
+							<input type="submit" value="Edit" id="edit" class="btn search_btn right" />
 							<input type="button" value="Cancel" class="btn cancel_btn right" />
 						</div>
 					</form>
@@ -182,6 +307,6 @@
 			</div>
 		</div>
 	</div>
-
 </body>
+
 </html>
