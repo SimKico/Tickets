@@ -3,22 +3,26 @@ package beans;
 public class Comment {
 	
 	private User buyer;
-	private Manifestation manifestation;
+	private String manifestation;
 	private String commentText;
 	private double grade;
 	private boolean isDeleted;
+	private boolean isApproved;
+	private boolean isRefused;
 	
 	public Comment() {
 		super();
 	}
 	
-	public Comment(User buyer, Manifestation manifestation, String commentText, double grade, boolean isDeleted) {
+	public Comment(User buyer, String manifestation, String commentText, double grade, boolean isDeleted, boolean isApproved) {
 		super();
 		this.buyer = buyer;
 		this.manifestation = manifestation;
 		this.commentText = commentText;
 		this.grade = grade;
 		this.isDeleted = isDeleted;
+		this.isApproved = isApproved;
+		this.isRefused = false;
 	}
 	
 	public User getBuyer() {
@@ -27,10 +31,10 @@ public class Comment {
 	public void setBuyer(User buyer) {
 		this.buyer = buyer;
 	}
-	public Manifestation getManifestation() {
+	public String getManifestation() {
 		return manifestation;
 	}
-	public void setManifestation(Manifestation manifestation) {
+	public void setManifestation(String manifestation) {
 		this.manifestation = manifestation;
 	}
 	public String getCommentText() {
@@ -53,5 +57,23 @@ public class Comment {
 	public void setDeleted(boolean isDeleted) {
 		this.isDeleted = isDeleted;
 	}
+
+	public boolean isApproved() {
+		return isApproved;
+	}
+
+	public void setApproved(boolean isApproved) {
+		this.isApproved = isApproved;
+	}
+
+	public boolean isRefused() {
+		return isRefused;
+	}
+
+	public void setRefused(boolean isRefused) {
+		this.isRefused = isRefused;
+	}
+	
+	
 	
 }
