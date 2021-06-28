@@ -45,6 +45,8 @@ public class Database {
 		
 	}
 	
+	
+	
 	public static void saveTickets() {
 		
 		String json = new Gson().toJson(tickets);
@@ -75,6 +77,22 @@ public class Database {
 		}
 	}
 	
+	public static void saveComments() {
+		
+		String json = new Gson().toJson(comments);
+		
+		try {
+			System.out.println("save");
+			file = new FileWriter(new File("src/database/comments.json"));
+			file.write(json);
+			file.close();
+	
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		
+	}
+	
 	public static boolean addUser(User newUser) {
 
 			users.add(newUser);
@@ -97,6 +115,13 @@ public class Database {
 		saveManifestations();
 		//saveTickets();
 
+		return true;
+	}
+	
+	public static boolean addComment(Comment comment) {
+
+		comments.add(comment);
+		saveComments();
 		return true;
 	}
 	

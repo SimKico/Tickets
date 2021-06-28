@@ -338,7 +338,7 @@ function showManifestation(title){
 function getManifestation(t){
 	var title = localStorage.getItem(t);
 	console.log(title);
-	return $.ajax({
+	 $.ajax({
 		url: "/manifestations/" + title,
 		method: "get",
 		dataType: "JSON",
@@ -365,7 +365,10 @@ function getManifestation(t){
 										.append($("<p class='card-text'>").text("Remaining tickets: " +  available))
 										)
 								.append($("<div class='card-footer'>").text("Regular price: " + data.price +" RSD").append($("<p class='card-text p_text'>").text("Rating: " + rating)))
-										));
+										))
+								.append($("<div class='col-md-4 div-space' id='comments'>")
+								.append($("<button class='btn search_btn' onclick='seeComments()' id='comment_btn'>").text("See comments")));
+				
 				
 				$("#mapa").append("<div id='map' class='map col'>");
 				var s = document.createElement("script");
@@ -399,6 +402,10 @@ function getManifestation(t){
 					  })\
 					});";
 				$("#mapa").append(s);
+				
+			 
+			  
+					
 			}else{
 				
 				var date = new Date(data.realisationDate);
@@ -420,5 +427,74 @@ function getManifestation(t){
 			
 		},
 	});
+	 
+	
+}
+
+function seeComments(){
+	var title = localStorage.getItem('showTitle');
+	if(localStorage.getItem("role") === "BUYER"){
+		$.ajax({
+			url: "/comments/check/" + title,
+			method: "get",
+			dataType: "JSON",
+			success: function (data) {
+				console.log(data);
+				if(data.allowed === "true"){
+					$("#comments")
+					.append($("<button class='btn search_btn'>").text("Leave comment"));
+				}
+			}
+		 });
+		$.ajax({
+			url: "/comments/approved/" + title,
+			method: "get",
+			dataType: "JSON",
+			success: function (data) {
+				console.log(data);
+				$("#comments")
+			
+				.append($("<div class='card'>")
+						.append($("<div class='card-header'>").append($("<h6>").text('"' + data[0].commentText + '"' ))
+								.append($("<div class='p-2' id='grade'>").text("Grade: " + data[0].grade)))
+						.append($("<div class='card-footer'>").text( data[0].buyer.username)));
+			}
+		 });
+		 
+	}else{
+		$("#comment_btn").prop("disabled", true);
+		$.ajax({
+			url: "/comments/" + title,
+			method: "get",
+			dataType: "JSON",
+			success: function (data) {
+				var i = 0;
+				for (i; i < data.length; i++) {
+				$("#comments")
+				
+				.append($("<div class='card border-secondary'>")
+						.append($("<div class='card-header'>").append($("<h6>").text('"' + data[i].commentText + '"' ))
+								.append($("<div class='p-2' id='grade'>").text("Grade: " + data[i].grade)))
+						.append($("<div class='card-footer'>").text( data[i].buyer.username)));
+				}
+			}
+		 });
+	}
+	 
+}
+	
+function leaveCommentCheck(title){
+	 $.ajax({
+		url: "/comments/check/" + title,
+		method: "get",
+		dataType: "JSON",
+		success: function (data) {
+			console.log(data);
+		}
+	 });
+}
+
+function leaveCommentCheck(){
+	console.log("leave");
 }
 

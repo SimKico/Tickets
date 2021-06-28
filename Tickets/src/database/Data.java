@@ -306,8 +306,8 @@ public class Data {
 		ArrayList<Ticket> tickets = new ArrayList<Ticket>();
 		
 		String sDate1="13.12.2021";
-		String sDate2="18.07.2021";
-		String sDate3="15.8.2021";
+		String sDate2="18.04.2021";
+		String sDate3="15.10.2021";
 		
 		Date date1 = new SimpleDateFormat("dd.MM.yyyy").parse(sDate1);  
 		Date date2 = new SimpleDateFormat("dd.MM.yyyy").parse(sDate2);  
@@ -380,9 +380,12 @@ public class Data {
 		
 		Manifestation manifestation1 = new Manifestation("Koncert1", ManifestationType.CONCERTS, date1, 1500, true, location4, "static/source/cloud-desktop-background.jpg", 10, 5, 3, 2, 4.5, false);
 		
-		Comment comment1 = new Comment(user1, manifestation1, "Sve pohvale.", 5, false);
-		
+		Comment comment1 = new Comment(user1, manifestation1.getTitle(), "Sve pohvale.", 5, false, true);
+		Comment comment2 = new Comment(user1, manifestation1.getTitle(), "Sve pohvale. Odlicna manifestacija.", 5, false, false);
+		Comment comment3 = new Comment(user1, "Festival2", "Zadovoljavajuce. ", 4, false, true);
 		comments.add(comment1);
+		comments.add(comment2);
+		comments.add(comment3);
 		
 		String json = new Gson().toJson(comments);
 		

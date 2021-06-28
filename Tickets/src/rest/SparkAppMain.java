@@ -16,7 +16,9 @@ import java.util.Base64;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.imageio.ImageIO;
 
@@ -27,6 +29,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import beans.BuyerType;
+import beans.Comment;
 import beans.Gender;
 import beans.Location;
 import beans.Manifestation;
@@ -1284,9 +1287,11 @@ public class SparkAppMain {
 					}
 				}
 				
+				
 				Database.saveManifestations();
 				Database.saveTickets();
 			    Database.saveUsers();
+			    Database.saveTickets();
 			    
 				res.status(200);
 				return true;
@@ -1297,6 +1302,7 @@ public class SparkAppMain {
 				
 				res.type("application/json");
 				String title = req.params(":title");
+				
 				
 				for(User u : Database.users) {
 					if(u.getManifestations() != null) {
@@ -1321,7 +1327,9 @@ public class SparkAppMain {
 					
 					}
 				}
-								
+				
+				
+						
 				res.status(404);
 				return false;
 						
@@ -1464,6 +1472,13 @@ public class SparkAppMain {
 									Database.tickets.get(Database.tickets.indexOf(t)).setManifestationDate(date);
 								}
 							}
+					     
+					     for(Comment c : Database.comments) {
+								if(c.getManifestation().equalsIgnoreCase(title)) {
+									Database.tickets.get(Database.comments.indexOf(c)).setManifestation(job.get("title").getAsString());
+									
+								}
+							}
 					
 					}
 				}
@@ -1473,7 +1488,7 @@ public class SparkAppMain {
 			    Database.saveManifestations();
 				
 			   
-			    
+			    Database.saveComments();
 			   	Database.saveUsers();
 			    Database.saveTickets();
 			    
@@ -1481,7 +1496,71 @@ public class SparkAppMain {
 						
 			});
 			
-
+			get("comments/:manifestationsTitle", (req, res) -> {
+				
+				res.type("application/json");
+				String title = req.params(":manifestationsTitle");
+			
+				
+				List<Comment> comments = new ArrayList<Comment>();
+				
+				for(Comment c : Database.comments) {
+					if(c.getManifestation().equals(title)) {
+						comments.add(c);
+					}
+				}
+				
+				
+				
+				return g.toJson(comments);
+						
+			});
+			
+			get("comments/check/:manifestationsTitle", (req, res) -> {
+				
+				res.type("application/json");
+				String title = req.params(":manifestationsTitle");
+			
+				Session ss = req.session(true);
+				User user = ss.attribute("user");
+			
+				Date currentDate = new Date();
+				
+				for(Ticket t : Database.tickets) {
+					if(t.getManifestation().equals(title) && t.getUsername().equals(user.getUsername()) && t.getStatus() == TicketStatus.RESERVED && t.getManifestationDate().before(currentDate)) {
+					JsonObject obj = new JsonObject();
+					
+				    obj.addProperty("allowed", "true");
+				   
+					return g.toJson(obj);
+					}
+				}
+				
+				JsonObject obj = new JsonObject();
+			    obj.addProperty("allowed", false);
+				return g.toJson(obj);
+						
+			});
+			
+			get("comments/approved/:manifestationsTitle", (req, res) -> {
+				
+				res.type("application/json");
+				String title = req.params(":manifestationsTitle");
+			
+				
+				List<Comment> comments = new ArrayList<Comment>();
+				
+				for(Comment c : Database.comments) {
+					if(c.getManifestation().equals(title)) {
+						comments.add(c);
+					}
+				}
+				
+				
+				comments.removeIf(r -> !r.isApproved());
+				return g.toJson(comments);
+						
+			});
 			
 	}
 }
