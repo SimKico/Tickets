@@ -2,6 +2,7 @@ package beans;
 
 public class Comment {
 	
+	private String id;
 	private User buyer;
 	private String manifestation;
 	private String commentText;
@@ -14,8 +15,9 @@ public class Comment {
 		super();
 	}
 	
-	public Comment(User buyer, String manifestation, String commentText, double grade, boolean isDeleted, boolean isApproved) {
+	public Comment(String id, User buyer, String manifestation, String commentText, double grade, boolean isDeleted, boolean isApproved) {
 		super();
+		this.id = id;
 		this.buyer = buyer;
 		this.manifestation = manifestation;
 		this.commentText = commentText;
@@ -72,6 +74,14 @@ public class Comment {
 
 	public void setRefused(boolean isRefused) {
 		this.isRefused = isRefused;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
 	}
 	
 	

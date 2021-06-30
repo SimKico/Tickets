@@ -1510,7 +1510,7 @@ public class SparkAppMain {
 					}
 				}
 				
-				
+				comments.removeIf(r -> r.isDeleted());
 				
 				return g.toJson(comments);
 						
@@ -1536,6 +1536,8 @@ public class SparkAppMain {
 					}
 				}
 				
+			
+				
 				JsonObject obj = new JsonObject();
 			    obj.addProperty("allowed", false);
 				return g.toJson(obj);
@@ -1557,10 +1559,97 @@ public class SparkAppMain {
 				}
 				
 				
-				comments.removeIf(r -> !r.isApproved());
+				comments.removeIf(r -> !r.isApproved() || r.isDeleted());
 				return g.toJson(comments);
 						
 			});
 			
+			delete("comments/:id", (req, res) -> {
+				
+				res.type("application/json");
+				String id = req.params(":id");
+			
+				for(Comment c : Database.comments) {
+					if(c.getId().equals(id)) {
+						Database.comments.get(Database.comments.indexOf(c)).setDeleted(true);
+					}
+				}
+				
+				
+				Database.saveComments();
+				return true;
+						
+			});
+			
+			post("/comments", (req, res) -> {
+				
+				res.type("application/json");
+						
+				String data = req.body();
+			
+				Session ss = req.session(true);
+						
+				User user = ss.attribute("user");
+					
+				JsonObject job = new JsonParser().parse(data).getAsJsonObject();		
+			
+			    Comment c = new Comment();
+			    c.setApproved(false);
+			    c.setDeleted(false);
+			    c.setRefused(false);
+			    
+			    c.setCommentText(job.get("text").getAsString());
+			    c.setBuyer(user);
+			    c.setGrade(job.get("grade").getAsDouble());
+			    c.setManifestation(job.get("title").getAsString());
+			    c.setId("c" + (Database.comments.size() + 1));
+			    
+			    Database.addComment(c);
+				return g.toJson(c);
+			});
+			
+			put("/comments/:id", (req, res) -> {
+				
+				res.type("application/json");
+						
+				String id = req.params(":id");
+				
+				String data = req.body();
+					
+				JsonObject job = new JsonParser().parse(data).getAsJsonObject();		
+			
+				for(Comment c : Database.comments) {
+					if(c.getId().equals(id)) {
+						Database.comments.get(Database.comments.indexOf(c)).setApproved(job.get("approved").getAsBoolean());
+						Database.comments.get(Database.comments.indexOf(c)).setRefused(!job.get("approved").getAsBoolean());
+						Database.saveComments();
+						return true;
+					}
+				}
+				
+				res.status(404);
+				return false;
+			});
+			
+			get("/manifestation/check/:title", (req, res) -> {
+				
+				res.type("application/json");
+						
+				String title = req.params(":title");
+				
+				Session ss = req.session(true);
+				
+				User user = ss.attribute("user");
+				
+				if(user.getRole() == Role.SELLER) {
+					if(user.getManifestations() == null) {
+						for(Manifestation m : user.getManifestations()) {
+							if(m.getTitle().equals(title))
+								return true;
+						}
+					}
+				}
+				return false;
+			});
 	}
 }

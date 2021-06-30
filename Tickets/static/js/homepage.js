@@ -366,10 +366,9 @@ function getManifestation(t){
 										)
 								.append($("<div class='card-footer'>").text("Regular price: " + data.price +" RSD").append($("<p class='card-text p_text'>").text("Rating: " + rating)))
 										))
-								.append($("<div class='col-md-4 div-space' id='comments'>")
-								.append($("<button class='btn search_btn' onclick='seeComments()' id='comment_btn'>").text("See comments")));
-				
-				
+								.append($("<div class='col-md-4 div-space' id='comments'>")										
+										.append($("<button class='btn search_btn' onclick='seeComments()' id='comment_btn'>").text("See comments")));
+							
 				$("#mapa").append("<div id='map' class='map col'>");
 				var s = document.createElement("script");
 				s.type = "text/javascript";
@@ -433,7 +432,9 @@ function getManifestation(t){
 
 function seeComments(){
 	var title = localStorage.getItem('showTitle');
-	if(localStorage.getItem("role") === "BUYER"){
+	$("#comment_btn").prop("disabled", true);
+	if(localStorage.getItem("role") === "BUYER" || localStorage.getItem("role") === null){
+		if(localStorage.getItem("role") === "BUYER"){
 		$.ajax({
 			url: "/comments/check/" + title,
 			method: "get",
@@ -442,10 +443,22 @@ function seeComments(){
 				console.log(data);
 				if(data.allowed === "true"){
 					$("#comments")
-					.append($("<button class='btn search_btn'>").text("Leave comment"));
+					.append($("<button class='btn search_btn' id='leave-comment'>").text("Leave comment").click(function () { leaveCommentForm(); }))
+					.append($("<div class='col div-space' id='comment-form' hidden>")
+							.append($("<textarea id='comment-text'>"))
+							.append($("<br>"))
+							.append($("<select>").append($("<option id='comment-grade' value='5'>").text("5"))
+									.append($("<option value='4'>").text("4"))
+									.append($("<option value='3'>").text("3"))
+									.append($("<option value='2'>").text("2"))
+									.append($("<option value='1'>").text("1")))
+									.append($("<br>"))
+									.append($("<button class='btn search_btn'>").text("Cancel").click(function () { cancelComment(); }))
+									.append($("<button class='btn cancel_btn'>").text("Send").click(function () { sendComment(); })));
+					
 				}
 			}
-		 });
+		 });}
 		$.ajax({
 			url: "/comments/approved/" + title,
 			method: "get",
@@ -457,12 +470,24 @@ function seeComments(){
 				.append($("<div class='card'>")
 						.append($("<div class='card-header'>").append($("<h6>").text('"' + data[0].commentText + '"' ))
 								.append($("<div class='p-2' id='grade'>").text("Grade: " + data[0].grade)))
+								
 						.append($("<div class='card-footer'>").text( data[0].buyer.username)));
 			}
 		 });
 		 
 	}else{
-		$("#comment_btn").prop("disabled", true);
+		var checkIfOwner = false;
+		if(localStorage.getItem("role") === "SELLER"){
+			$.ajax({
+				url: "/manifestation/check/" + title,
+				method: "get",
+				dataType: "JSON",
+				complete: function(data) {
+					checkIfOwner = data;
+					}
+				});
+		}
+
 		$.ajax({
 			url: "/comments/" + title,
 			method: "get",
@@ -470,31 +495,113 @@ function seeComments(){
 			success: function (data) {
 				var i = 0;
 				for (i; i < data.length; i++) {
-				$("#comments")
-				
-				.append($("<div class='card border-secondary'>")
-						.append($("<div class='card-header'>").append($("<h6>").text('"' + data[i].commentText + '"' ))
-								.append($("<div class='p-2' id='grade'>").text("Grade: " + data[i].grade)))
-						.append($("<div class='card-footer'>").text( data[i].buyer.username)));
+					console.log(data[i])
+					$("#comments")
+					
+					.append($("<div class='card border-secondary' id="+"card" + data[i].id+ ">")
+							.append($("<div class='card-header' id='c"+data[i].id+"'>").append($("<h6>").text('"' + data[i].commentText + '"' ))
+									.append($("<div class='p-2' id='grade'>").text("Grade: " + data[i].grade)))
+									
+							.append($("<div class='card-footer'>").text( data[i].buyer.username)));
+					
+					var username = localStorage.getItem('username');
+					console.log(username + "1");
+					console.log(username + "1");
+					if(localStorage.getItem("role") === "ADMIN")
+						$("#c"+data[i].id+"").append($('<button id ="' + data[i].id + '" class = "btn"><i class="fa fa-trash" aria-hidden="true"></i></button>').click(function () { deleteComment(this.id); }));
+					else if(checkIfOwner && localStorage.getItem("role") === "SELLER" && data[i].isApproved === false && data[i].isRefused === false)	
+						$("#c"+data[i].id+"").append($("<div id='approve"+data[i].id+"'>").append($('<button id ="' + data[i].id + '" class = "btn"><i class="fa fa-check" aria-hidden="true"></i></button>').click(function () { approveComment(this.id); }))
+								.append($('<button id ="' + data[i].id + '" class = "btn"><i class="fa fa-times" aria-hidden="true"></i></button>').click(function () { refuseComment(this.id); })));
+						
 				}
+				
 			}
+		 	
 		 });
 	}
 	 
 }
 	
-function leaveCommentCheck(title){
+function approveComment(id){
+	var approve = JSON.stringify({approved: true});
 	 $.ajax({
-		url: "/comments/check/" + title,
-		method: "get",
+		url: "/comments/" + id,
+		method: "put",
+		contentType: "application/json",
+		data: approve,
 		dataType: "JSON",
 		success: function (data) {
 			console.log(data);
+			$("#approve"+id+"").prop("hidden", true);
 		}
 	 });
 }
 
-function leaveCommentCheck(){
+function refuseComment(id){
+	var approve = JSON.stringify({approved: false});
+	 $.ajax({
+		url: "/comments/" + id,
+		method: "put",
+		contentType: "application/json",
+		data: approve,
+		dataType: "JSON",
+		success: function (data) {
+			console.log(data);
+			$("#approve"+id+"").prop("hidden", true);
+		}
+	 });
+}
+
+function leaveCommentForm(){
 	console.log("leave");
+	
+	$("#comment-form").prop("hidden", false);
+	$("#leave-comment").prop("hidden", true);
+}
+
+function cancelComment(){
+	$("#comment-form").prop("hidden", true);
+	$("#leave-comment").prop("hidden", false);
+}
+
+function sendComment(){
+	var text = $("#comment-text").val();
+	var grade = $("#comment-grade ").val();
+	var title = localStorage.getItem("showTitle");
+	
+	if(text != ""){
+	 var comment = JSON.stringify({title: title, text: text, grade: grade});
+		$.ajax({
+			url: "/comments",
+			method: "post",
+			contentType: "application/json",
+			data: comment,
+			dataType: "JSON",
+			success: function (data) {
+				console.log("Done");
+				alert("Comment sent");
+				$("#comment-text").val("");
+				$("#comment-form").prop("hidden", true);
+				$("#leave-comment").prop("hidden", false);
+			}
+		});
+	}else{
+		alert("Field must not be empty");
+	}
+	
+}
+
+function deleteComment(id){
+	$.ajax({
+		url: "/comments/" + id,
+		method: "delete",
+		success: function (data) {
+			console.log("Done");
+			alert("Comment deleted");
+			$("#card"+id).empty();
+			
+			//$("#comment_btn").prop("disabled", false);
+		}
+	});
 }
 
