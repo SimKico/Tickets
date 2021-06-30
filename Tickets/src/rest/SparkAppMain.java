@@ -1642,7 +1642,7 @@ public class SparkAppMain {
 				User user = ss.attribute("user");
 				
 				if(user.getRole() == Role.SELLER) {
-					if(user.getManifestations() == null) {
+					if(user.getManifestations() != null) {
 						for(Manifestation m : user.getManifestations()) {
 							if(m.getTitle().equals(title))
 								return true;
