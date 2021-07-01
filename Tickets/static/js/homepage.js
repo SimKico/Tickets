@@ -157,7 +157,7 @@ $(document).ready(function(){
 
 function search(){
 	console.log("Uso sam");
-	var title = $("#title").val();
+	var title = $("#title").val() == "" ? "" : title;
 	var location = $("#location").val();
 	var fromDate = $("#datepicker").val();
 	var toDate = $("#datepicker2").val();
@@ -169,12 +169,11 @@ function search(){
 	console.log(toDate);
 	console.log(fromPrice);
 	console.log(toPrice);
+	console.log("/manifestations/search?title=" + title +"&location=" + location + "&fromDate="+ fromDate + "&toDate="+ toDate + "&fromPrice="+ fromPrice + "&toPrice="+ toPrice);
 	dataForSearch = JSON.stringify({ "title": title, "location" : location, "fromDate" : fromDate, "toDate" : toDate, "fromPrice" : fromPrice, "toPrice" : toPrice });
 	$.ajax({
-        url:"/manifestations/search",
-        method:"post",
-        contentType: "application/json",
-        data: dataForSearch,
+        url:"/manifestations/search?title=" + title +"&location=" + location + "&fromDate="+ fromDate + "&toDate="+ toDate + "&fromPrice="+ fromPrice + "&toPrice="+ toPrice ,
+        method:"get",
         dataType: "JSON",
         success:function(data){
             console.log(data);

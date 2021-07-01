@@ -77,10 +77,8 @@
 		data = JSON.stringify({manifestations : manifestations, criteria : criteria});
 		console.log(data);
 		$.ajax({
-            url:"/manifestations/sortAsc",
-            method:"post",
-            contentType: "application/json",
-            data: data,
+            url:"/manifestations/sortAsc?criteria=" + criteria,
+            method:"get",
             dataType: "JSON",
             success:function(data){
                 console.log(data);
@@ -101,10 +99,8 @@
 		data = JSON.stringify({manifestations : manifestations, criteria : criteria});
 		console.log(data);
 		$.ajax({
-            url:"/manifestations/sortDesc",
-            method:"post",
-            contentType: "application/json",
-            data: data,
+            url:"/manifestations/sortDesc?criteria=" + criteria,
+            method:"get",
             dataType: "JSON",
             success:function(data){
                 console.log(data);
@@ -127,10 +123,8 @@
 	    data = JSON.stringify({manifestations : manifestations, type : type, available : available});
 
 		$.ajax({
-            url:"/manifestations/filter",
-            method:"post",
-            contentType: "application/json",
-            data: data,
+            url:"/manifestations/filter?type=" + type + "&available=" + available,
+            method:"get",
             dataType: "JSON",
             success:function(data){
             	if(type != "none")

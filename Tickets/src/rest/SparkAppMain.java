@@ -46,6 +46,8 @@ import spark.Session;
 public class SparkAppMain {
 
 	private static Gson g = new Gson();
+	
+	public static ArrayList<Manifestation> searchResult = new ArrayList<Manifestation>();
 
 	public static void main(String[] args) throws Exception {
 		
@@ -938,31 +940,35 @@ public class SparkAppMain {
 			
 // **********************manifestations**********************************//
 			
-			post("/manifestations/search", (req, res) -> {
+			get("/manifestations/search", (req, res) -> {
+				
+				if(!searchResult.isEmpty()) {
+					searchResult.clear();
+				}
 				
 				res.type("application/json");
 				
-				String data = req.body();
-				System.out.print(data);
+				
+				String title = req.queryParams("title"); 
+				
+				String location = req.queryParams("location"); 
+				
+				String fromDate = req.queryParams("fromDate"); 
+				
+				String toDate = req.queryParams("toDate"); 
 			
-				JsonObject job = new JsonParser().parse(data).getAsJsonObject();
-				System.out.print(data);
-				String title = job.get("title").getAsString().toLowerCase();
-				String location = job.get("location").getAsString().toLowerCase();
-				String fromDate = job.get("fromDate").getAsString().toLowerCase();
-				String toDate = job.get("toDate").getAsString().toLowerCase();
-				int fromPrice = job.get("fromPrice").getAsInt();
-				int toPrice = job.get("toPrice").getAsInt();
-				System.out.print(data);
+				int fromPrice = Integer.parseInt(req.queryParams("fromPrice"));
+
+				int toPrice = Integer.parseInt(req.queryParams("toPrice")); 
+				
+		
 				boolean checkTitle = false;
 				boolean checkLocation = false;
 				boolean checkFromDate = false;
 				boolean checkToDate = false;
 				boolean checkFromPrice = false;
 				boolean checkToPrice = false;
-				System.out.print(data);
 				
-				ArrayList<Manifestation> manifestations = new ArrayList<Manifestation>();
 				ArrayList<Manifestation> nonDeletedManifestations = Database.manifestations;
 				nonDeletedManifestations.removeIf(m -> m.isDeleted());
 				for(Manifestation manifestation : nonDeletedManifestations) {
@@ -972,7 +978,7 @@ public class SparkAppMain {
 						checkTitle = false;
 					}
 					
-					if((!location.isEmpty() && manifestation.getLocation().getCity().toLowerCase().equals(location))) {
+					if((!location.isEmpty() && manifestation.getLocation().getCity().toLowerCase().equals(location.toLowerCase()))) {
 						checkLocation = true;
 					}else {
 						checkLocation = false;
@@ -1020,56 +1026,29 @@ public class SparkAppMain {
 							&& (toDate.equals("") || checkToDate)
 							&& (fromPrice == 500 || checkFromPrice)
 							&& (toPrice == 3000 || checkToPrice)) {
-						 System.out.println("Imaa");
-						 manifestations.add(manifestation);
+						 searchResult.add(manifestation);
 					}
 					
 				}
 				
-				if(manifestations.isEmpty()) {
-					return null;
-				}else {
-					return g.toJson(manifestations);
-				}
 				
-				
-				
+				return g.toJson(searchResult);
+
 			});
 			
-			post("/manifestations/sortAsc", (req, res)->{
+			get("/manifestations/sortAsc", (req, res)->{
 				
 				res.type("application/json");
-				String data = req.body();
 				
-				JsonObject job = new JsonParser().parse(data).getAsJsonObject();
-				JsonArray manifestationsJson = job.get("manifestations").getAsJsonArray();
-				String criteria = job.get("criteria").getAsString().toLowerCase();
+				String criteria = req.queryParams("criteria"); 
+				
 				
 				ArrayList<Manifestation> manifestations = new ArrayList<Manifestation>();
 				
-				for(int i=0; i<manifestationsJson.size(); i++) {
-					
-				   Location l = new Location();
-				   l.setCity(manifestationsJson.get(i).getAsJsonObject().get("location").getAsJsonObject().get("city").getAsString());
-				   l.setNumber(manifestationsJson.get(i).getAsJsonObject().get("location").getAsJsonObject().get("number").getAsString());
-				   l.setStreet(manifestationsJson.get(i).getAsJsonObject().get("location").getAsJsonObject().get("street").getAsString());
-				   l.setZipCode(manifestationsJson.get(i).getAsJsonObject().get("location").getAsJsonObject().get("zipCode").getAsInt());
-				   l.setLat(manifestationsJson.get(i).getAsJsonObject().get("location").getAsJsonObject().get("lat").getAsDouble());
-				   l.setLng(manifestationsJson.get(i).getAsJsonObject().get("location").getAsJsonObject().get("lng").getAsDouble());
+			
+				manifestations.clear();
+				manifestations.addAll(searchResult);
 				
-			       Manifestation m = new Manifestation();
-			       m.setLocation(l);
-			       m.setActive(manifestationsJson.get(i).getAsJsonObject().get("isActive").getAsBoolean());
-			       m.setPrice(manifestationsJson.get(i).getAsJsonObject().get("price").getAsInt());
-			       m.setTitle(manifestationsJson.get(i).getAsJsonObject().get("title").getAsString());
-			       m.setManifestationType(ManifestationType.valueOf(manifestationsJson.get(i).getAsJsonObject().get("manifestationType").getAsString()));
-			       m.setRealisationDate(new Date(manifestationsJson.get(i).getAsJsonObject().get("realisationDate").getAsString()));
-			       m.setPosterPath(manifestationsJson.get(i).getAsJsonObject().get("posterPath").getAsString());
-			       m.setAvailableTickets(manifestationsJson.get(i).getAsJsonObject().get("availableTickets").getAsInt());
-			       m.setAverageRating(manifestationsJson.get(i).getAsJsonObject().get("averageRating").getAsDouble());
-			       manifestations.add(m);
-			    }
-			    
 				if(criteria.equals("title")) {
 					Collections.sort(manifestations, Manifestation.titleComparatorAsc);
 				}else if(criteria.equals("city")) {
@@ -1085,39 +1064,15 @@ public class SparkAppMain {
 				
 			});
 			
-			post("/manifestations/sortDesc", (req, res)->{
+			get("/manifestations/sortDesc", (req, res)->{
 				
 				res.type("application/json");
-				String data = req.body();
 				
-				JsonObject job = new JsonParser().parse(data).getAsJsonObject();
-				JsonArray manifestationsJson = job.get("manifestations").getAsJsonArray();
-				String criteria = job.get("criteria").getAsString().toLowerCase();
+				String criteria = req.queryParams("criteria"); 
 				
 				ArrayList<Manifestation> manifestations = new ArrayList<Manifestation>();
 				
-				for(int i=0; i<manifestationsJson.size(); i++) {
-					
-				   Location l = new Location();
-				   l.setCity(manifestationsJson.get(i).getAsJsonObject().get("location").getAsJsonObject().get("city").getAsString());
-				   l.setNumber(manifestationsJson.get(i).getAsJsonObject().get("location").getAsJsonObject().get("number").getAsString());
-				   l.setStreet(manifestationsJson.get(i).getAsJsonObject().get("location").getAsJsonObject().get("street").getAsString());
-				   l.setZipCode(manifestationsJson.get(i).getAsJsonObject().get("location").getAsJsonObject().get("zipCode").getAsInt());
-				   l.setLat(manifestationsJson.get(i).getAsJsonObject().get("location").getAsJsonObject().get("lat").getAsDouble());
-				   l.setLng(manifestationsJson.get(i).getAsJsonObject().get("location").getAsJsonObject().get("lng").getAsDouble());
-				
-			       Manifestation m = new Manifestation();
-			       m.setLocation(l);
-			       m.setActive(manifestationsJson.get(i).getAsJsonObject().get("isActive").getAsBoolean());
-			       m.setPrice(manifestationsJson.get(i).getAsJsonObject().get("price").getAsInt());
-			       m.setTitle(manifestationsJson.get(i).getAsJsonObject().get("title").getAsString());
-			       m.setManifestationType(ManifestationType.valueOf(manifestationsJson.get(i).getAsJsonObject().get("manifestationType").getAsString()));
-			       m.setRealisationDate(new Date(manifestationsJson.get(i).getAsJsonObject().get("realisationDate").getAsString()));
-			       m.setPosterPath(manifestationsJson.get(i).getAsJsonObject().get("posterPath").getAsString());
-			       m.setAvailableTickets(manifestationsJson.get(i).getAsJsonObject().get("availableTickets").getAsInt());
-			       m.setAverageRating(manifestationsJson.get(i).getAsJsonObject().get("averageRating").getAsDouble());
-			       manifestations.add(m);
-			    }
+				manifestations.addAll(searchResult);
 			    
 				if(criteria.equals("title")) {
 					Collections.sort(manifestations, Manifestation.titleComparatorDesc);
@@ -1134,40 +1089,18 @@ public class SparkAppMain {
 				
 			});
 			
-			post("/manifestations/filter", (req, res)->{
+			get("/manifestations/filter", (req, res)->{
 				
 				res.type("application/json");
-				String data = req.body();
 				
-				JsonObject job = new JsonParser().parse(data).getAsJsonObject();
-				JsonArray manifestationsJson = job.get("manifestations").getAsJsonArray();
-				String type = job.get("type").getAsString();
-				boolean available = job.get("available").getAsBoolean();
+				String type = req.queryParams("type"); 
+				Boolean available =  Boolean.parseBoolean(req.queryParams("available")); 
+				
 				
 				ArrayList<Manifestation> manifestations = new ArrayList<Manifestation>();
-				
-				for(int i=0; i<manifestationsJson.size(); i++) {
-					
-				   Location l = new Location();
-				   l.setCity(manifestationsJson.get(i).getAsJsonObject().get("location").getAsJsonObject().get("city").getAsString());
-				   l.setNumber(manifestationsJson.get(i).getAsJsonObject().get("location").getAsJsonObject().get("number").getAsString());
-				   l.setStreet(manifestationsJson.get(i).getAsJsonObject().get("location").getAsJsonObject().get("street").getAsString());
-				   l.setZipCode(manifestationsJson.get(i).getAsJsonObject().get("location").getAsJsonObject().get("zipCode").getAsInt());
-				   l.setLat(manifestationsJson.get(i).getAsJsonObject().get("location").getAsJsonObject().get("lat").getAsDouble());
-				   l.setLng(manifestationsJson.get(i).getAsJsonObject().get("location").getAsJsonObject().get("lng").getAsDouble());
-				
-			       Manifestation m = new Manifestation();
-			       m.setLocation(l);
-			       m.setActive(manifestationsJson.get(i).getAsJsonObject().get("isActive").getAsBoolean());
-			       m.setPrice(manifestationsJson.get(i).getAsJsonObject().get("price").getAsInt());
-			       m.setTitle(manifestationsJson.get(i).getAsJsonObject().get("title").getAsString());
-			       m.setManifestationType(ManifestationType.valueOf(manifestationsJson.get(i).getAsJsonObject().get("manifestationType").getAsString()));
-			       m.setRealisationDate(new Date(manifestationsJson.get(i).getAsJsonObject().get("realisationDate").getAsString()));
-			       m.setPosterPath(manifestationsJson.get(i).getAsJsonObject().get("posterPath").getAsString());
-			       m.setAvailableTickets(manifestationsJson.get(i).getAsJsonObject().get("availableTickets").getAsInt());
-			       m.setAverageRating(manifestationsJson.get(i).getAsJsonObject().get("averageRating").getAsDouble());
-			       manifestations.add(m);
-			    }
+			
+				manifestations.clear();
+				manifestations.addAll(searchResult);
 			    
 				if(available && !type.equals("none")) {
 					manifestations.removeIf(p -> p.getManifestationType() != ManifestationType.valueOf(type) || p.getAvailableTickets() == 0);
