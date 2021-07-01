@@ -68,7 +68,11 @@
 		<div class="collapse navbar-collapse" id="collapsibleNavbar">
 			<ul class="navbar-nav ml-auto">
 				<li class="nav-item"><a class="nav-link" href="#" onclick="goToHomepage();return false;">Return to homepage</a></li>
-
+				<li class="nav-item" id="not-logged-in" hidden=true><a class="nav-link" href="login.html">Log
+						In</a></li>
+				<li class="nav-item" id="not-logged-in-sign"  hidden=true><a class="nav-link" href="signIn.html">Sign
+						Up</a></li>
+				<li class="nav-item" id="logged-in"  hidden=true><a class="nav-link" href="#" onclick="logOut()">Log out</a></li>		
 			</ul>
 		</div>
 	</nav>

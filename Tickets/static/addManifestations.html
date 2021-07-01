@@ -169,13 +169,13 @@
 						</div>
 						<div class="input-group form-group">
 
-							<input id="poster" class="form-control" type="file"
-								placeholder="Poster" />
+							<input id="poster" class="form-control" type="file" accept="image/*"
+								placeholder="Poster"  required/>
 						</div>
 						<br />
 						<div class="right">
 							<input type="submit" value="Add" id="add" class="btn search_btn right" />
-							<input type="button" value="Cancel" class="btn cancel_btn right" />
+							<input type="button" value="Cancel" class="btn cancel_btn right" onclick="history.back();"/>
 						</div>
 					</form>
 				</div>

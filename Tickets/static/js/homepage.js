@@ -336,6 +336,14 @@ function showManifestation(title){
 
 
 function getManifestation(t){
+	if(localStorage.getItem("role") === null && t==='showTitle'){
+		$("#not-logged-in").prop("hidden", false);
+		$("#not-logged-in-sign").prop("hidden", false);
+	}else if(localStorage.getItem("role") !== 'SELLER' && localStorage.getItem('editTitle') === null ){
+		goToHomepage();
+	}else{
+		$("#logged-in").prop("hidden", false);
+	}
 	var title = localStorage.getItem(t);
 	console.log(title);
 	 $.ajax({
@@ -358,7 +366,7 @@ function getManifestation(t){
 								.append($("<img  class='image'  src='"+data.posterPath+"'   id='"+data.title +"'>"))
 								.append($("<div class='card-body text-center'>")
 										.append($("<div class='card-title'>").append($("<h5>").text(data.title)))
-										.append($("<p class='card-text'>").text("Status: " + data.isActive))
+										.append($("<p class='card-text'>").text("Status: " + (data.isActive ? "Active" : "Inactive")))
 										.append($("<p class='card-text'>").text("Date: " +data.realisationDate))
 										.append($("<p class='card-text'>").text("Location: " + data.location.street +" " + data.location.number + ", " + data.location.city))
 										.append($("<p class='card-text'>").text("Number of seats: " + data.availableTickets ))
@@ -447,7 +455,7 @@ function seeComments(){
 					.append($("<div class='col div-space' id='comment-form' hidden>")
 							.append($("<textarea id='comment-text'>"))
 							.append($("<br>"))
-							.append($("<select>").append($("<option id='comment-grade' value='5'>").text("5"))
+							.append($("<select id='comment-grade'>").append($("<option  value='5'>").text("5"))
 									.append($("<option value='4'>").text("4"))
 									.append($("<option value='3'>").text("3"))
 									.append($("<option value='2'>").text("2"))
@@ -465,13 +473,16 @@ function seeComments(){
 			dataType: "JSON",
 			success: function (data) {
 				console.log(data);
+				var i = 0;
+				for (i; i < data.length; i++) {
 				$("#comments")
 			
 				.append($("<div class='card'>")
-						.append($("<div class='card-header'>").append($("<h6>").text('"' + data[0].commentText + '"' ))
-								.append($("<div class='p-2' id='grade'>").text("Grade: " + data[0].grade)))
+						.append($("<div class='card-header'>").append($("<h6>").text('"' + data[i].commentText + '"' ))
+								.append($("<div class='p-2' id='grade'>").text("Grade: " + data[i].grade)))
 								
-						.append($("<div class='card-footer'>").text( data[0].buyer.username)));
+						.append($("<div class='card-footer'>").text( data[i].buyer.username)));
+			}
 			}
 		 });
 		 
@@ -566,7 +577,8 @@ function cancelComment(){
 
 function sendComment(){
 	var text = $("#comment-text").val();
-	var grade = $("#comment-grade ").val();
+	var grade = $("#comment-grade").val();
+	console.log(grade);
 	var title = localStorage.getItem("showTitle");
 	
 	if(text != ""){

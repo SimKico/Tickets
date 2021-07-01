@@ -1363,6 +1363,9 @@ public class SparkAppMain {
 				for(Manifestation m : Database.manifestations) {
 					if(m.getTitle().equalsIgnoreCase(title)) {
 						
+						
+					    
+					    
 						returnVal = Database.manifestations.get(Database.manifestations.indexOf(m));
 					
 					}
@@ -1623,6 +1626,8 @@ public class SparkAppMain {
 			    c.setId("c" + (Database.comments.size() + 1));
 			    
 			    Database.addComment(c);
+			    
+			   
 				return g.toJson(c);
 			});
 			
@@ -1638,11 +1643,35 @@ public class SparkAppMain {
 			
 				for(Comment c : Database.comments) {
 					if(c.getId().equals(id)) {
+						
+						
 						Database.comments.get(Database.comments.indexOf(c)).setApproved(job.get("approved").getAsBoolean());
 						Database.comments.get(Database.comments.indexOf(c)).setRefused(!job.get("approved").getAsBoolean());
 						Database.saveComments();
+						
+						if(job.get("approved").getAsBoolean()) {
+							double avg = 0;
+							int counter = 0;
+						    for(Comment com : Database.comments) {
+						    	if(com.getManifestation().equals(c.getManifestation()) && com.isApproved()) {
+						    		avg = avg + com.getGrade();
+						    		counter = counter + 1 ;
+						    	}
+						    }
+							
+						    if(avg != 0) {
+						    	for(Manifestation m : Database.manifestations) {
+						    		if(c.getManifestation().equals(m.getTitle())) {
+						    			Database.manifestations.get(Database.manifestations.indexOf(m)).setAverageRating(avg/counter);
+								    	Database.saveManifestations();
+						    		}
+						    	}	
+						    }
+						}
+						
 						return true;
 					}
+					
 				}
 				
 				res.status(404);

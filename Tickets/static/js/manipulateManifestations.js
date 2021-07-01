@@ -201,6 +201,9 @@ function editManifestation(e){
 				dataType: "JSON",
 				success: function (data) {
 					
+					alert("Successfully edited");
+					location.href = "sellersManifestations.html";
+					
 				},
 				error: function(res){
 					console.log(res)
@@ -220,3 +223,4 @@ function goToEditPage(title){
 	localStorage.setItem('editTitle', title);
 	location.href = "editManifestation.html";
 }
+
