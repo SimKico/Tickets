@@ -74,7 +74,7 @@ public class SparkAppMain {
 			User user = ss.attribute("user");
 			
 			for(User kk: Database.users) {
-				if(kk.getUsername().equals(k.getUsername()) && kk.getPassword().equals(k.getPassword())  ) {
+				if(!kk.isDeleted() && kk.getUsername().equals(k.getUsername()) && kk.getPassword().equals(k.getPassword())  ) {
 					if(user == null) {
 						user = kk;
 						ss.attribute("user", user);	
@@ -222,19 +222,21 @@ public class SparkAppMain {
 			ArrayList<Ticket> userTickets = new ArrayList<Ticket>();
 			if(k.getRole().equals(Role.BUYER)) {
 				for(Ticket ticket : Database.tickets) {
-					if(ticket.getStatus().equals(TicketStatus.RESERVED) && ticket.getBuyerFirstName().equals(k.getFirstName()) && ticket.getBuyerLastName().equals(k.getLastName())) {
+					if(!ticket.isDeleted() && ticket.getStatus().equals(TicketStatus.RESERVED) && ticket.getBuyerFirstName().equals(k.getFirstName()) && ticket.getBuyerLastName().equals(k.getLastName())) {
 						System.out.println(ticket.getBuyerFirstName()+ " " + ticket.getBuyerLastName());
 						userTickets.add(ticket);
 					}
 				}
 			}else if(k.getRole().equals(Role.ADMIN)) {
 				for(Ticket ticket : Database.tickets) {
-					userTickets.add(ticket);
+					if(!ticket.isDeleted()) {
+						userTickets.add(ticket);
+					}
 				}
 			}else {
 				if(k.getRole().equals(Role.SELLER)) {
 					for(Ticket ticket : Database.tickets) {
-						if(ticket.getStatus().equals(TicketStatus.RESERVED) && Database.isSellersManifestation(k, ticket.getManifestation())) {
+						if(!ticket.isDeleted() && ticket.getStatus().equals(TicketStatus.RESERVED) && Database.isSellersManifestation(k, ticket.getManifestation())) {
 							userTickets.add(ticket);
 						}
 					}
@@ -259,7 +261,7 @@ public class SparkAppMain {
 				if(k.getRole().equals(Role.ADMIN)) {
 					if(manifestation != null) {
 						for(Ticket ticket : Database.tickets) {
-							if(ticket.getManifestation().toLowerCase().equals(manifestation)) {
+							if(!ticket.isDeleted() && ticket.getManifestation().toLowerCase().equals(manifestation)) {
 								satisfiesManifestation.add(ticket);
 							}
 						}
@@ -267,14 +269,14 @@ public class SparkAppMain {
 				}else if(k.getRole().equals(Role.SELLER)) {
 					if(manifestation != null && Database.isSellersManifestation(k, manifestation)) {
 						for(Ticket ticket : Database.tickets) {
-							if(ticket.getManifestation().toLowerCase().equals(manifestation)) {
+							if(!ticket.isDeleted() && ticket.getManifestation().toLowerCase().equals(manifestation)) {
 								satisfiesManifestation.add(ticket);
 							}
 						}
 					}
 				}else {
 					for(Ticket ticket : Database.tickets) {
-						if(ticket.getStatus().equals(TicketStatus.RESERVED) && ticket.getManifestation().toLowerCase().equals(manifestation) && ticket.getBuyerFirstName().equals(k.getFirstName()) && ticket.getBuyerLastName().equals(k.getLastName())) {
+						if(!ticket.isDeleted() && ticket.getStatus().equals(TicketStatus.RESERVED) && ticket.getManifestation().toLowerCase().equals(manifestation) && ticket.getBuyerFirstName().equals(k.getFirstName()) && ticket.getBuyerLastName().equals(k.getLastName())) {
 							satisfiesManifestation.add(ticket);
 						}
 					}
@@ -303,14 +305,14 @@ public class SparkAppMain {
 			
 				if(k.getRole().equals(Role.ADMIN)) {
 						for(Ticket ticket : Database.tickets) {
-							if(ticket.getPrice() >= minPrice && ticket.getPrice() <= maxPrice ) {
+							if(!ticket.isDeleted() && ticket.getPrice() >= minPrice && ticket.getPrice() <= maxPrice ) {
 								satisfiesManifestation.add(ticket);
 							}
 					}
 				}else if(k.getRole().equals(Role.SELLER)) {
 						for(Ticket ticket : Database.tickets) {
 							if(Database.isSellersManifestation(k, ticket.getManifestation())) {
-								if(ticket.getPrice() >= minPrice && ticket.getPrice() <= maxPrice ) {
+								if(!ticket.isDeleted() && ticket.getPrice() >= minPrice && ticket.getPrice() <= maxPrice ) {
 									satisfiesManifestation.add(ticket);
 								}
 							}
@@ -319,7 +321,7 @@ public class SparkAppMain {
 					}
 				}else {
 					for(Ticket ticket : Database.tickets) {
-						if(ticket.getStatus().equals(TicketStatus.RESERVED) && ticket.getBuyerFirstName().equals(k.getFirstName()) && ticket.getBuyerLastName().equals(k.getLastName()) && ticket.getPrice() >= minPrice && ticket.getPrice() <= maxPrice ) {
+						if(!ticket.isDeleted() && ticket.getStatus().equals(TicketStatus.RESERVED) && ticket.getBuyerFirstName().equals(k.getFirstName()) && ticket.getBuyerLastName().equals(k.getLastName()) && ticket.getPrice() >= minPrice && ticket.getPrice() <= maxPrice ) {
 							satisfiesManifestation.add(ticket);
 						}
 					}
@@ -346,14 +348,14 @@ public class SparkAppMain {
 		
 				if(k.getRole().equals(Role.ADMIN)) {
 						for(Ticket ticket : Database.tickets) {
-							if(ticket.getManifestationDate().after(fromDate) && ticket.getManifestationDate().before(toDate)) {
+							if(!ticket.isDeleted() && ticket.getManifestationDate().after(fromDate) && ticket.getManifestationDate().before(toDate)) {
 								satisfiesManifestation.add(ticket);
 							}
 					}
 				}else if(k.getRole().equals(Role.SELLER)) {
 						for(Ticket ticket : Database.tickets) {
 							if(Database.isSellersManifestation(k, ticket.getManifestation())) {
-								if(ticket.getManifestationDate().after(fromDate) && ticket.getManifestationDate().before(toDate)) {
+								if(!ticket.isDeleted() && ticket.getManifestationDate().after(fromDate) && ticket.getManifestationDate().before(toDate)) {
 									satisfiesManifestation.add(ticket);
 								}
 							}
@@ -362,7 +364,7 @@ public class SparkAppMain {
 					}
 				}else {
 					for(Ticket ticket : Database.tickets) {
-						if(ticket.getStatus().equals(TicketStatus.RESERVED) &&  ticket.getBuyerFirstName().equals(k.getFirstName()) && ticket.getBuyerLastName().equals(k.getLastName()) && ticket.getManifestationDate().after(fromDate) && ticket.getManifestationDate().before(toDate) ) {
+						if(!ticket.isDeleted() && ticket.getStatus().equals(TicketStatus.RESERVED) &&  ticket.getBuyerFirstName().equals(k.getFirstName()) && ticket.getBuyerLastName().equals(k.getLastName()) && ticket.getManifestationDate().after(fromDate) && ticket.getManifestationDate().before(toDate) ) {
 							satisfiesManifestation.add(ticket);
 						}
 					}
@@ -400,14 +402,14 @@ public class SparkAppMain {
 			
 				if(k.getRole().equals(Role.ADMIN)) {
 						for(Ticket ticket : Database.tickets) {
-							if(ticket.getType().equals(ticketType)) {
+							if(!ticket.isDeleted() && ticket.getType().equals(ticketType)) {
 								satisfiesManifestation.add(ticket);
 							}
 					}
 				}else if(k.getRole().equals(Role.SELLER)) {
 					for(Ticket ticket : Database.tickets) {
 						if(Database.isSellersManifestation(k, ticket.getManifestation())) {
-							if(ticket.getType().equals(ticketType)) {
+							if(!ticket.isDeleted() && ticket.getType().equals(ticketType)) {
 								satisfiesManifestation.add(ticket);
 							}
 						}
@@ -415,7 +417,7 @@ public class SparkAppMain {
 				}else {
 					for(Ticket ticket : Database.tickets) {
 						System.out.println(ticketType);
-						if(ticket.getStatus().equals(TicketStatus.RESERVED) && ticket.getBuyerFirstName().equals(k.getFirstName()) && ticket.getBuyerLastName().equals(k.getLastName()) && ticket.getType().equals(ticketType)) {
+						if(!ticket.isDeleted() && ticket.getStatus().equals(TicketStatus.RESERVED) && ticket.getBuyerFirstName().equals(k.getFirstName()) && ticket.getBuyerLastName().equals(k.getLastName()) && ticket.getType().equals(ticketType)) {
 							System.out.println("hehe");
 							satisfiesManifestation.add(ticket);
 						}
@@ -450,21 +452,21 @@ public class SparkAppMain {
 			
 				if(k.getRole().equals(Role.ADMIN)) {
 						for(Ticket ticket : Database.tickets) {
-							if(ticket.getStatus().equals(ticketStatus)) {
+							if(!ticket.isDeleted() && ticket.getStatus().equals(ticketStatus)) {
 								satisfiesManifestation.add(ticket);
 							}
 					}
 				}else if(k.getRole().equals(Role.SELLER)) {
 					for(Ticket ticket : Database.tickets) {
 						if(Database.isSellersManifestation(k, ticket.getManifestation())) {
-							if(ticket.getStatus().equals(ticketStatus)) {
+							if(!ticket.isDeleted() && ticket.getStatus().equals(ticketStatus)) {
 								satisfiesManifestation.add(ticket);
 							}
 						}
 					}
 				}else {
 					for(Ticket ticket : Database.tickets) {
-						if(ticket.getBuyerFirstName().equals(k.getFirstName()) && ticket.getBuyerLastName().equals(k.getLastName()) && ticket.getStatus().equals(ticketStatus)) {
+						if(!ticket.isDeleted() && ticket.getBuyerFirstName().equals(k.getFirstName()) && ticket.getBuyerLastName().equals(k.getLastName()) && ticket.getStatus().equals(ticketStatus)) {
 							satisfiesManifestation.add(ticket);
 						}
 					}
@@ -492,19 +494,21 @@ public class SparkAppMain {
 				
 				if(k.getRole().equals(Role.BUYER)) {
 					for(Ticket ticket : Database.tickets) {
-						if(ticket.getStatus().equals(TicketStatus.RESERVED) && ticket.getBuyerFirstName().equals(k.getFirstName()) && ticket.getBuyerLastName().equals(k.getLastName())) {
+						if(!ticket.isDeleted() && ticket.getStatus().equals(TicketStatus.RESERVED) && ticket.getBuyerFirstName().equals(k.getFirstName()) && ticket.getBuyerLastName().equals(k.getLastName())) {
 							System.out.println(ticket.getBuyerFirstName()+ " " + ticket.getBuyerLastName());
 							userTickets.add(ticket);
 						}
 					}
 				}else if(k.getRole().equals(Role.ADMIN)) {
 					for(Ticket ticket : Database.tickets) {
-						userTickets.add(ticket);
+						if(!ticket.isDeleted()) {
+							userTickets.add(ticket);
+						}
 					}
 				}else {
 					if(k.getRole().equals(Role.SELLER)) {
 						for(Ticket ticket : Database.tickets) {
-							if(ticket.getStatus().equals(TicketStatus.RESERVED) && Database.isSellersManifestation(k, ticket.getManifestation())) {
+							if(!ticket.isDeleted() && ticket.getStatus().equals(TicketStatus.RESERVED) && Database.isSellersManifestation(k, ticket.getManifestation())) {
 								userTickets.add(ticket);
 							}
 						}
@@ -535,19 +539,21 @@ public class SparkAppMain {
 				
 				if(k.getRole().equals(Role.BUYER)) {
 					for(Ticket ticket : Database.tickets) {
-						if(ticket.getStatus().equals(TicketStatus.RESERVED) && ticket.getBuyerFirstName().equals(k.getFirstName()) && ticket.getBuyerLastName().equals(k.getLastName())) {
+						if(!ticket.isDeleted() && ticket.getStatus().equals(TicketStatus.RESERVED) && ticket.getBuyerFirstName().equals(k.getFirstName()) && ticket.getBuyerLastName().equals(k.getLastName())) {
 							System.out.println(ticket.getBuyerFirstName()+ " " + ticket.getBuyerLastName());
 							userTickets.add(ticket);
 						}
 					}
 				}else if(k.getRole().equals(Role.ADMIN)) {
 					for(Ticket ticket : Database.tickets) {
-						userTickets.add(ticket);
+						if(!ticket.isDeleted()) {
+							userTickets.add(ticket);
+						}
 					}
 				}else {
 					if(k.getRole().equals(Role.SELLER)) {
 						for(Ticket ticket : Database.tickets) {
-							if(ticket.getStatus().equals(TicketStatus.RESERVED) && Database.isSellersManifestation(k, ticket.getManifestation())) {
+							if(!ticket.isDeleted() && ticket.getStatus().equals(TicketStatus.RESERVED) && Database.isSellersManifestation(k, ticket.getManifestation())) {
 								userTickets.add(ticket);
 							}
 						}
@@ -574,7 +580,7 @@ public class SparkAppMain {
 
 						System.out.println(ticketID);
 						for(Ticket t : Database.tickets) {
-							if(t.getTicketID().equalsIgnoreCase(ticketID)) {
+							if(t.getTicketID().equalsIgnoreCase(ticketID) && !t.isDeleted()) {
 
 								System.out.println(t.getManifestation());
 								 Calendar cal = Calendar.getInstance();
@@ -808,6 +814,18 @@ public class SparkAppMain {
 							return false;
 							}else {
 								System.out.println("User to be deleted"  + user.getFirstName());
+								for(Ticket ticket : Database.tickets) {
+									if(!ticket.isDeleted() && ticket.getUsername().equals(username)) {
+										ticket.setDeleted(true);
+										Database.saveTickets();
+									}
+								}
+								for(Comment comment : Database.comments) {
+									if(!comment.isDeleted() && comment.getBuyer().getUsername().equals(username)) {
+										comment.setDeleted(true);
+										Database.saveComments();
+									}
+								}
 								user.setDeleted(true);
 								Database.saveUsers();
 								res.status(200);
