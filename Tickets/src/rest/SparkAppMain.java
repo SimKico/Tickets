@@ -85,7 +85,7 @@ public class SparkAppMain {
 			return false;			
 		});
 		
-		get("/logout", (req, res) ->{
+		post("/logout", (req, res) ->{
 			
 			Session ss = req.session(true);
 			User user = ss.attribute("user");

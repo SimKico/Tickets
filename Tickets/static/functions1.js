@@ -4,7 +4,7 @@ function logOut(){
 	localStorage.removeItem('username');
 				$.ajax({
 							url: "/logout",
-							method: "get",
+							method: "post",
 							complete: function(){
 								location.href="/"
 							}   
