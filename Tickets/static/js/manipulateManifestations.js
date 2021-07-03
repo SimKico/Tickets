@@ -91,7 +91,8 @@ function add(e){
 				data: newManifestation,
 				dataType: "JSON",
 				success: function (data) {
-					
+					alert("Manifestation successfully added!");
+					location.href = "sellersManifestations.html";
 				},
 				error: function(res){
 					console.log(res)
