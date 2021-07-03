@@ -49,6 +49,9 @@ function getSellerManifestations() {
 
 function add(e){
 	e.preventDefault();
+	
+	$("#add").prop("disabled", true);
+	
 	var title = $('#title').val();
 	var seats = $('#seats').val();
 	var price = $('#price').val();
@@ -76,6 +79,7 @@ function add(e){
 	var type = $("#type option:selected").val();
 
 	
+	
 	$.ajax({
 		url: "https://nominatim.openstreetmap.org/search/"+street+"%20"+number+"%20"+city+"?format=json&addressdetails=1&limit=1&polygon_svg=1",
 		method: "get",
@@ -92,16 +96,19 @@ function add(e){
 				dataType: "JSON",
 				success: function (data) {
 					alert("Manifestation successfully added!");
+					$("#add").prop("disabled", false);
 					location.href = "sellersManifestations.html";
 				},
 				error: function(res){
-					console.log(res)
+					console.log(res);
+					$("#add").prop("disabled", false);
 				    alert(res.responseJSON.message);
 				     
 				  }
 			});
 			},
 		error : function(){
+			$("#add").prop("disabled", false);
 			alert("Invalid address. Please check again or try without a number. ")
 		}
 		});
