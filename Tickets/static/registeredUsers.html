@@ -31,6 +31,7 @@
 
 
 		function getUsers() {
+			username = localStorage.getItem('username');
 			$.ajax({
 				url: "/users",
 				method: "get",
@@ -38,7 +39,27 @@
 				success: function (data) {
 					var i = 0;
 					for (i; i < data.length; i++) {
-						$("#cards")
+						if(data[i].username === username){
+							$("#cards")
+							.append($("<div class='col-md-4 div-space'>")
+								.append($("<div class='card'>")
+									.append($("<div class='card-header text-center'>").append($("<h6>").text(data[i].role)))
+									.append($("<div class='card-header text-center'>").append($("<h3>").text(data[i].username)))
+
+									.append($("<div class='card-body text-center'>")
+										.append($("<div class='card-title'>").append($("<h5>").text(data[i].type)))
+										.append($("<p class='card-text'>").text(data[i].firstName + " " + data[i].lastName))
+										.append($("<p class='card-text'>").text(data[i].birthDay.split(", 12")[0]))
+										.append($("<p class='card-text'>").text(data[i].status))
+										.append($("<p class='card-text'>").text(data[i].gender))
+									)
+									.append($("<div class='card-footer'>").text(data[i].role === "BUYER" ? data[i].points : ""))
+									.append($("<div class='card-footer'>").text(data[i].buyerType ? "typeName: " + data[i].buyerType.typeName : ""))
+									.append($("<div class='card-footer'>").text(data[i].buyerType ? "Discount: " + data[i].buyerType.discount : ""))
+									.append($("<div class='card-footer'>").text(data[i].buyerType ? "Next Level Points: " + data[i].buyerType.nextLevelPoints : ""))
+								));
+						}else{
+							$("#cards")
 							.append($("<div class='col-md-4 div-space'>")
 								.append($("<div class='card'>")
 									.append($("<div class='card-header text-center'>").append($("<h6>").text(data[i].role)))
@@ -57,6 +78,8 @@
 									.append($("<div class='card-footer'>").text(data[i].buyerType ? "Discount: " + data[i].buyerType.discount : ""))
 									.append($("<div class='card-footer'>").text(data[i].buyerType ? "Next Level Points: " + data[i].buyerType.nextLevelPoints : ""))
 								));
+						}
+						
 					}
 				}
 			});
@@ -262,10 +285,8 @@
 		<div class="collapse navbar-collapse" id="collapsibleNavbar">
 			<ul class="navbar-nav ml-auto">
 
-				<li class="nav-item"><a class="nav-link" href="pendingManifestations.html" >Pending manifestations</a></li>
-				
-				<li class="nav-item"><a class="nav-link" href="tickets.html">Tickets</a></li>
-				<li class="nav-item"><a class="nav-link" href="profil.html">Profile</a></li>
+
+				<li class="nav-item"><a class="nav-link" href="#" onclick="homepage()">Homepage</a></li>
 
 				<li class="nav-item"><a class="nav-link" href="#" onclick="logOut()">Log out</a></li>
 

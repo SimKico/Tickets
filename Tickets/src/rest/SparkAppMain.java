@@ -153,6 +153,7 @@ public class SparkAppMain {
 			String oldUsername = oldUserData.getUsername();
 			Date date = new SimpleDateFormat("yyyy-MM-dd").parse(job.get("birthDay").getAsString());
 			
+			
 			Gender gender = null;
 			if(job.get("gender").getAsString()!= null) {
 				 gender = job.get("gender").getAsString() == ("MALE") ? Gender.MALE : Gender.FEMALE;
@@ -167,7 +168,7 @@ public class SparkAppMain {
 //			User newUserData = new User(job.get("username").getAsString(), passwordOldNew, job.get("firstName").getAsString(), job.get("lastName").getAsString(), gender, date, Role.BUYER, null, null, 0, buyerType);
 		
 			Session ss = req.session(true);
-					
+				
 			for(User oneUser : Database.users) {
 				if(oneUser.getUsername().equals(oldUsername)) {
 					oneUser.setUsername(job.get("username").getAsString());
@@ -181,11 +182,24 @@ public class SparkAppMain {
 					oneUser.setPassword(passwordNew);
 								
 					Database.saveUsers();
-					return true;
+					
 					}
-			}					
+			}	
 			
-			return false;	
+			for(Ticket ticket : Database.tickets) {
+				if(ticket.getUsername().equals(oldUsername)) {
+					ticket.setUsername(job.get("username").getAsString());
+					Database.saveTickets();
+				}
+			}
+			
+			for(Comment comment : Database.comments) {
+				if(comment.getBuyer().equals(oldUsername)) {
+					comment.getBuyer().setUsername(job.get("username").getAsString());
+					Database.saveComments();;
+				}
+			}
+			 return true;
 		});
 		
 		get("/manifestations", (req, res) -> {
