@@ -157,7 +157,7 @@ $(document).ready(function(){
 
 function search(){
 	console.log("Uso sam");
-	var title = $("#title").val() == "" ? "" : title;
+	var title = $("#title").val();
 	var location = $("#location").val();
 	var fromDate = $("#datepicker").val();
 	var toDate = $("#datepicker2").val();
