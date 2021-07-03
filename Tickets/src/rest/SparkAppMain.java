@@ -941,7 +941,7 @@ public class SparkAppMain {
 // **********************manifestations**********************************//
 			
 			get("/manifestations/search", (req, res) -> {
-				
+		
 				if(!searchResult.isEmpty()) {
 					searchResult.clear();
 				}
@@ -961,7 +961,6 @@ public class SparkAppMain {
 
 				int toPrice = Integer.parseInt(req.queryParams("toPrice")); 
 				
-		
 				boolean checkTitle = false;
 				boolean checkLocation = false;
 				boolean checkFromDate = false;
@@ -972,7 +971,7 @@ public class SparkAppMain {
 				ArrayList<Manifestation> nonDeletedManifestations = Database.manifestations;
 				nonDeletedManifestations.removeIf(m -> m.isDeleted());
 				for(Manifestation manifestation : nonDeletedManifestations) {
-					if((!title.isEmpty() && manifestation.getTitle().toLowerCase().contains(title))) {
+					if((!title.isEmpty() && manifestation.getTitle().toLowerCase().contains(title.toLowerCase()))) {
 						checkTitle = true;
 					}else {
 						checkTitle = false;
