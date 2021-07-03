@@ -194,7 +194,7 @@ public class SparkAppMain {
 			}
 			
 			for(Comment comment : Database.comments) {
-				if(comment.getBuyer().equals(oldUsername)) {
+				if(comment.getBuyer().getUsername().equals(oldUsername)) {
 					comment.getBuyer().setUsername(job.get("username").getAsString());
 					Database.saveComments();;
 				}
