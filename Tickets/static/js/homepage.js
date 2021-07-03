@@ -29,6 +29,7 @@ function getManifestations() {
 
 				var rating = data[i].averageRating === 0 ? "/" : data[i].averageRating;
 				var date = new Date(data[i].realisationDate);
+				var currentDate = new Date();
 				if(localStorage.getItem("role") === 'BUYER'){
 
 					
@@ -50,7 +51,7 @@ function getManifestations() {
 									)
 									.append(
 										$("<p class='card-text'>").text(
-											date.toLocaleString("sr-sp")
+												data[i].realisationDate
 										)
 									)
 									.append(
@@ -67,18 +68,18 @@ function getManifestations() {
 								$('<div class="card-footer" >')
 									.append($("<h5>").text("Book a ticket:"))
 									.append($("<p class='card-text'>")
-										.append($('<button id ="' + data[i].title+1+ '" class = "btn" ' + regular + ' >').attr("disabled", !data[i].isActive || rr === 0).
+										.append($('<button id ="' + data[i].title+1+ '" class = "btn" ' + regular + ' >').attr("disabled", !data[i].isActive || rr === 0 || (date.getTime() < currentDate.getTime())).
 										text("Regular " + data[i].price + "RSD ").click(function () { bookTicket(this.id, "regular", price,i); rr--; console.log(rr); if(rr === 0){$("#"+this.id+"").css("visibility", "hidden");alert("There is no more of these tickets!"); }else{r++;} })))
 				
 						.append(
 							$("<p class='card-text'>")						
 							.append($("<p class='card-text'>")
-							.append($('<button id ="' + data[i].title+2 + '" class = "btn" ' + fanpit + '>').attr("disabled", !data[i].isActive || ff === 0).
+							.append($('<button id ="' + data[i].title+2 + '" class = "btn" ' + fanpit + '>').attr("disabled", !data[i].isActive || ff === 0 || (date.getTime() < currentDate.getTime())).
 							text("Fanpit " + data[i].price * 2 + " RSD").click(function () { bookTicket(this.id, "fanpit", price,i); ff--; if(ff === 0) { $("#"+this.id+"").css("visibility", "hidden"); alert("There is no more of these tickets!");} })))
 						)
 						.append(
 							$("<p class='card-text'>")
-							.append($('<button id ="' + data[i].title+3 + '" class = "btn"' + vip + ' >').attr("disabled", !data[i].isActive || vv === 0).
+							.append($('<button id ="' + data[i].title+3 + '" class = "btn"' + vip + ' >').attr("disabled", !data[i].isActive || vv === 0 || (date.getTime() < currentDate.getTime())).
 							text("Vip " + data[i].price * 4 + " RSD").click(function () { bookTicket(this.id, "vip", price,i);vv--; if(vv === 0) {$("#"+this.id+"").css("visibility", "hidden"); alert("There is no more of these tickets!"); }  })))
 				)
 					)
